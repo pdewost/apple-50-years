@@ -279,12 +279,38 @@ body.staging .product-card[data-triage="validated"]::after {
 .card-ref a:hover { text-decoration: underline; }
 
 .staging-controls { display: none; }
-body.staging .staging-controls { display: inline-flex; }
+body.staging .staging-controls { display: inline-flex; gap: 4px; }
 .staging-filter-bar {
   display: none; padding: 8px 24px; gap: 8px; justify-content: center;
   max-width: 1400px; margin: 0 auto;
 }
 body.staging .staging-filter-bar { display: flex; flex-wrap: wrap; }
+
+.card-img-meta {
+  display: none; font-size: 0.65rem; color: var(--text-tertiary);
+  padding: 4px 8px; background: var(--bg-primary); border-top: 1px solid var(--border-light);
+  word-break: break-all; line-height: 1.3;
+}
+body.staging .card-img-meta { display: block; }
+.card-img-meta .score { font-weight: 600; }
+.card-img-meta .score.bad { color: #FF453A; }
+.card-img-meta .score.suspect { color: #FF9F0A; }
+.card-img-meta .score.good { color: #30D158; }
+.card-img-actions { display: none; padding: 4px 8px; gap: 4px; }
+body.staging .product-card[data-triage="wrong-image"] .card-img-actions { display: flex; flex-wrap: wrap; }
+.card-img-actions a, .card-img-actions button {
+  font-size: 0.65rem; padding: 2px 8px; border-radius: 4px;
+  border: 1px solid var(--border); background: var(--bg-secondary);
+  color: var(--accent); text-decoration: none; cursor: pointer;
+  font-family: var(--font-body); white-space: nowrap;
+}
+.card-img-actions a:hover, .card-img-actions button:hover { background: var(--accent-light); }
+.img-override-input {
+  font-size: 0.65rem; padding: 2px 6px; border: 1px solid var(--border);
+  border-radius: 4px; width: 100%; margin-top: 3px; font-family: var(--font-body);
+  background: var(--bg-secondary); color: var(--text-primary);
+}
+.img-override-input::placeholder { color: var(--text-tertiary); }
 </style>
 </head>
 <body>
@@ -305,6 +331,7 @@ body.staging .staging-filter-bar { display: flex; flex-wrap: wrap; }
       <button class="btn" onclick="exportChecked()" title="Export checked list">Export</button>
       <button class="btn" onclick="clearAll()" title="Clear all selections">Clear</button>
       <span class="staging-controls">
+        <button class="btn" onclick="runAutoDetect()" title="Auto-detect image/name mismatches" style="background:#FF9F0A;color:#fff;border-color:#FF9F0A">Auto-Detect</button>
         <button class="btn" onclick="exportTriage()" title="Export triage flags">Triage JSON</button>
         <button class="btn" onclick="importTriage()" title="Import triage flags">Import</button>
       </span>
@@ -627,7 +654,67 @@ const CPI_FALLBACK={1976:56.9,1977:60.6,1978:65.2,1979:72.6,1980:82.4,1981:90.9,
 // ── STATE ──
 const PRODUCT_MAP=new Map(PRODUCTS.map(p=>[p.id,p]));
 const STAGING=new URLSearchParams(window.location.search).has('staging');
-const state={checkedIds:new Set(),viewMode:"category",searchQuery:"",theme:"light",cpiData:Object.assign({},CPI_FALLBACK),eurRate:0.92,apiStatus:{cpi:"fallback",eur:"fallback"},triageFlags:{},triageFilter:"all"};
+const state={checkedIds:new Set(),viewMode:"category",searchQuery:"",theme:"light",cpiData:Object.assign({},CPI_FALLBACK),eurRate:0.92,apiStatus:{cpi:"fallback",eur:"fallback"},triageFlags:{},triageFilter:"all",imageOverrides:{},mismatchScores:{}};
+
+// ── IMAGE MISMATCH DETECTION ──
+const NOISE_WORDS=new Set(['apple','computer','inc','jpg','jpeg','png','webp','thumb','px','500px','440px','file','wikipedia','commons','upload','wikimedia','org','the','and','of','in','at','with','from','a','an','for','by','on','museum','cropped','front','back','side','rear','view','display','photo','image','img','photography','color','black','white','gray','grey','silver','gold','space','product','red','blue','green']);
+
+function extractFilename(url){
+  if(!url) return '';
+  // Extract the actual filename from Wikimedia thumb URLs
+  // Pattern: .../thumb/a/a1/FILENAME/500px-FILENAME or .../a/a1/FILENAME
+  const parts=url.split('/');
+  // Find the filename: it's the part before the "500px-" size variant, or the last meaningful segment
+  for(let i=parts.length-1;i>=0;i--){
+    if(parts[i].match(/^\d+px-/)) continue; // skip "500px-..." size prefix
+    if(parts[i]==='thumb'||parts[i]==='commons'||parts[i]==='wikipedia') continue;
+    if(parts[i].length<=2) continue; // skip hash dirs like "a", "a1"
+    if(parts[i].match(/^[a-f0-9]{1,2}$/)) continue;
+    return decodeURIComponent(parts[i]);
+  }
+  return '';
+}
+
+function tokenize(s){
+  return s.toLowerCase()
+    .replace(/[_\-\(\)\[\]\{\},.;:!?'"\/\\]/g,' ')
+    .replace(/%[0-9A-Fa-f]{2}/g,' ') // URL-encoded chars
+    .split(/\s+/)
+    .map(t=>t.replace(/\.(jpg|jpeg|png|webp|gif|svg)$/i,''))
+    .filter(t=>t.length>1 && !NOISE_WORDS.has(t) && !t.match(/^\d+$/));
+}
+
+function mismatchScore(productName, imageUrl){
+  const nameTokens=tokenize(productName);
+  const fileTokens=tokenize(extractFilename(imageUrl));
+  if(nameTokens.length===0||fileTokens.length===0) return 0;
+  const nameSet=new Set(nameTokens);
+  const matching=fileTokens.filter(t=>nameSet.has(t)).length;
+  // Also check partial matches (e.g., "macbook" matches "macbookpro")
+  const partialMatches=fileTokens.filter(ft=>nameTokens.some(nt=>ft.includes(nt)||nt.includes(ft))).length;
+  const score=Math.max(matching,partialMatches)/Math.max(nameTokens.length,fileTokens.length);
+  return Math.min(score,1);
+}
+
+function runAutoDetect(){
+  let flagged=0;
+  PRODUCTS.forEach(p=>{
+    const score=mismatchScore(p.name,p.image);
+    state.mismatchScores[p.id]=score;
+    if(score<0.25 && !state.triageFlags[p.id]){
+      state.triageFlags[p.id]='wrong-image';
+      flagged++;
+    }
+  });
+  render();
+  updateStagingProgress();
+  // Non-blocking notification
+  const note=document.createElement('div');
+  note.style.cssText='position:fixed;top:50px;left:50%;transform:translateX(-50%);background:#1C1C1E;color:#F5F5F7;padding:12px 24px;border-radius:12px;z-index:9999;font-size:0.85rem;box-shadow:0 8px 32px rgba(0,0,0,0.3);';
+  note.textContent='Auto-detect: '+flagged+' flagged as wrong-image (score < 25%). All '+PRODUCTS.length+' scored.';
+  document.body.appendChild(note);
+  setTimeout(()=>note.remove(),4000);
+}
 
 // ── FORMATTING ──
 const fmtUSD=new Intl.NumberFormat('en-US',{style:'currency',currency:'USD',maximumFractionDigits:0});
@@ -676,14 +763,29 @@ function cardHTML(p){
   const tf=state.triageFlags[p.id]||'';
   const triageAttr=tf?' data-triage="'+tf+'"':'';
   const refLink=p.url?'<div class="card-ref"><a href="'+p.url+'" target="_blank" rel="noopener" onclick="event.stopPropagation()">Specs &rarr;</a></div>':'';
+  // Resolved image (override or original)
+  const imgSrc=state.imageOverrides[p.id]||p.image;
+  // Mismatch score display
+  const score=state.mismatchScores[p.id];
+  const scoreClass=score===undefined?'':(score<0.25?'bad':(score<0.5?'suspect':'good'));
+  const scoreText=score!==undefined?(' <span class="score '+scoreClass+'">['+Math.round(score*100)+'%]</span>'):'';
+  const fname=extractFilename(imgSrc);
+  const imgMeta='<div class="card-img-meta">'+fname.substring(0,60)+(fname.length>60?'...':'')+scoreText+'</div>';
+  // Wikipedia search link for wrong-image correction
+  const wikiName=encodeURIComponent(p.name.replace(/\s*\(.*\)/,''));
+  const imgActions='<div class="card-img-actions">'+
+    '<a href="https://en.wikipedia.org/wiki/'+wikiName+'" target="_blank" rel="noopener" onclick="event.stopPropagation()">Wikipedia</a>'+
+    '<a href="https://commons.wikimedia.org/w/index.php?search='+wikiName+'&title=Special:MediaSearch&type=image" target="_blank" rel="noopener" onclick="event.stopPropagation()">Commons</a>'+
+    '<button onclick="event.stopPropagation();promptImageOverride(\''+p.id+'\')">Paste URL</button>'+
+    '</div>';
   // Triage toolbar buttons
   const tBar='<div class="triage-bar">'+
-    '<button class="triage-btn'+(tf==='remove'?' active-remove':'')+'" data-triage-action="remove" title="Remove" onclick="event.stopPropagation();setTriage(\''+p.id+'\',\'remove\')">&#10005;</button>'+
-    '<button class="triage-btn'+(tf==='wrong-image'?' active-wrong-image':'')+'" data-triage-action="wrong-image" title="Wrong image" onclick="event.stopPropagation();setTriage(\''+p.id+'\',\'wrong-image\')">&#128248;</button>'+
-    '<button class="triage-btn'+(tf==='wrong-price'?' active-wrong-price':'')+'" data-triage-action="wrong-price" title="Wrong price" onclick="event.stopPropagation();setTriage(\''+p.id+'\',\'wrong-price\')">&#36;</button>'+
-    '<button class="triage-btn'+(tf==='validated'?' active-validated':'')+'" data-triage-action="validated" title="Validated" onclick="event.stopPropagation();setTriage(\''+p.id+'\',\'validated\')">&#10003;</button>'+
+    '<button class="triage-btn'+(tf==='remove'?' active-remove':'')+'" title="Remove" onclick="event.stopPropagation();setTriage(\''+p.id+'\',\'remove\')">&#10005;</button>'+
+    '<button class="triage-btn'+(tf==='wrong-image'?' active-wrong-image':'')+'" title="Wrong image" onclick="event.stopPropagation();setTriage(\''+p.id+'\',\'wrong-image\')">&#128248;</button>'+
+    '<button class="triage-btn'+(tf==='wrong-price'?' active-wrong-price':'')+'" title="Wrong price" onclick="event.stopPropagation();setTriage(\''+p.id+'\',\'wrong-price\')">&#36;</button>'+
+    '<button class="triage-btn'+(tf==='validated'?' active-validated':'')+'" title="Validated" onclick="event.stopPropagation();setTriage(\''+p.id+'\',\'validated\')">&#10003;</button>'+
     '</div>';
-  return '<article class="product-card'+(checked?' checked':'')+'"'+triageAttr+' data-id="'+p.id+'"><div class="card-check">'+(checked?'&#10003;':'')+'</div><div class="card-img-wrap"><img src="'+p.image+'" alt="'+p.name+'" loading="lazy" onerror="imgError(this,\''+eName+'\')"></div><div class="card-body"><div class="card-name">'+p.name+'</div><div class="card-year">'+p.year+'</div><div class="card-prices"><div class="price-row"><span class="price-label">MSRP</span><span class="price-value price-original'+(p.est?' est':'')+'">'+fmtUSD.format(p.msrp)+'</span></div><div class="price-row"><span class="price-label">Today USD</span><span class="price-value price-adjusted">'+fmtUSD.format(adj)+'</span></div><div class="price-row"><span class="price-label">Today EUR</span><span class="price-value price-eur">'+fmtEUR.format(eur)+'</span></div></div>'+refLink+'</div>'+tBar+'</article>';
+  return '<article class="product-card'+(checked?' checked':'')+'"'+triageAttr+' data-id="'+p.id+'"><div class="card-check">'+(checked?'&#10003;':'')+'</div><div class="card-img-wrap"><img src="'+imgSrc+'" alt="'+p.name+'" loading="lazy" onerror="imgError(this,\''+eName+'\')"></div>'+imgMeta+imgActions+'<div class="card-body"><div class="card-name">'+p.name+'</div><div class="card-year">'+p.year+'</div><div class="card-prices"><div class="price-row"><span class="price-label">MSRP</span><span class="price-value price-original'+(p.est?' est':'')+'">'+fmtUSD.format(p.msrp)+'</span></div><div class="price-row"><span class="price-label">Today USD</span><span class="price-value price-adjusted">'+fmtUSD.format(adj)+'</span></div><div class="price-row"><span class="price-label">Today EUR</span><span class="price-value price-eur">'+fmtEUR.format(eur)+'</span></div></div>'+refLink+'</div>'+tBar+'</article>';
 }
 function render(){
   const items=getFiltered();
@@ -813,11 +915,23 @@ function updateStagingProgress(){
     '<span class="sp-stat"><span class="sp-dot green"></span>'+counts.validated+'</span>'+
     '<span class="sp-stat"><span class="sp-dot gray"></span>'+counts.unreviewed+'</span>';
 }
+function promptImageOverride(id){
+  const current=state.imageOverrides[id]||PRODUCT_MAP.get(id)?.image||'';
+  const url=prompt('Paste new Wikimedia Commons image URL for '+id+':\n\nCurrent: '+current);
+  if(url&&url.trim()){
+    state.imageOverrides[id]=url.trim();
+    // Auto-flag as wrong-image if not already flagged
+    if(!state.triageFlags[id]) state.triageFlags[id]='wrong-image';
+    render();
+    updateStagingProgress();
+  }
+}
+
 function exportTriage(){
   const total=PRODUCTS.length;
   const counts={remove:0,'wrong-image':0,'wrong-price':0,validated:0,unreviewed:0};
   PRODUCTS.forEach(p=>{const f=state.triageFlags[p.id];if(f) counts[f]++;else counts.unreviewed++;});
-  const data={timestamp:new Date().toISOString(),total:total,validated:counts.validated,'wrong-image':counts['wrong-image'],'wrong-price':counts['wrong-price'],remove:counts.remove,unreviewed:counts.unreviewed,flags:state.triageFlags};
+  const data={timestamp:new Date().toISOString(),total:total,validated:counts.validated,'wrong-image':counts['wrong-image'],'wrong-price':counts['wrong-price'],remove:counts.remove,unreviewed:counts.unreviewed,flags:state.triageFlags,imageOverrides:state.imageOverrides,mismatchScores:state.mismatchScores};
   const blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'});
   const url=URL.createObjectURL(blob);
   const a=document.createElement('a');a.href=url;a.download='apple-50-years-triage.json';
@@ -826,7 +940,12 @@ function exportTriage(){
 function importTriage(){
   const input=document.createElement('input');input.type='file';input.accept='.json';
   input.onchange=e=>{const f=e.target.files[0];if(!f)return;const r=new FileReader();
-    r.onload=ev=>{try{const d=JSON.parse(ev.target.result);if(d.flags){state.triageFlags=d.flags;render();updateStagingProgress();}}catch(err){alert('Invalid triage JSON');}};
+    r.onload=ev=>{try{const d=JSON.parse(ev.target.result);
+      if(d.flags){state.triageFlags=d.flags;}
+      if(d.imageOverrides){state.imageOverrides=d.imageOverrides;}
+      if(d.mismatchScores){state.mismatchScores=d.mismatchScores;}
+      render();updateStagingProgress();
+    }catch(err){alert('Invalid triage JSON');}};
     r.readAsText(f);};
   input.click();
 }
