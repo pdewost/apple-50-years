@@ -225,10 +225,73 @@ main { max-width: 1400px; margin: 0 auto; padding: 24px; }
 
 @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
 .section-group { animation: fadeIn 0.3s ease both; }
+
+/* STAGING MODE */
+.staging-banner {
+  background: linear-gradient(135deg, #1C1C1E, #2C2C2E);
+  color: #F5F5F7; padding: 10px 24px;
+  font-size: 0.8rem; text-align: center;
+  display: none; position: sticky; top: 0; z-index: 200;
+  border-bottom: 2px solid #FF9F0A;
+}
+body.staging .staging-banner { display: block; }
+body.staging .site-header { top: 42px; }
+.staging-progress { display: flex; gap: 16px; justify-content: center; align-items: center; flex-wrap: wrap; }
+.staging-progress .sp-bar { width: 200px; height: 6px; background: #38383A; border-radius: 3px; overflow: hidden; }
+.staging-progress .sp-fill { height: 100%; background: var(--green); border-radius: 3px; transition: width 0.3s; }
+.staging-progress .sp-stat { display: inline-flex; align-items: center; gap: 3px; }
+.sp-dot { width: 8px; height: 8px; border-radius: 50%; display: inline-block; }
+.sp-dot.red { background: #FF453A; } .sp-dot.orange { background: #FF9F0A; }
+.sp-dot.yellow { background: #FFD60A; } .sp-dot.green { background: #30D158; }
+.sp-dot.gray { background: #636366; }
+
+.triage-bar {
+  display: none; padding: 6px 8px;
+  gap: 4px; justify-content: center; border-top: 1px solid var(--border-light);
+  background: var(--bg-card);
+}
+body.staging .triage-bar { display: flex; }
+.triage-btn {
+  width: 32px; height: 28px; border: 1px solid var(--border); border-radius: 6px;
+  background: var(--bg-secondary); cursor: pointer; font-size: 13px;
+  display: flex; align-items: center; justify-content: center;
+  transition: all var(--transition-fast); color: var(--text-tertiary);
+}
+.triage-btn:hover { border-color: var(--text-secondary); }
+.triage-btn.active-remove { background: #FF453A; color: #fff; border-color: #FF453A; }
+.triage-btn.active-wrong-image { background: #FF9F0A; color: #fff; border-color: #FF9F0A; }
+.triage-btn.active-wrong-price { background: #FFD60A; color: #1D1D1F; border-color: #FFD60A; }
+.triage-btn.active-validated { background: #30D158; color: #fff; border-color: #30D158; }
+
+body.staging .product-card[data-triage="remove"] { opacity: 0.4; }
+body.staging .product-card[data-triage="remove"] .card-name { text-decoration: line-through; color: #FF453A; }
+body.staging .product-card[data-triage="wrong-image"] .card-img-wrap { border: 3px solid #FF9F0A; }
+body.staging .product-card[data-triage="wrong-price"] .price-original { background: #FFD60A33; border-radius: 4px; padding: 0 4px; }
+body.staging .product-card[data-triage="validated"] { border-color: #30D158; }
+body.staging .product-card[data-triage="validated"]::after {
+  content: ''; position: absolute; top: 8px; left: 8px;
+  width: 20px; height: 20px; border-radius: 50%;
+  background: #30D158; display: flex; align-items: center; justify-content: center;
+}
+
+.card-ref { font-size: 0.7rem; margin-top: 4px; }
+.card-ref a { color: var(--accent); text-decoration: none; }
+.card-ref a:hover { text-decoration: underline; }
+
+.staging-controls { display: none; }
+body.staging .staging-controls { display: inline-flex; }
+.staging-filter-bar {
+  display: none; padding: 8px 24px; gap: 8px; justify-content: center;
+  max-width: 1400px; margin: 0 auto;
+}
+body.staging .staging-filter-bar { display: flex; flex-wrap: wrap; }
 </style>
 </head>
 <body>
 
+<div class="staging-banner" id="stagingBanner">
+  <div class="staging-progress" id="stagingProgress"></div>
+</div>
 <header class="site-header">
   <div class="header-top">
     <div class="site-title"><span>&#63743;</span> 50 Years (1976–2026)</div>
@@ -241,9 +304,21 @@ main { max-width: 1400px; margin: 0 auto; padding: 24px; }
       <button class="btn" id="btnTheme" onclick="toggleTheme()" title="Toggle dark mode">&#9789;</button>
       <button class="btn" onclick="exportChecked()" title="Export checked list">Export</button>
       <button class="btn" onclick="clearAll()" title="Clear all selections">Clear</button>
+      <span class="staging-controls">
+        <button class="btn" onclick="exportTriage()" title="Export triage flags">Triage JSON</button>
+        <button class="btn" onclick="importTriage()" title="Import triage flags">Import</button>
+      </span>
     </div>
   </div>
   <div class="api-status" id="apiStatus"></div>
+  <div class="staging-filter-bar">
+    <button class="btn" onclick="setTriageFilter('all')">All</button>
+    <button class="btn" onclick="setTriageFilter('unreviewed')"><span class="sp-dot gray"></span> Unreviewed</button>
+    <button class="btn" onclick="setTriageFilter('remove')"><span class="sp-dot red"></span> Remove</button>
+    <button class="btn" onclick="setTriageFilter('wrong-image')"><span class="sp-dot orange"></span> Wrong Image</button>
+    <button class="btn" onclick="setTriageFilter('wrong-price')"><span class="sp-dot yellow"></span> Wrong Price</button>
+    <button class="btn" onclick="setTriageFilter('validated')"><span class="sp-dot green"></span> Validated</button>
+  </div>
 </header>
 
 <main id="app"></main>
@@ -418,12 +493,6 @@ const PRODUCTS=[
 {id:"studio-m2",name:"Mac Studio (M2 Ultra, 2023)",year:2023,msrp:3999,est:false,category:"mac-studio",image:"https://upload.wikimedia.org/wikipedia/commons/thumb/5/53/Back_of_a_Mac_Studio.jpg/500px-Back_of_a_Mac_Studio.jpg"},
 {id:"studio-m4",name:"Mac Studio (M4 Ultra, 2025)",year:2025,msrp:3999,est:true,category:"mac-studio",image:"https://upload.wikimedia.org/wikipedia/commons/thumb/2/29/Apple_Studio_Display_and_Mac_Studio_with_Peripherals.jpg/500px-Apple_Studio_Display_and_Mac_Studio_with_Peripherals.jpg"},
 
-// Xserve
-{id:"xserve-02",name:"Xserve (2002)",year:2002,msrp:2999,est:false,category:"xserve",image:"https://upload.wikimedia.org/wikipedia/commons/thumb/e/e9/Xserve_cluster_NASA.jpg/500px-Xserve_cluster_NASA.jpg"},
-{id:"xserve-g5",name:"Xserve G5 (2004)",year:2004,msrp:2999,est:false,category:"xserve",image:"https://upload.wikimedia.org/wikipedia/commons/thumb/e/e9/Xserve_cluster_NASA.jpg/500px-Xserve_cluster_NASA.jpg"},
-{id:"xserve-intel",name:"Xserve (Intel, 2006)",year:2006,msrp:2999,est:false,category:"xserve",image:"https://upload.wikimedia.org/wikipedia/commons/thumb/e/e9/Xserve_cluster_NASA.jpg/500px-Xserve_cluster_NASA.jpg"},
-{id:"xserve-09",name:"Xserve (2009)",year:2009,msrp:2999,est:false,category:"xserve",image:"https://upload.wikimedia.org/wikipedia/commons/thumb/e/e9/Xserve_cluster_NASA.jpg/500px-Xserve_cluster_NASA.jpg"},
-
 // QuickTake
 {id:"qt-100",name:"QuickTake 100",year:1994,msrp:749,est:false,category:"quicktake",image:"https://upload.wikimedia.org/wikipedia/commons/thumb/4/45/Apple_QuickTake_100_camera.jpg/500px-Apple_QuickTake_100_camera.jpg"},
 {id:"qt-150",name:"QuickTake 150",year:1995,msrp:699,est:true,category:"quicktake",image:"https://upload.wikimedia.org/wikipedia/commons/c/ca/Quicktake_150.jpg"},
@@ -454,15 +523,15 @@ const PRODUCTS=[
 
 // iPhone
 {id:"iphone-1",name:"iPhone (Original)",year:2007,msrp:499,est:false,category:"iphone",image:"https://upload.wikimedia.org/wikipedia/commons/thumb/d/d0/Original_iPhone_docked.jpg/500px-Original_iPhone_docked.jpg"},
-{id:"iphone-3g",name:"iPhone 3G",year:2008,msrp:199,est:false,category:"iphone",image:"https://upload.wikimedia.org/wikipedia/commons/thumb/6/61/IPhone_3GS.jpg/500px-IPhone_3GS.jpg"},
-{id:"iphone-3gs",name:"iPhone 3GS",year:2009,msrp:199,est:false,category:"iphone",image:"https://upload.wikimedia.org/wikipedia/commons/thumb/6/6a/IPhone_3GS_-_bottom_view-0393.jpg/500px-IPhone_3GS_-_bottom_view-0393.jpg"},
-{id:"iphone-4",name:"iPhone 4",year:2010,msrp:199,est:false,category:"iphone",image:"https://upload.wikimedia.org/wikipedia/commons/thumb/5/59/IPhone_4_Mock_No_Shadow_PSD.png/500px-IPhone_4_Mock_No_Shadow_PSD.png"},
-{id:"iphone-4s",name:"iPhone 4S",year:2011,msrp:199,est:false,category:"iphone",image:"https://upload.wikimedia.org/wikipedia/commons/thumb/d/d2/IPhone_4S_No_shadow.png/500px-IPhone_4S_No_shadow.png"},
-{id:"iphone-5",name:"iPhone 5",year:2012,msrp:199,est:false,category:"iphone",image:"https://upload.wikimedia.org/wikipedia/commons/thumb/f/fa/IPhone_5.png/500px-IPhone_5.png"},
-{id:"iphone-5c",name:"iPhone 5c",year:2013,msrp:99,est:false,category:"iphone",image:"https://upload.wikimedia.org/wikipedia/commons/thumb/f/fa/IPhone_5.png/500px-IPhone_5.png"},
-{id:"iphone-5s",name:"iPhone 5s",year:2013,msrp:199,est:false,category:"iphone",image:"https://upload.wikimedia.org/wikipedia/commons/thumb/0/0e/IPhone_5s_Black.png/500px-IPhone_5s_Black.png"},
-{id:"iphone-6",name:"iPhone 6",year:2014,msrp:199,est:false,category:"iphone",image:"https://upload.wikimedia.org/wikipedia/commons/thumb/a/ae/IPhone_6_display_removed_1.jpg/500px-IPhone_6_display_removed_1.jpg"},
-{id:"iphone-6p",name:"iPhone 6 Plus",year:2014,msrp:299,est:false,category:"iphone",image:"https://upload.wikimedia.org/wikipedia/commons/thumb/e/ed/OnePlus_One_vs_LG_G3_vs_Apple_iPhone_6_Plus_vs_Samsung_Galaxy_Note_4_%2816299792506%29.jpg/500px-OnePlus_One_vs_LG_G3_vs_Apple_iPhone_6_Plus_vs_Samsung_Galaxy_Note_4_%2816299792506%29.jpg"},
+{id:"iphone-3g",name:"iPhone 3G",year:2008,msrp:599,est:false,category:"iphone",image:"https://upload.wikimedia.org/wikipedia/commons/thumb/6/61/IPhone_3GS.jpg/500px-IPhone_3GS.jpg"},
+{id:"iphone-3gs",name:"iPhone 3GS",year:2009,msrp:599,est:false,category:"iphone",image:"https://upload.wikimedia.org/wikipedia/commons/thumb/6/6a/IPhone_3GS_-_bottom_view-0393.jpg/500px-IPhone_3GS_-_bottom_view-0393.jpg"},
+{id:"iphone-4",name:"iPhone 4",year:2010,msrp:599,est:false,category:"iphone",image:"https://upload.wikimedia.org/wikipedia/commons/thumb/5/59/IPhone_4_Mock_No_Shadow_PSD.png/500px-IPhone_4_Mock_No_Shadow_PSD.png"},
+{id:"iphone-4s",name:"iPhone 4S",year:2011,msrp:649,est:false,category:"iphone",image:"https://upload.wikimedia.org/wikipedia/commons/thumb/d/d2/IPhone_4S_No_shadow.png/500px-IPhone_4S_No_shadow.png"},
+{id:"iphone-5",name:"iPhone 5",year:2012,msrp:649,est:false,category:"iphone",image:"https://upload.wikimedia.org/wikipedia/commons/thumb/f/fa/IPhone_5.png/500px-IPhone_5.png"},
+{id:"iphone-5c",name:"iPhone 5c",year:2013,msrp:549,est:false,category:"iphone",image:"https://upload.wikimedia.org/wikipedia/commons/thumb/f/fa/IPhone_5.png/500px-IPhone_5.png"},
+{id:"iphone-5s",name:"iPhone 5s",year:2013,msrp:649,est:false,category:"iphone",image:"https://upload.wikimedia.org/wikipedia/commons/thumb/0/0e/IPhone_5s_Black.png/500px-IPhone_5s_Black.png"},
+{id:"iphone-6",name:"iPhone 6",year:2014,msrp:649,est:false,category:"iphone",image:"https://upload.wikimedia.org/wikipedia/commons/thumb/a/ae/IPhone_6_display_removed_1.jpg/500px-IPhone_6_display_removed_1.jpg"},
+{id:"iphone-6p",name:"iPhone 6 Plus",year:2014,msrp:749,est:false,category:"iphone",image:"https://upload.wikimedia.org/wikipedia/commons/thumb/e/ed/OnePlus_One_vs_LG_G3_vs_Apple_iPhone_6_Plus_vs_Samsung_Galaxy_Note_4_%2816299792506%29.jpg/500px-OnePlus_One_vs_LG_G3_vs_Apple_iPhone_6_Plus_vs_Samsung_Galaxy_Note_4_%2816299792506%29.jpg"},
 {id:"iphone-se1",name:"iPhone SE (1st gen)",year:2016,msrp:399,est:false,category:"iphone",image:"https://upload.wikimedia.org/wikipedia/commons/thumb/6/6b/IPhone_SE_rose_gold_rear.png/500px-IPhone_SE_rose_gold_rear.png"},
 {id:"iphone-7",name:"iPhone 7",year:2016,msrp:649,est:false,category:"iphone",image:"https://upload.wikimedia.org/wikipedia/commons/thumb/9/98/IPhone_6s_-_rear_view-92671.jpg/500px-IPhone_6s_-_rear_view-92671.jpg"},
 {id:"iphone-8",name:"iPhone 8",year:2017,msrp:699,est:false,category:"iphone",image:"https://upload.wikimedia.org/wikipedia/commons/thumb/c/c4/IPhones_6%2C_7%2C_8%2C_SE2_black_-_bottom_view.jpg/500px-IPhones_6%2C_7%2C_8%2C_SE2_black_-_bottom_view.jpg"},
@@ -550,14 +619,15 @@ const PRODUCTS=[
 ];
 
 // ── CATEGORIES ──
-const CATEGORIES={"pre-mac":{label:"Pre-Mac Era",order:0},"compact-mac":{label:"Compact Macs",order:1},"mac-ii":{label:"Mac II Family",order:2},"quadra-centris":{label:"Quadra & Centris",order:3},"performa":{label:"Performa",order:4},"powerbook":{label:"PowerBook & Duo",order:5},"ibook":{label:"iBook",order:6},"power-mac":{label:"Power Mac",order:7},"imac":{label:"iMac",order:8},"macbook":{label:"MacBook Family",order:9},"mac-mini":{label:"Mac mini",order:10},"mac-pro":{label:"Mac Pro",order:11},"mac-studio":{label:"Mac Studio",order:12},"xserve":{label:"Xserve",order:13},"quicktake":{label:"QuickTake",order:14},"newton":{label:"Newton",order:15},"ipod":{label:"iPod",order:16},"iphone":{label:"iPhone",order:17},"ipad":{label:"iPad",order:18},"apple-watch":{label:"Apple Watch",order:19},"airpods":{label:"AirPods",order:20},"homepod":{label:"HomePod",order:21},"apple-tv":{label:"Apple TV",order:22},"vision-pro":{label:"Vision Pro",order:23}};
+const CATEGORIES={"pre-mac":{label:"Pre-Mac Era",order:0},"compact-mac":{label:"Compact Macs",order:1},"mac-ii":{label:"Mac II Family",order:2},"quadra-centris":{label:"Quadra & Centris",order:3},"performa":{label:"Performa",order:4},"powerbook":{label:"PowerBook & Duo",order:5},"ibook":{label:"iBook",order:6},"power-mac":{label:"Power Mac",order:7},"imac":{label:"iMac",order:8},"macbook":{label:"MacBook Family",order:9},"mac-mini":{label:"Mac mini",order:10},"mac-pro":{label:"Mac Pro",order:11},"mac-studio":{label:"Mac Studio",order:12},"quicktake":{label:"QuickTake",order:14},"newton":{label:"Newton",order:15},"ipod":{label:"iPod",order:16},"iphone":{label:"iPhone",order:17},"ipad":{label:"iPad",order:18},"apple-watch":{label:"Apple Watch",order:19},"airpods":{label:"AirPods",order:20},"homepod":{label:"HomePod",order:21},"apple-tv":{label:"Apple TV",order:22},"vision-pro":{label:"Vision Pro",order:23}};
 
 // ── CPI FALLBACK (BLS CPI-U Annual Averages) ──
 const CPI_FALLBACK={1976:56.9,1977:60.6,1978:65.2,1979:72.6,1980:82.4,1981:90.9,1982:96.5,1983:99.6,1984:103.9,1985:107.6,1986:109.6,1987:113.6,1988:118.3,1989:124.0,1990:130.7,1991:136.2,1992:140.3,1993:144.5,1994:148.2,1995:152.4,1996:156.9,1997:160.5,1998:163.0,1999:166.6,2000:172.2,2001:177.1,2002:179.9,2003:184.0,2004:188.9,2005:195.3,2006:201.6,2007:207.3,2008:215.3,2009:214.5,2010:218.1,2011:224.9,2012:229.6,2013:233.0,2014:236.7,2015:237.0,2016:240.0,2017:245.1,2018:251.1,2019:255.7,2020:258.8,2021:271.0,2022:292.7,2023:304.7,2024:315.6,2025:323.0,2026:330.0};
 
 // ── STATE ──
 const PRODUCT_MAP=new Map(PRODUCTS.map(p=>[p.id,p]));
-const state={checkedIds:new Set(),viewMode:"category",searchQuery:"",theme:"light",cpiData:Object.assign({},CPI_FALLBACK),eurRate:0.92,apiStatus:{cpi:"fallback",eur:"fallback"}};
+const STAGING=new URLSearchParams(window.location.search).has('staging');
+const state={checkedIds:new Set(),viewMode:"category",searchQuery:"",theme:"light",cpiData:Object.assign({},CPI_FALLBACK),eurRate:0.92,apiStatus:{cpi:"fallback",eur:"fallback"},triageFlags:{},triageFilter:"all"};
 
 // ── FORMATTING ──
 const fmtUSD=new Intl.NumberFormat('en-US',{style:'currency',currency:'USD',maximumFractionDigits:0});
@@ -583,9 +653,15 @@ function imgError(el,name){
 
 // ── RENDER ──
 function getFiltered(){
+  let list=PRODUCTS;
+  // Triage filter (staging mode only)
+  if(STAGING&&state.triageFilter!=='all'){
+    if(state.triageFilter==='unreviewed') list=list.filter(p=>!state.triageFlags[p.id]);
+    else list=list.filter(p=>state.triageFlags[p.id]===state.triageFilter);
+  }
   const q=state.searchQuery.toLowerCase().trim();
-  if(!q) return PRODUCTS;
-  return PRODUCTS.filter(p=>p.name.toLowerCase().includes(q)||(CATEGORIES[p.category]?.label||'').toLowerCase().includes(q)||String(p.year).includes(q));
+  if(!q) return list;
+  return list.filter(p=>p.name.toLowerCase().includes(q)||(CATEGORIES[p.category]?.label||'').toLowerCase().includes(q)||String(p.year).includes(q));
 }
 function badge(items){
   const total=items.length;
@@ -597,7 +673,17 @@ function cardHTML(p){
   const adj=adjustForInflation(p.msrp,p.year);
   const eur=toEUR(adj);
   const eName=p.name.replace(/'/g,"\\'").replace(/"/g,'&quot;');
-  return '<article class="product-card'+(checked?' checked':'')+'" data-id="'+p.id+'"><div class="card-check">'+(checked?'&#10003;':'')+'</div><div class="card-img-wrap"><img src="'+p.image+'" alt="'+p.name+'" loading="lazy" onerror="imgError(this,\''+eName+'\')"></div><div class="card-body"><div class="card-name">'+p.name+'</div><div class="card-year">'+p.year+'</div><div class="card-prices"><div class="price-row"><span class="price-label">MSRP</span><span class="price-value price-original'+(p.est?' est':'')+'">'+fmtUSD.format(p.msrp)+'</span></div><div class="price-row"><span class="price-label">Today USD</span><span class="price-value price-adjusted">'+fmtUSD.format(adj)+'</span></div><div class="price-row"><span class="price-label">Today EUR</span><span class="price-value price-eur">'+fmtEUR.format(eur)+'</span></div></div></div></article>';
+  const tf=state.triageFlags[p.id]||'';
+  const triageAttr=tf?' data-triage="'+tf+'"':'';
+  const refLink=p.url?'<div class="card-ref"><a href="'+p.url+'" target="_blank" rel="noopener" onclick="event.stopPropagation()">Specs &rarr;</a></div>':'';
+  // Triage toolbar buttons
+  const tBar='<div class="triage-bar">'+
+    '<button class="triage-btn'+(tf==='remove'?' active-remove':'')+'" data-triage-action="remove" title="Remove" onclick="event.stopPropagation();setTriage(\''+p.id+'\',\'remove\')">&#10005;</button>'+
+    '<button class="triage-btn'+(tf==='wrong-image'?' active-wrong-image':'')+'" data-triage-action="wrong-image" title="Wrong image" onclick="event.stopPropagation();setTriage(\''+p.id+'\',\'wrong-image\')">&#128248;</button>'+
+    '<button class="triage-btn'+(tf==='wrong-price'?' active-wrong-price':'')+'" data-triage-action="wrong-price" title="Wrong price" onclick="event.stopPropagation();setTriage(\''+p.id+'\',\'wrong-price\')">&#36;</button>'+
+    '<button class="triage-btn'+(tf==='validated'?' active-validated':'')+'" data-triage-action="validated" title="Validated" onclick="event.stopPropagation();setTriage(\''+p.id+'\',\'validated\')">&#10003;</button>'+
+    '</div>';
+  return '<article class="product-card'+(checked?' checked':'')+'"'+triageAttr+' data-id="'+p.id+'"><div class="card-check">'+(checked?'&#10003;':'')+'</div><div class="card-img-wrap"><img src="'+p.image+'" alt="'+p.name+'" loading="lazy" onerror="imgError(this,\''+eName+'\')"></div><div class="card-body"><div class="card-name">'+p.name+'</div><div class="card-year">'+p.year+'</div><div class="card-prices"><div class="price-row"><span class="price-label">MSRP</span><span class="price-value price-original'+(p.est?' est':'')+'">'+fmtUSD.format(p.msrp)+'</span></div><div class="price-row"><span class="price-label">Today USD</span><span class="price-value price-adjusted">'+fmtUSD.format(adj)+'</span></div><div class="price-row"><span class="price-label">Today EUR</span><span class="price-value price-eur">'+fmtEUR.format(eur)+'</span></div></div>'+refLink+'</div>'+tBar+'</article>';
 }
 function render(){
   const items=getFiltered();
@@ -702,8 +788,52 @@ function updateApiStatus(){
   el.innerHTML='<span class="dot '+(cOk?'dot-ok':'dot-warn')+'"></span>CPI: '+(cOk?'Live':'Fallback')+' &nbsp; <span class="dot '+(eOk?'dot-ok':'dot-warn')+'"></span>EUR/USD: '+(eOk?state.eurRate.toFixed(4):'Fallback ('+state.eurRate+')');
 }
 
+// ── STAGING / TRIAGE ──
+function setTriage(id,flag){
+  if(state.triageFlags[id]===flag) delete state.triageFlags[id]; // toggle off
+  else state.triageFlags[id]=flag;
+  render();
+  updateStagingProgress();
+}
+function setTriageFilter(f){state.triageFilter=f;render();}
+function updateStagingProgress(){
+  if(!STAGING) return;
+  const total=PRODUCTS.length;
+  const counts={remove:0,'wrong-image':0,'wrong-price':0,validated:0,unreviewed:0};
+  PRODUCTS.forEach(p=>{const f=state.triageFlags[p.id];if(f) counts[f]++;else counts.unreviewed++;});
+  const reviewed=total-counts.unreviewed;
+  const pct=Math.round(reviewed/total*100);
+  document.getElementById('stagingProgress').innerHTML=
+    '<span>STAGING MODE</span>'+
+    '<div class="sp-bar"><div class="sp-fill" style="width:'+pct+'%"></div></div>'+
+    '<span>'+reviewed+'/'+total+' ('+pct+'%)</span>'+
+    '<span class="sp-stat"><span class="sp-dot red"></span>'+counts.remove+'</span>'+
+    '<span class="sp-stat"><span class="sp-dot orange"></span>'+counts['wrong-image']+'</span>'+
+    '<span class="sp-stat"><span class="sp-dot yellow"></span>'+counts['wrong-price']+'</span>'+
+    '<span class="sp-stat"><span class="sp-dot green"></span>'+counts.validated+'</span>'+
+    '<span class="sp-stat"><span class="sp-dot gray"></span>'+counts.unreviewed+'</span>';
+}
+function exportTriage(){
+  const total=PRODUCTS.length;
+  const counts={remove:0,'wrong-image':0,'wrong-price':0,validated:0,unreviewed:0};
+  PRODUCTS.forEach(p=>{const f=state.triageFlags[p.id];if(f) counts[f]++;else counts.unreviewed++;});
+  const data={timestamp:new Date().toISOString(),total:total,validated:counts.validated,'wrong-image':counts['wrong-image'],'wrong-price':counts['wrong-price'],remove:counts.remove,unreviewed:counts.unreviewed,flags:state.triageFlags};
+  const blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'});
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement('a');a.href=url;a.download='apple-50-years-triage.json';
+  document.body.appendChild(a);a.click();document.body.removeChild(a);URL.revokeObjectURL(url);
+}
+function importTriage(){
+  const input=document.createElement('input');input.type='file';input.accept='.json';
+  input.onchange=e=>{const f=e.target.files[0];if(!f)return;const r=new FileReader();
+    r.onload=ev=>{try{const d=JSON.parse(ev.target.result);if(d.flags){state.triageFlags=d.flags;render();updateStagingProgress();}}catch(err){alert('Invalid triage JSON');}};
+    r.readAsText(f);};
+  input.click();
+}
+
 // ── INIT ──
-render();updateApiStatus();
+if(STAGING) document.body.classList.add('staging');
+render();updateApiStatus();updateStagingProgress();
 Promise.allSettled([fetchCPI(),fetchEUR()]).then(()=>{render();updateApiStatus();});
 </script>
 </body>
