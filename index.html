@@ -1,0 +1,710 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Apple 50 Years — Interactive Checklist (1976–2026)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Outfit:wght@500;600;700&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --bg-primary: #F5F5F7;
+  --bg-secondary: #FFFFFF;
+  --bg-card: #FFFFFF;
+  --bg-card-hover: #FAFAFA;
+  --text-primary: #1D1D1F;
+  --text-secondary: #6E6E73;
+  --text-tertiary: #86868B;
+  --accent: #0071E3;
+  --accent-hover: #0077ED;
+  --accent-light: rgba(0,113,227,0.08);
+  --green: #34C759;
+  --border: #D2D2D7;
+  --border-light: #E8E8ED;
+  --shadow-sm: 0 1px 3px rgba(0,0,0,0.06);
+  --shadow-md: 0 4px 16px rgba(0,0,0,0.08);
+  --shadow-lg: 0 8px 32px rgba(0,0,0,0.12);
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 16px;
+  --font-body: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --font-display: 'Outfit', var(--font-body);
+  --transition-fast: 150ms ease;
+  --transition-medium: 300ms ease;
+  --footer-bg: rgba(255,255,255,0.82);
+  --header-bg: rgba(245,245,247,0.85);
+  --badge-bg: rgba(0,113,227,0.08);
+  --badge-text: #0071E3;
+  --checked-bg: rgba(52,199,89,0.08);
+  --checked-border: rgba(52,199,89,0.3);
+}
+
+[data-theme="dark"] {
+  --bg-primary: #000000;
+  --bg-secondary: #1C1C1E;
+  --bg-card: #1C1C1E;
+  --bg-card-hover: #2C2C2E;
+  --text-primary: #F5F5F7;
+  --text-secondary: #A1A1A6;
+  --text-tertiary: #6E6E73;
+  --accent: #2997FF;
+  --accent-hover: #40A9FF;
+  --accent-light: rgba(41,151,255,0.12);
+  --green: #30D158;
+  --border: #38383A;
+  --border-light: #2C2C2E;
+  --shadow-sm: 0 1px 3px rgba(0,0,0,0.2);
+  --shadow-md: 0 4px 16px rgba(0,0,0,0.3);
+  --shadow-lg: 0 8px 32px rgba(0,0,0,0.4);
+  --footer-bg: rgba(28,28,30,0.85);
+  --header-bg: rgba(0,0,0,0.85);
+  --badge-bg: rgba(41,151,255,0.12);
+  --badge-text: #2997FF;
+  --checked-bg: rgba(48,209,88,0.1);
+  --checked-border: rgba(48,209,88,0.3);
+}
+
+html { scroll-behavior: smooth; }
+body {
+  font-family: var(--font-body);
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  transition: background var(--transition-medium), color var(--transition-medium);
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  padding-bottom: 80px;
+}
+
+.site-header {
+  position: sticky; top: 0; z-index: 100;
+  background: var(--header-bg);
+  backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+  border-bottom: 1px solid var(--border-light);
+  padding: 12px 24px;
+  transition: background var(--transition-medium);
+}
+.header-top {
+  display: flex; align-items: center; justify-content: space-between;
+  gap: 16px; flex-wrap: wrap; max-width: 1400px; margin: 0 auto;
+}
+.site-title {
+  font-family: var(--font-display); font-weight: 700; font-size: 1.3rem;
+  display: flex; align-items: center; gap: 8px; white-space: nowrap;
+}
+.header-controls {
+  display: flex; align-items: center; gap: 8px; flex-wrap: wrap;
+}
+.search-box {
+  padding: 8px 14px; border-radius: var(--radius-md);
+  border: 1px solid var(--border); background: var(--bg-secondary);
+  color: var(--text-primary); font-size: 0.875rem; font-family: var(--font-body);
+  width: 220px; outline: none; transition: border var(--transition-fast), box-shadow var(--transition-fast);
+}
+.search-box:focus { border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-light); }
+.search-box::placeholder { color: var(--text-tertiary); }
+
+.btn {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 7px 14px; border-radius: var(--radius-md);
+  border: 1px solid var(--border); background: var(--bg-secondary);
+  color: var(--text-primary); font-size: 0.8rem; font-family: var(--font-body);
+  cursor: pointer; transition: all var(--transition-fast); white-space: nowrap; font-weight: 500;
+}
+.btn:hover { background: var(--bg-card-hover); border-color: var(--text-tertiary); }
+.btn.active { background: var(--accent); color: #fff; border-color: var(--accent); }
+.btn.active:hover { background: var(--accent-hover); }
+
+.nav-toggle { display: flex; border-radius: var(--radius-md); overflow: hidden; }
+.nav-toggle .btn { border-radius: 0; border-right-width: 0; }
+.nav-toggle .btn:first-child { border-radius: var(--radius-md) 0 0 var(--radius-md); }
+.nav-toggle .btn:last-child { border-radius: 0 var(--radius-md) var(--radius-md) 0; border-right-width: 1px; }
+
+.api-status {
+  font-size: 0.7rem; color: var(--text-tertiary); padding: 4px 0;
+  text-align: center; max-width: 1400px; margin: 4px auto 0;
+}
+.dot { display: inline-block; width: 6px; height: 6px; border-radius: 50%; margin-right: 3px; vertical-align: middle; }
+.dot-ok { background: var(--green); }
+.dot-warn { background: #FF9F0A; }
+
+main { max-width: 1400px; margin: 0 auto; padding: 24px; }
+
+.section-group { margin-bottom: 32px; }
+.section-header {
+  display: flex; align-items: baseline; gap: 12px; margin-bottom: 16px;
+  padding-bottom: 8px; border-bottom: 2px solid var(--border-light);
+}
+.section-title { font-family: var(--font-display); font-weight: 600; font-size: 1.25rem; }
+.section-badge {
+  font-size: 0.75rem; color: var(--badge-text); background: var(--badge-bg);
+  padding: 3px 10px; border-radius: 20px; font-weight: 500;
+}
+
+.card-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 16px;
+}
+
+.product-card {
+  background: var(--bg-card); border: 1px solid var(--border-light);
+  border-radius: var(--radius-lg); overflow: hidden;
+  transition: all var(--transition-fast); cursor: pointer; position: relative;
+}
+.product-card:hover { transform: translateY(-2px); box-shadow: var(--shadow-md); border-color: var(--border); }
+.product-card.checked { background: var(--checked-bg); border-color: var(--checked-border); }
+
+.card-img-wrap {
+  width: 100%; aspect-ratio: 4/3; overflow: hidden;
+  background: var(--bg-primary); display: flex; align-items: center; justify-content: center;
+}
+.card-img-wrap img {
+  width: 100%; height: 100%; object-fit: contain; padding: 12px;
+  transition: transform var(--transition-medium);
+}
+.product-card:hover .card-img-wrap img { transform: scale(1.03); }
+.fallback-svg { width: 80%; height: 80%; }
+
+.card-body { padding: 12px 14px 14px; }
+.card-name { font-family: var(--font-display); font-weight: 600; font-size: 0.95rem; margin-bottom: 2px; line-height: 1.3; }
+.card-year { font-size: 0.75rem; color: var(--text-tertiary); margin-bottom: 8px; }
+.card-prices { display: flex; flex-direction: column; gap: 2px; font-size: 0.8rem; }
+.price-row { display: flex; justify-content: space-between; }
+.price-label { color: var(--text-tertiary); }
+.price-value { font-weight: 500; font-variant-numeric: tabular-nums; }
+.price-value.est::after { content: " est."; font-weight: 400; font-size: 0.65rem; color: var(--text-tertiary); }
+.price-original { color: var(--text-secondary); }
+.price-adjusted { color: var(--text-primary); }
+.price-eur { color: var(--accent); }
+
+.card-check {
+  position: absolute; top: 10px; right: 10px;
+  width: 28px; height: 28px; border-radius: 50%;
+  background: var(--bg-secondary); border: 2px solid var(--border);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 14px; color: transparent; transition: all var(--transition-fast);
+  box-shadow: var(--shadow-sm);
+}
+.product-card.checked .card-check { background: var(--green); border-color: var(--green); color: #fff; }
+
+.site-footer {
+  position: fixed; bottom: 0; left: 0; right: 0; z-index: 100;
+  background: var(--footer-bg);
+  backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+  border-top: 1px solid var(--border-light);
+  padding: 10px 24px;
+  transition: background var(--transition-medium);
+}
+.footer-inner {
+  display: flex; align-items: center; justify-content: space-between;
+  gap: 16px; flex-wrap: wrap; max-width: 1400px; margin: 0 auto; font-size: 0.82rem;
+}
+.footer-stat { display: flex; flex-direction: column; align-items: center; gap: 1px; }
+.footer-label { color: var(--text-tertiary); font-size: 0.65rem; text-transform: uppercase; letter-spacing: 0.05em; }
+.footer-value { font-weight: 600; font-variant-numeric: tabular-nums; }
+.footer-value.eur { color: var(--accent); }
+
+.empty-state { text-align: center; padding: 80px 24px; color: var(--text-tertiary); font-size: 1.1rem; }
+
+@media (max-width: 768px) {
+  .site-header { padding: 10px 16px; }
+  .header-top { gap: 8px; }
+  .search-box { width: 100%; order: 10; }
+  main { padding: 16px; }
+  .card-grid { grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 12px; }
+  .footer-inner { font-size: 0.75rem; gap: 8px; justify-content: center; }
+  .site-title { font-size: 1.1rem; }
+}
+@media (max-width: 480px) {
+  .card-grid { grid-template-columns: 1fr; }
+  .header-controls { width: 100%; justify-content: space-between; }
+}
+
+@keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+.section-group { animation: fadeIn 0.3s ease both; }
+</style>
+</head>
+<body>
+
+<header class="site-header">
+  <div class="header-top">
+    <div class="site-title"><span>&#63743;</span> 50 Years (1976–2026)</div>
+    <div class="header-controls">
+      <div class="nav-toggle">
+        <button class="btn active" id="btnCategory" onclick="setViewMode('category')">By Product</button>
+        <button class="btn" id="btnYear" onclick="setViewMode('year')">By Year</button>
+      </div>
+      <input type="text" class="search-box" id="searchBox" placeholder="Search products..." oninput="onSearchInput()">
+      <button class="btn" id="btnTheme" onclick="toggleTheme()" title="Toggle dark mode">&#9789;</button>
+      <button class="btn" onclick="exportChecked()" title="Export checked list">Export</button>
+      <button class="btn" onclick="clearAll()" title="Clear all selections">Clear</button>
+    </div>
+  </div>
+  <div class="api-status" id="apiStatus"></div>
+</header>
+
+<main id="app"></main>
+
+<footer class="site-footer">
+  <div class="footer-inner">
+    <div class="footer-stat"><span class="footer-label">Checked</span><span class="footer-value" id="footCount">0 / 0</span></div>
+    <div class="footer-stat"><span class="footer-label">Original USD</span><span class="footer-value" id="footOriginal">$0</span></div>
+    <div class="footer-stat"><span class="footer-label">Today's USD</span><span class="footer-value" id="footAdjusted">$0</span></div>
+    <div class="footer-stat"><span class="footer-label">Today's EUR</span><span class="footer-value eur" id="footEur">&euro;0</span></div>
+  </div>
+</footer>
+
+<script>
+// ── PRODUCT DATABASE ──
+const PRODUCTS=[
+// Pre-Mac Era
+{id:"apple-i",name:"Apple I",year:1976,msrp:666.66,est:false,category:"pre-mac",image:"https://upload.wikimedia.org/wikipedia/commons/thumb/f/f3/Apple_II_at_Mus%C3%A9e_Bolo.jpg/500px-Apple_II_at_Mus%C3%A9e_Bolo.jpg"},
+{id:"apple-ii",name:"Apple II",year:1977,msrp:1298,est:false,category:"pre-mac",image:"https://upload.wikimedia.org/wikipedia/commons/thumb/f/f3/Apple_II_at_Mus%C3%A9e_Bolo.jpg/500px-Apple_II_at_Mus%C3%A9e_Bolo.jpg"},
+{id:"apple-ii-plus",name:"Apple II Plus",year:1979,msrp:1195,est:false,category:"pre-mac",image:"https://upload.wikimedia.org/wikipedia/commons/thumb/b/b1/Apple_II_Plus%2C_Museum_of_the_Moving_Image.jpg/500px-Apple_II_Plus%2C_Museum_of_the_Moving_Image.jpg"},
+{id:"apple-iii",name:"Apple III",year:1980,msrp:4340,est:true,category:"pre-mac",image:"https://upload.wikimedia.org/wikipedia/commons/thumb/0/09/Apple_Computer_History_1979-1989.jpg/500px-Apple_Computer_History_1979-1989.jpg"},
+{id:"apple-iie",name:"Apple IIe",year:1983,msrp:1395,est:false,category:"pre-mac",image:"https://upload.wikimedia.org/wikipedia/commons/thumb/e/ef/Apple_IIe_and_Bilbo_80.jpg/500px-Apple_IIe_and_Bilbo_80.jpg"},
+{id:"apple-lisa",name:"Apple Lisa",year:1983,msrp:9995,est:false,category:"pre-mac",image:"https://upload.wikimedia.org/wikipedia/commons/thumb/e/ec/Apple_Lisa-2-IMG_1730.jpg/500px-Apple_Lisa-2-IMG_1730.jpg"},
+{id:"apple-iii-plus",name:"Apple III Plus",year:1983,msrp:2995,est:true,category:"pre-mac",image:"https://upload.wikimedia.org/wikipedia/commons/thumb/0/09/Apple_Computer_History_1979-1989.jpg/500px-Apple_Computer_History_1979-1989.jpg"},
+{id:"apple-iic",name:"Apple IIc",year:1984,msrp:1295,est:false,category:"pre-mac",image:"https://upload.wikimedia.org/wikipedia/commons/thumb/4/48/Apple_IIc_with_monitor.jpg/500px-Apple_IIc_with_monitor.jpg"},
+{id:"lisa-2",name:"Apple Lisa 2",year:1984,msrp:3495,est:false,category:"pre-mac",image:"https://upload.wikimedia.org/wikipedia/commons/thumb/e/ec/Apple_Lisa-2-IMG_1730.jpg/500px-Apple_Lisa-2-IMG_1730.jpg"},
+{id:"apple-iigs",name:"Apple IIGS",year:1986,msrp:999,est:false,category:"pre-mac",image:"https://upload.wikimedia.org/wikipedia/commons/thumb/2/24/Apple_Museum_%28Prague%29_Apple_IIGS_Woz_%281986%29.jpg/500px-Apple_Museum_%28Prague%29_Apple_IIGS_Woz_%281986%29.jpg"},
+{id:"apple-iic-plus",name:"Apple IIc Plus",year:1988,msrp:675,est:true,category:"pre-mac",image:"https://upload.wikimedia.org/wikipedia/commons/thumb/d/d5/Apple_IIc_Plus_%28front%29.jpg/500px-Apple_IIc_Plus_%28front%29.jpg"},
+
+// Compact Macs
+{id:"mac-128k",name:"Macintosh 128K",year:1984,msrp:2495,est:false,category:"compact-mac",image:"https://upload.wikimedia.org/wikipedia/commons/thumb/7/79/Computer_macintosh_128k%2C_1984_%28all_about_Apple_onlus%29.jpg/500px-Computer_macintosh_128k%2C_1984_%28all_about_Apple_onlus%29.jpg"},
+{id:"mac-512k",name:"Macintosh 512K",year:1984,msrp:3195,est:false,category:"compact-mac",image:"https://upload.wikimedia.org/wikipedia/commons/thumb/e/e8/Apple_Macintosh_512K_Desktop.jpg/500px-Apple_Macintosh_512K_Desktop.jpg"},
+{id:"mac-512ke",name:"Macintosh 512Ke",year:1986,msrp:1999,est:true,category:"compact-mac",image:"https://upload.wikimedia.org/wikipedia/commons/thumb/e/ed/Apple_512k.jpg/500px-Apple_512k.jpg"},
+{id:"mac-plus",name:"Macintosh Plus",year:1986,msrp:2599,est:false,category:"compact-mac",image:"https://upload.wikimedia.org/wikipedia/commons/thumb/4/46/Macintosh_Plus_interior_2.jpg/500px-Macintosh_Plus_interior_2.jpg"},
+{id:"mac-se",name:"Macintosh SE",year:1987,msrp:2899,est:false,category:"compact-mac",image:"https://upload.wikimedia.org/wikipedia/commons/thumb/0/02/Macintosh_SE_b.jpg/500px-Macintosh_SE_b.jpg"},
+{id:"mac-se30",name:"Macintosh SE/30",year:1989,msrp:4369,est:false,category:"compact-mac",image:"https://upload.wikimedia.org/wikipedia/commons/thumb/c/c0/Apple_Macintosh_SE-30_computer_%281989%29_clear_background.png/500px-Apple_Macintosh_SE-30_computer_%281989%29_clear_background.png"},
+{id:"mac-classic",name:"Macintosh Classic",year:1990,msrp:999,est:false,category:"compact-mac",image:"https://upload.wikimedia.org/wikipedia/commons/thumb/d/d8/Macintosh_classic.jpg/500px-Macintosh_classic.jpg"},
+{id:"mac-classic-ii",name:"Macintosh Classic II",year:1991,msrp:1899,est:false,category:"compact-mac",image:"https://upload.wikimedia.org/wikipedia/commons/thumb/4/43/Apple_Macintosh_Classic_II_Main_Board.jpg/500px-Apple_Macintosh_Classic_II_Main_Board.jpg"},
+{id:"mac-color-classic",name:"Macintosh Color Classic",year:1993,msrp:1389,est:false,category:"compact-mac",image:"https://upload.wikimedia.org/wikipedia/commons/4/4f/Macintosh_Color_Classic.jpg"},
+
+// Mac II Family
+{id:"mac-ii",name:"Macintosh II",year:1987,msrp:5498,est:false,category:"mac-ii",image:"https://upload.wikimedia.org/wikipedia/commons/thumb/2/27/Macintosh_II.jpg/500px-Macintosh_II.jpg"},
+{id:"mac-iix",name:"Macintosh IIx",year:1988,msrp:7769,est:false,category:"mac-ii",image:"https://upload.wikimedia.org/wikipedia/commons/thumb/2/2f/Macintosh_IIx.jpg/500px-Macintosh_IIx.jpg"},
+{id:"mac-iicx",name:"Macintosh IIcx",year:1989,msrp:5369,est:false,category:"mac-ii",image:"https://upload.wikimedia.org/wikipedia/commons/thumb/c/ca/Macintosh_IIcx.jpg/500px-Macintosh_IIcx.jpg"},
+{id:"mac-iici",name:"Macintosh IIci",year:1989,msrp:6269,est:false,category:"mac-ii",image:"https://upload.wikimedia.org/wikipedia/commons/thumb/6/63/Macintosh_IIci.png/500px-Macintosh_IIci.png"},
+{id:"mac-iifx",name:"Macintosh IIfx",year:1990,msrp:9869,est:false,category:"mac-ii",image:"https://upload.wikimedia.org/wikipedia/commons/thumb/5/53/Macintosh_IIfx.jpg/500px-Macintosh_IIfx.jpg"},
+{id:"mac-iisi",name:"Macintosh IIsi",year:1990,msrp:3769,est:false,category:"mac-ii",image:"https://upload.wikimedia.org/wikipedia/commons/thumb/9/99/Macintosh_IIsi_2.jpg/500px-Macintosh_IIsi_2.jpg"},
+{id:"mac-iivi",name:"Macintosh IIvi",year:1992,msrp:2949,est:true,category:"mac-ii",image:"https://upload.wikimedia.org/wikipedia/commons/thumb/f/ff/Macintosh_IIvi.jpg/500px-Macintosh_IIvi.jpg"},
+{id:"mac-iivx",name:"Macintosh IIvx",year:1992,msrp:2949,est:true,category:"mac-ii",image:"https://upload.wikimedia.org/wikipedia/commons/thumb/3/3e/Macintosh_IIvx.jpg/500px-Macintosh_IIvx.jpg"},
+
+// Quadra & Centris
+{id:"quadra-700",name:"Macintosh Quadra 700",year:1991,msrp:5700,est:false,category:"quadra-centris",image:"https://upload.wikimedia.org/wikipedia/commons/thumb/3/39/Macintosh_Quadra_700.png/500px-Macintosh_Quadra_700.png"},
+{id:"quadra-900",name:"Macintosh Quadra 900",year:1991,msrp:7200,est:false,category:"quadra-centris",image:"https://upload.wikimedia.org/wikipedia/commons/thumb/e/e5/Macintosh_Quadra_900.jpg/500px-Macintosh_Quadra_900.jpg"},
+{id:"quadra-950",name:"Macintosh Quadra 950",year:1992,msrp:7200,est:true,category:"quadra-centris",image:"https://upload.wikimedia.org/wikipedia/commons/thumb/8/8e/Quadra950-01.jpg/500px-Quadra950-01.jpg"},
+{id:"centris-610",name:"Macintosh Centris 610",year:1993,msrp:1859,est:false,category:"quadra-centris",image:"https://upload.wikimedia.org/wikipedia/commons/thumb/e/e1/Macintosh_Quadra_610.jpg/500px-Macintosh_Quadra_610.jpg"},
+{id:"centris-650",name:"Macintosh Centris 650",year:1993,msrp:2699,est:false,category:"quadra-centris",image:"https://upload.wikimedia.org/wikipedia/commons/thumb/8/81/Apple_Museum_%28Prague%29_Centris_650_%281993%29.jpg/500px-Apple_Museum_%28Prague%29_Centris_650_%281993%29.jpg"},
+{id:"quadra-660av",name:"Macintosh Quadra 660AV",year:1993,msrp:2579,est:false,category:"quadra-centris",image:"https://upload.wikimedia.org/wikipedia/commons/thumb/2/22/Macintosh_Centris_660AV.jpg/500px-Macintosh_Centris_660AV.jpg"},
+{id:"quadra-840av",name:"Macintosh Quadra 840AV",year:1993,msrp:3579,est:false,category:"quadra-centris",image:"https://upload.wikimedia.org/wikipedia/commons/thumb/b/b7/Macintosh_Quadra_840AV.jpg/500px-Macintosh_Quadra_840AV.jpg"},
+{id:"quadra-630",name:"Macintosh Quadra 630",year:1994,msrp:1279,est:false,category:"quadra-centris",image:"https://upload.wikimedia.org/wikipedia/commons/thumb/b/b3/Macintosh_LC_630.jpg/500px-Macintosh_LC_630.jpg"},
+
+// Performa (representative)
+{id:"performa-200",name:"Macintosh Performa 200",year:1992,msrp:1249,est:true,category:"performa",image:"https://upload.wikimedia.org/wikipedia/commons/thumb/0/01/Macintosh_Classic_2.jpg/500px-Macintosh_Classic_2.jpg"},
+{id:"performa-400",name:"Macintosh Performa 400",year:1992,msrp:1479,est:true,category:"performa",image:"https://upload.wikimedia.org/wikipedia/commons/thumb/d/d6/Macintosh_LC_II.jpg/500px-Macintosh_LC_II.jpg"},
+{id:"performa-475",name:"Macintosh Performa 475",year:1993,msrp:1390,est:true,category:"performa",image:"https://upload.wikimedia.org/wikipedia/commons/thumb/8/8e/Macintosh_quadra_605_warm.jpg/500px-Macintosh_quadra_605_warm.jpg"},
+{id:"performa-550",name:"Macintosh Performa 550",year:1993,msrp:1680,est:true,category:"performa",image:"https://upload.wikimedia.org/wikipedia/commons/thumb/f/fb/Macintosh_Performa_550.jpg/500px-Macintosh_Performa_550.jpg"},
+{id:"performa-630cd",name:"Macintosh Performa 630CD",year:1994,msrp:1659,est:true,category:"performa",image:"https://upload.wikimedia.org/wikipedia/commons/thumb/f/f4/Apple_Macintosh_Performa_630.jpg/500px-Apple_Macintosh_Performa_630.jpg"},
+{id:"performa-580cd",name:"Macintosh Performa 580CD",year:1995,msrp:2100,est:true,category:"performa",image:"https://upload.wikimedia.org/wikipedia/commons/thumb/2/28/Macintosh_Performa_580CD_-_front.jpg/500px-Macintosh_Performa_580CD_-_front.jpg"},
+{id:"performa-5200",name:"Macintosh Performa 5200",year:1995,msrp:1900,est:true,category:"performa",image:"https://upload.wikimedia.org/wikipedia/commons/thumb/d/df/Macintosh_Performa_5200.jpg/500px-Macintosh_Performa_5200.jpg"},
+{id:"performa-6400",name:"Macintosh Performa 6400",year:1996,msrp:2400,est:true,category:"performa",image:"https://upload.wikimedia.org/wikipedia/commons/thumb/5/50/Macintosh_Performa_6400.jpg/500px-Macintosh_Performa_6400.jpg"},
+
+// PowerBook & Duo
+{id:"pb-100",name:"PowerBook 100",year:1991,msrp:2500,est:false,category:"powerbook",image:"https://upload.wikimedia.org/wikipedia/commons/thumb/5/58/Powerbook_100_pose.jpg/500px-Powerbook_100_pose.jpg"},
+{id:"pb-140",name:"PowerBook 140",year:1991,msrp:2900,est:false,category:"powerbook",image:"https://upload.wikimedia.org/wikipedia/commons/thumb/8/89/Macintosh_PowerBook_140.jpg/500px-Macintosh_PowerBook_140.jpg"},
+{id:"pb-170",name:"PowerBook 170",year:1991,msrp:4599,est:false,category:"powerbook",image:"https://upload.wikimedia.org/wikipedia/commons/thumb/9/97/RetroIT_Arad_01.jpg/500px-RetroIT_Arad_01.jpg"},
+{id:"pb-145",name:"PowerBook 145",year:1992,msrp:2149,est:true,category:"powerbook",image:"https://upload.wikimedia.org/wikipedia/commons/thumb/8/89/Macintosh_PowerBook_140.jpg/500px-Macintosh_PowerBook_140.jpg"},
+{id:"pb-160",name:"PowerBook 160",year:1992,msrp:2430,est:true,category:"powerbook",image:"https://upload.wikimedia.org/wikipedia/commons/thumb/8/89/Macintosh_PowerBook_140.jpg/500px-Macintosh_PowerBook_140.jpg"},
+{id:"pb-180",name:"PowerBook 180",year:1992,msrp:4110,est:false,category:"powerbook",image:"https://upload.wikimedia.org/wikipedia/commons/thumb/9/9e/Apple_Macintosh_PowerBook_180c.jpg/500px-Apple_Macintosh_PowerBook_180c.jpg"},
+{id:"pb-duo-210",name:"PowerBook Duo 210",year:1992,msrp:2249,est:false,category:"powerbook",image:"https://upload.wikimedia.org/wikipedia/commons/thumb/b/bd/PowerBook_Duo_210_-_front.jpg/500px-PowerBook_Duo_210_-_front.jpg"},
+{id:"pb-duo-230",name:"PowerBook Duo 230",year:1992,msrp:2609,est:false,category:"powerbook",image:"https://upload.wikimedia.org/wikipedia/commons/thumb/7/7c/PowerBook_Duo_230.jpg/500px-PowerBook_Duo_230.jpg"},
+{id:"pb-165c",name:"PowerBook 165c",year:1993,msrp:3400,est:true,category:"powerbook",image:"https://upload.wikimedia.org/wikipedia/commons/thumb/d/d2/Macintosh_PowerBook_165c.jpg/500px-Macintosh_PowerBook_165c.jpg"},
+{id:"pb-180c",name:"PowerBook 180c",year:1993,msrp:4160,est:true,category:"powerbook",image:"https://upload.wikimedia.org/wikipedia/commons/thumb/9/9e/Apple_Macintosh_PowerBook_180c.jpg/500px-Apple_Macintosh_PowerBook_180c.jpg"},
+{id:"pb-duo-250",name:"PowerBook Duo 250",year:1993,msrp:2520,est:true,category:"powerbook",image:"https://upload.wikimedia.org/wikipedia/commons/d/d5/Powerbook_duo_2300c.jpg"},
+{id:"pb-duo-270c",name:"PowerBook Duo 270c",year:1993,msrp:3100,est:true,category:"powerbook",image:"https://upload.wikimedia.org/wikipedia/commons/d/d5/Powerbook_duo_2300c.jpg"},
+{id:"pb-duo-280",name:"PowerBook Duo 280",year:1994,msrp:2270,est:true,category:"powerbook",image:"https://upload.wikimedia.org/wikipedia/commons/d/d5/Powerbook_duo_2300c.jpg"},
+{id:"pb-duo-280c",name:"PowerBook Duo 280c",year:1994,msrp:3100,est:true,category:"powerbook",image:"https://upload.wikimedia.org/wikipedia/commons/thumb/2/2d/PowerBook_Duo_280c.jpg/500px-PowerBook_Duo_280c.jpg"},
+{id:"pb-500",name:"PowerBook 500 series",year:1994,msrp:2270,est:true,category:"powerbook",image:"https://upload.wikimedia.org/wikipedia/commons/thumb/e/e8/540c_open.jpg/500px-540c_open.jpg"},
+{id:"pb-1400",name:"PowerBook 1400",year:1996,msrp:2499,est:true,category:"powerbook",image:"https://upload.wikimedia.org/wikipedia/commons/thumb/7/7c/PowerBook_1400cs_133.jpg/500px-PowerBook_1400cs_133.jpg"},
+{id:"pb-2400c",name:"PowerBook 2400c",year:1997,msrp:3500,est:true,category:"powerbook",image:"https://upload.wikimedia.org/wikipedia/commons/thumb/7/7c/PowerBook_1400cs_133.jpg/500px-PowerBook_1400cs_133.jpg"},
+{id:"pb-3400c",name:"PowerBook 3400c",year:1997,msrp:4500,est:true,category:"powerbook",image:"https://upload.wikimedia.org/wikipedia/commons/thumb/2/24/Powerbook3400.jpg/500px-Powerbook3400.jpg"},
+{id:"pb-g3-ws",name:"PowerBook G3 (Wallstreet)",year:1998,msrp:2299,est:false,category:"powerbook",image:"https://upload.wikimedia.org/wikipedia/commons/thumb/3/31/WallstreetII.jpg/500px-WallstreetII.jpg"},
+{id:"pb-g3-lom",name:"PowerBook G3 (Lombard)",year:1999,msrp:1599,est:false,category:"powerbook",image:"https://upload.wikimedia.org/wikipedia/commons/thumb/0/0b/Macintosh_PowerBook_G3_%28Bronze_Keyboard%29.jpg/500px-Macintosh_PowerBook_G3_%28Bronze_Keyboard%29.jpg"},
+{id:"pb-g3-pis",name:"PowerBook G3 (Pismo)",year:2000,msrp:1599,est:false,category:"powerbook",image:"https://upload.wikimedia.org/wikipedia/commons/thumb/7/77/Apple_PowerBook_G3_500_Pismo-2763.jpg/500px-Apple_PowerBook_G3_500_Pismo-2763.jpg"},
+{id:"pb-g4-ti",name:"PowerBook G4 Titanium",year:2001,msrp:2599,est:false,category:"powerbook",image:"https://upload.wikimedia.org/wikipedia/commons/thumb/b/bb/Titanium_PowerBook_G4_Keyboard_9030.jpg/500px-Titanium_PowerBook_G4_Keyboard_9030.jpg"},
+{id:"pb-g4-al",name:"PowerBook G4 Aluminum",year:2003,msrp:1799,est:false,category:"powerbook",image:"https://upload.wikimedia.org/wikipedia/commons/thumb/3/3e/PowerBook_G4_Aluminium_12%E2%80%B3.jpg/500px-PowerBook_G4_Aluminium_12%E2%80%B3.jpg"},
+
+// iBook
+{id:"ibook-g3-clam",name:"iBook G3 (Clamshell)",year:1999,msrp:1599,est:false,category:"ibook",image:"https://upload.wikimedia.org/wikipedia/commons/e/e9/Clamshell_iBook_G3.jpg"},
+{id:"ibook-g3-dual",name:"iBook G3 (Dual USB)",year:2001,msrp:1299,est:false,category:"ibook",image:"https://upload.wikimedia.org/wikipedia/commons/thumb/6/62/IBook_G4.jpg/500px-IBook_G4.jpg"},
+{id:"ibook-g4",name:"iBook G4",year:2003,msrp:1099,est:false,category:"ibook",image:"https://upload.wikimedia.org/wikipedia/commons/thumb/6/62/IBook_G4.jpg/500px-IBook_G4.jpg"},
+
+// Power Mac
+{id:"pm-6100",name:"Power Macintosh 6100",year:1994,msrp:1819,est:false,category:"power-mac",image:"https://upload.wikimedia.org/wikipedia/commons/thumb/8/87/Power_Macintosh_6100-60AV_-_front.jpg/500px-Power_Macintosh_6100-60AV_-_front.jpg"},
+{id:"pm-7100",name:"Power Macintosh 7100",year:1994,msrp:2899,est:false,category:"power-mac",image:"https://upload.wikimedia.org/wikipedia/commons/thumb/7/74/Power_Macintosh_7100_66.jpg/500px-Power_Macintosh_7100_66.jpg"},
+{id:"pm-8100",name:"Power Macintosh 8100",year:1994,msrp:4249,est:false,category:"power-mac",image:"https://upload.wikimedia.org/wikipedia/commons/thumb/c/cb/Power-Macintosh-8100-80av.jpg/500px-Power-Macintosh-8100-80av.jpg"},
+{id:"pm-g3-beige",name:"Power Macintosh G3 (Beige)",year:1997,msrp:2000,est:true,category:"power-mac",image:"https://upload.wikimedia.org/wikipedia/commons/thumb/d/d6/Beige_Power_Macintosh_G3_Minitower.jpg/500px-Beige_Power_Macintosh_G3_Minitower.jpg"},
+{id:"pm-g3-bw",name:"Power Macintosh G3 (Blue & White)",year:1999,msrp:1599,est:false,category:"power-mac",image:"https://upload.wikimedia.org/wikipedia/commons/thumb/8/81/Power_Macintosh_G3_B%26W_side.jpg/500px-Power_Macintosh_G3_B%26W_side.jpg"},
+{id:"pm-g4-agp",name:"Power Mac G4 (AGP)",year:1999,msrp:1599,est:false,category:"power-mac",image:"https://upload.wikimedia.org/wikipedia/commons/thumb/0/0e/Replace_the_power_supply_in_a_graphite_Mac_G4_-1.jpg/500px-Replace_the_power_supply_in_a_graphite_Mac_G4_-1.jpg"},
+{id:"pm-g4-cube",name:"Power Mac G4 Cube",year:2000,msrp:1799,est:false,category:"power-mac",image:"https://upload.wikimedia.org/wikipedia/commons/c/c0/PowerMac_G4_Cube.jpg"},
+{id:"pm-g4-qs",name:"Power Mac G4 (Quicksilver)",year:2001,msrp:1699,est:false,category:"power-mac",image:"https://upload.wikimedia.org/wikipedia/commons/thumb/c/c4/Apple_PowerMac_G4_M8493_QuickSilver_sideopen.jpg/500px-Apple_PowerMac_G4_M8493_QuickSilver_sideopen.jpg"},
+{id:"pm-g4-mdd",name:"Power Mac G4 (MDD)",year:2002,msrp:1699,est:false,category:"power-mac",image:"https://upload.wikimedia.org/wikipedia/commons/thumb/a/a2/Power_Mac_G4_MDD_and_Studio_Display.jpg/500px-Power_Mac_G4_MDD_and_Studio_Display.jpg"},
+{id:"pm-g5",name:"Power Mac G5",year:2003,msrp:1999,est:false,category:"power-mac",image:"https://upload.wikimedia.org/wikipedia/commons/thumb/9/95/Power_Mac_G5_transparent_right.png/500px-Power_Mac_G5_transparent_right.png"},
+{id:"pm-g5-late",name:"Power Mac G5 (Late 2005)",year:2005,msrp:1999,est:false,category:"power-mac",image:"https://upload.wikimedia.org/wikipedia/commons/thumb/3/3f/Apple_Power_Mac_G5_%28Late_2005%29_-_49657734511.jpg/500px-Apple_Power_Mac_G5_%28Late_2005%29_-_49657734511.jpg"},
+
+// iMac
+{id:"imac-g3-bondi",name:"iMac G3 (Bondi Blue)",year:1998,msrp:1299,est:false,category:"imac",image:"https://upload.wikimedia.org/wikipedia/commons/thumb/d/db/IMac_G3_Bondi_Blue%2C_three-quarters_view.png/500px-IMac_G3_Bondi_Blue%2C_three-quarters_view.png"},
+{id:"imac-g3-colors",name:"iMac G3 (5 Colors)",year:1999,msrp:1199,est:false,category:"imac",image:"https://upload.wikimedia.org/wikipedia/commons/thumb/7/74/IMac_G3_flavors.jpg/500px-IMac_G3_flavors.jpg"},
+{id:"imac-g4",name:"iMac G4 (Lamp)",year:2002,msrp:1299,est:false,category:"imac",image:"https://upload.wikimedia.org/wikipedia/commons/thumb/e/ea/Apple_iMac_G4.jpg/500px-Apple_iMac_G4.jpg"},
+{id:"imac-g5",name:"iMac G5",year:2004,msrp:1299,est:false,category:"imac",image:"https://upload.wikimedia.org/wikipedia/commons/thumb/b/b3/IMac_G5_Rev._A_front.jpg/500px-IMac_G5_Rev._A_front.jpg"},
+{id:"imac-intel",name:"iMac (Intel, 2006)",year:2006,msrp:1299,est:false,category:"imac",image:"https://upload.wikimedia.org/wikipedia/commons/thumb/a/a4/2006_iMac_sizes.jpg/500px-2006_iMac_sizes.jpg"},
+{id:"imac-alu",name:"iMac (Aluminum, 2007)",year:2007,msrp:1199,est:false,category:"imac",image:"https://upload.wikimedia.org/wikipedia/commons/thumb/d/dc/24_inch_iMac_monitor.jpeg/500px-24_inch_iMac_monitor.jpeg"},
+{id:"imac-uni",name:"iMac (Unibody, 2012)",year:2012,msrp:1299,est:false,category:"imac",image:"https://upload.wikimedia.org/wikipedia/commons/thumb/3/34/IMac_Late_2012_Edge.jpg/500px-IMac_Late_2012_Edge.jpg"},
+{id:"imac-5k",name:"iMac (5K Retina, 2014)",year:2014,msrp:2499,est:false,category:"imac",image:"https://upload.wikimedia.org/wikipedia/commons/thumb/3/34/IMac_Late_2012_Edge.jpg/500px-IMac_Late_2012_Edge.jpg"},
+{id:"imac-pro",name:"iMac Pro",year:2017,msrp:4999,est:false,category:"imac",image:"https://upload.wikimedia.org/wikipedia/commons/thumb/3/34/IMac_Late_2012_Edge.jpg/500px-IMac_Late_2012_Edge.jpg"},
+{id:"imac-m1",name:"iMac (M1, 2021)",year:2021,msrp:1299,est:false,category:"imac",image:"https://upload.wikimedia.org/wikipedia/commons/thumb/3/34/IMac_Late_2012_Edge.jpg/500px-IMac_Late_2012_Edge.jpg"},
+{id:"imac-m3",name:"iMac (M3, 2023)",year:2023,msrp:1299,est:false,category:"imac",image:"https://upload.wikimedia.org/wikipedia/commons/thumb/3/34/IMac_Late_2012_Edge.jpg/500px-IMac_Late_2012_Edge.jpg"},
+{id:"imac-m4",name:"iMac (M4, 2024)",year:2024,msrp:1299,est:false,category:"imac",image:"https://upload.wikimedia.org/wikipedia/commons/thumb/6/62/Mac_mini_2024_M4.jpg/500px-Mac_mini_2024_M4.jpg"},
+
+// MacBook Family
+{id:"macbook-06",name:"MacBook (2006)",year:2006,msrp:1099,est:false,category:"macbook",image:"https://upload.wikimedia.org/wikipedia/commons/thumb/a/a4/MacBook_white_transparency.png/500px-MacBook_white_transparency.png"},
+{id:"macbook-12",name:'MacBook (12" Retina)',year:2015,msrp:1299,est:false,category:"macbook",image:"https://upload.wikimedia.org/wikipedia/commons/thumb/d/d5/Apple_Macbook12%2C_2015Unboxing_3.jpg/500px-Apple_Macbook12%2C_2015Unboxing_3.jpg"},
+{id:"mbp-06",name:"MacBook Pro (2006)",year:2006,msrp:1999,est:false,category:"macbook",image:"https://upload.wikimedia.org/wikipedia/commons/thumb/9/9a/MacBook_Pro.jpg/500px-MacBook_Pro.jpg"},
+{id:"mbp-uni",name:"MacBook Pro (Unibody, 2008)",year:2008,msrp:1999,est:false,category:"macbook",image:"https://upload.wikimedia.org/wikipedia/commons/thumb/b/bb/MacBook_Pro_Keyboard_9031.jpg/500px-MacBook_Pro_Keyboard_9031.jpg"},
+{id:"mbp-ret",name:"MacBook Pro (Retina, 2012)",year:2012,msrp:2199,est:false,category:"macbook",image:"https://upload.wikimedia.org/wikipedia/commons/thumb/c/c4/Apple_MacBook_Pro_15%22_%282017%29.jpg/500px-Apple_MacBook_Pro_15%22_%282017%29.jpg"},
+{id:"mbp-tb",name:"MacBook Pro (Touch Bar, 2016)",year:2016,msrp:1799,est:false,category:"macbook",image:"https://upload.wikimedia.org/wikipedia/commons/thumb/9/9a/Late_2016_MacBook_Pro.jpg/500px-Late_2016_MacBook_Pro.jpg"},
+{id:"mbp-m1",name:"MacBook Pro (M1, 2020)",year:2020,msrp:1299,est:false,category:"macbook",image:"https://upload.wikimedia.org/wikipedia/commons/thumb/7/78/Macbook_Pro_2020_color_photography.jpg/500px-Macbook_Pro_2020_color_photography.jpg"},
+{id:"mbp-m1p",name:"MacBook Pro (M1 Pro/Max, 2021)",year:2021,msrp:1999,est:false,category:"macbook",image:"https://upload.wikimedia.org/wikipedia/commons/thumb/9/9a/Late_2016_MacBook_Pro.jpg/500px-Late_2016_MacBook_Pro.jpg"},
+{id:"mbp-m2p",name:"MacBook Pro (M2 Pro/Max, 2023)",year:2023,msrp:1999,est:false,category:"macbook",image:"https://upload.wikimedia.org/wikipedia/commons/thumb/a/af/MacBook_Pro_2022_M2.webp/500px-MacBook_Pro_2022_M2.webp.png"},
+{id:"mbp-m3",name:"MacBook Pro (M3, 2023)",year:2023,msrp:1599,est:false,category:"macbook",image:"https://upload.wikimedia.org/wikipedia/commons/thumb/a/a6/M3_Macbook_Pro_14_inch_Space_Grey_model.jpg/500px-M3_Macbook_Pro_14_inch_Space_Grey_model.jpg"},
+{id:"mbp-m3p",name:"MacBook Pro (M3 Pro/Max, 2023)",year:2023,msrp:1999,est:false,category:"macbook",image:"https://upload.wikimedia.org/wikipedia/commons/thumb/a/a6/M3_Macbook_Pro_14_inch_Space_Grey_model.jpg/500px-M3_Macbook_Pro_14_inch_Space_Grey_model.jpg"},
+{id:"mbp-m4",name:"MacBook Pro (M4, 2024)",year:2024,msrp:1599,est:false,category:"macbook",image:"https://upload.wikimedia.org/wikipedia/commons/thumb/a/a6/M3_Macbook_Pro_14_inch_Space_Grey_model.jpg/500px-M3_Macbook_Pro_14_inch_Space_Grey_model.jpg"},
+{id:"mbp-m4p",name:"MacBook Pro (M4 Pro/Max, 2024)",year:2024,msrp:1999,est:false,category:"macbook",image:"https://upload.wikimedia.org/wikipedia/commons/thumb/a/a6/M3_Macbook_Pro_14_inch_Space_Grey_model.jpg/500px-M3_Macbook_Pro_14_inch_Space_Grey_model.jpg"},
+{id:"mba-08",name:"MacBook Air (2008)",year:2008,msrp:1799,est:false,category:"macbook",image:"https://upload.wikimedia.org/wikipedia/commons/thumb/6/6a/MacBook_Air.jpg/500px-MacBook_Air.jpg"},
+{id:"mba-11",name:'MacBook Air (11", 2010)',year:2010,msrp:999,est:false,category:"macbook",image:"https://upload.wikimedia.org/wikipedia/commons/thumb/8/82/MacBook_Air_11_inch_side_view.jpg/500px-MacBook_Air_11_inch_side_view.jpg"},
+{id:"mba-13",name:"MacBook Air (2013)",year:2013,msrp:999,est:false,category:"macbook",image:"https://upload.wikimedia.org/wikipedia/commons/thumb/6/6a/MacBook_Air.jpg/500px-MacBook_Air.jpg"},
+{id:"mba-ret",name:"MacBook Air (Retina, 2018)",year:2018,msrp:1199,est:false,category:"macbook",image:"https://upload.wikimedia.org/wikipedia/commons/thumb/5/55/Macbook_Air.jpeg/500px-Macbook_Air.jpeg"},
+{id:"mba-m1",name:"MacBook Air (M1, 2020)",year:2020,msrp:999,est:false,category:"macbook",image:"https://upload.wikimedia.org/wikipedia/commons/thumb/2/20/MacBook_Air_M1.png/500px-MacBook_Air_M1.png"},
+{id:"mba-m2",name:"MacBook Air (M2, 2022)",year:2022,msrp:1199,est:false,category:"macbook",image:"https://upload.wikimedia.org/wikipedia/commons/thumb/2/2f/M2_Macbook_Air_Midnight_model_-_2.jpg/500px-M2_Macbook_Air_Midnight_model_-_2.jpg"},
+{id:"mba-m3",name:"MacBook Air (M3, 2024)",year:2024,msrp:1099,est:false,category:"macbook",image:"https://upload.wikimedia.org/wikipedia/commons/thumb/2/20/MacBook_Air_M1.png/500px-MacBook_Air_M1.png"},
+
+// Mac mini
+{id:"mini-g4",name:"Mac mini (G4, 2005)",year:2005,msrp:499,est:false,category:"mac-mini",image:"https://upload.wikimedia.org/wikipedia/commons/thumb/a/aa/Mac_mini_G4-2005-04-05.jpg/500px-Mac_mini_G4-2005-04-05.jpg"},
+{id:"mini-intel",name:"Mac mini (Intel, 2006)",year:2006,msrp:599,est:false,category:"mac-mini",image:"https://upload.wikimedia.org/wikipedia/commons/thumb/d/d2/Apple_Mac_Mini_%28March_2009%29_02.jpg/500px-Apple_Mac_Mini_%28March_2009%29_02.jpg"},
+{id:"mini-uni",name:"Mac mini (Unibody, 2010)",year:2010,msrp:699,est:false,category:"mac-mini",image:"https://upload.wikimedia.org/wikipedia/commons/thumb/d/d2/Apple_Mac_Mini_%28March_2009%29_02.jpg/500px-Apple_Mac_Mini_%28March_2009%29_02.jpg"},
+{id:"mini-14",name:"Mac mini (2014)",year:2014,msrp:499,est:false,category:"mac-mini",image:"https://upload.wikimedia.org/wikipedia/commons/thumb/d/d2/Apple_Mac_Mini_%28March_2009%29_02.jpg/500px-Apple_Mac_Mini_%28March_2009%29_02.jpg"},
+{id:"mini-18",name:"Mac mini (2018)",year:2018,msrp:799,est:false,category:"mac-mini",image:"https://upload.wikimedia.org/wikipedia/commons/thumb/5/52/Mac_mini_2018.jpg/500px-Mac_mini_2018.jpg"},
+{id:"mini-m1",name:"Mac mini (M1, 2020)",year:2020,msrp:699,est:false,category:"mac-mini",image:"https://upload.wikimedia.org/wikipedia/commons/thumb/8/80/Mac_mini_2020_%28M1%29_Anschl%C3%BCsse.jpg/500px-Mac_mini_2020_%28M1%29_Anschl%C3%BCsse.jpg"},
+{id:"mini-m2",name:"Mac mini (M2, 2023)",year:2023,msrp:599,est:false,category:"mac-mini",image:"https://upload.wikimedia.org/wikipedia/commons/thumb/8/80/Mac_mini_2020_%28M1%29_Anschl%C3%BCsse.jpg/500px-Mac_mini_2020_%28M1%29_Anschl%C3%BCsse.jpg"},
+{id:"mini-m2p",name:"Mac mini (M2 Pro, 2023)",year:2023,msrp:1299,est:false,category:"mac-mini",image:"https://upload.wikimedia.org/wikipedia/commons/thumb/8/80/Mac_mini_2020_%28M1%29_Anschl%C3%BCsse.jpg/500px-Mac_mini_2020_%28M1%29_Anschl%C3%BCsse.jpg"},
+{id:"mini-m4",name:"Mac mini (M4, 2024)",year:2024,msrp:599,est:false,category:"mac-mini",image:"https://upload.wikimedia.org/wikipedia/commons/thumb/6/62/Mac_mini_2024_M4.jpg/500px-Mac_mini_2024_M4.jpg"},
+{id:"mini-m4p",name:"Mac mini (M4 Pro, 2024)",year:2024,msrp:1399,est:false,category:"mac-mini",image:"https://upload.wikimedia.org/wikipedia/commons/thumb/6/62/Mac_mini_2024_M4.jpg/500px-Mac_mini_2024_M4.jpg"},
+
+// Mac Pro
+{id:"mp-06",name:"Mac Pro (2006)",year:2006,msrp:2499,est:false,category:"mac-pro",image:"https://upload.wikimedia.org/wikipedia/commons/thumb/9/95/Power_Mac_G5_transparent_right.png/500px-Power_Mac_G5_transparent_right.png"},
+{id:"mp-08",name:"Mac Pro (Early 2008)",year:2008,msrp:2799,est:false,category:"mac-pro",image:"https://upload.wikimedia.org/wikipedia/commons/thumb/9/95/Power_Mac_G5_transparent_right.png/500px-Power_Mac_G5_transparent_right.png"},
+{id:"mp-10",name:"Mac Pro (Mid 2010)",year:2010,msrp:2499,est:false,category:"mac-pro",image:"https://upload.wikimedia.org/wikipedia/commons/thumb/9/95/Power_Mac_G5_transparent_right.png/500px-Power_Mac_G5_transparent_right.png"},
+{id:"mp-13",name:"Mac Pro (Cylindrical, 2013)",year:2013,msrp:2999,est:false,category:"mac-pro",image:"https://upload.wikimedia.org/wikipedia/commons/thumb/d/d6/New_Mac_Pro_%2812093123884%29.jpg/500px-New_Mac_Pro_%2812093123884%29.jpg"},
+{id:"mp-19",name:"Mac Pro (Modular, 2019)",year:2019,msrp:5999,est:false,category:"mac-pro",image:"https://upload.wikimedia.org/wikipedia/commons/thumb/d/d6/New_Mac_Pro_%2812093123884%29.jpg/500px-New_Mac_Pro_%2812093123884%29.jpg"},
+{id:"mp-m2u",name:"Mac Pro (M2 Ultra, 2023)",year:2023,msrp:6999,est:false,category:"mac-pro",image:"https://upload.wikimedia.org/wikipedia/commons/thumb/d/d6/New_Mac_Pro_%2812093123884%29.jpg/500px-New_Mac_Pro_%2812093123884%29.jpg"},
+
+// Mac Studio
+{id:"studio-m1",name:"Mac Studio (M1 Ultra, 2022)",year:2022,msrp:3999,est:false,category:"mac-studio",image:"https://upload.wikimedia.org/wikipedia/commons/thumb/3/32/Mac_Studio_%282022%29_front.jpg/500px-Mac_Studio_%282022%29_front.jpg"},
+{id:"studio-m2",name:"Mac Studio (M2 Ultra, 2023)",year:2023,msrp:3999,est:false,category:"mac-studio",image:"https://upload.wikimedia.org/wikipedia/commons/thumb/5/53/Back_of_a_Mac_Studio.jpg/500px-Back_of_a_Mac_Studio.jpg"},
+{id:"studio-m4",name:"Mac Studio (M4 Ultra, 2025)",year:2025,msrp:3999,est:true,category:"mac-studio",image:"https://upload.wikimedia.org/wikipedia/commons/thumb/2/29/Apple_Studio_Display_and_Mac_Studio_with_Peripherals.jpg/500px-Apple_Studio_Display_and_Mac_Studio_with_Peripherals.jpg"},
+
+// Xserve
+{id:"xserve-02",name:"Xserve (2002)",year:2002,msrp:2999,est:false,category:"xserve",image:"https://upload.wikimedia.org/wikipedia/commons/thumb/e/e9/Xserve_cluster_NASA.jpg/500px-Xserve_cluster_NASA.jpg"},
+{id:"xserve-g5",name:"Xserve G5 (2004)",year:2004,msrp:2999,est:false,category:"xserve",image:"https://upload.wikimedia.org/wikipedia/commons/thumb/e/e9/Xserve_cluster_NASA.jpg/500px-Xserve_cluster_NASA.jpg"},
+{id:"xserve-intel",name:"Xserve (Intel, 2006)",year:2006,msrp:2999,est:false,category:"xserve",image:"https://upload.wikimedia.org/wikipedia/commons/thumb/e/e9/Xserve_cluster_NASA.jpg/500px-Xserve_cluster_NASA.jpg"},
+{id:"xserve-09",name:"Xserve (2009)",year:2009,msrp:2999,est:false,category:"xserve",image:"https://upload.wikimedia.org/wikipedia/commons/thumb/e/e9/Xserve_cluster_NASA.jpg/500px-Xserve_cluster_NASA.jpg"},
+
+// QuickTake
+{id:"qt-100",name:"QuickTake 100",year:1994,msrp:749,est:false,category:"quicktake",image:"https://upload.wikimedia.org/wikipedia/commons/thumb/4/45/Apple_QuickTake_100_camera.jpg/500px-Apple_QuickTake_100_camera.jpg"},
+{id:"qt-150",name:"QuickTake 150",year:1995,msrp:699,est:true,category:"quicktake",image:"https://upload.wikimedia.org/wikipedia/commons/c/ca/Quicktake_150.jpg"},
+{id:"qt-200",name:"QuickTake 200",year:1996,msrp:600,est:true,category:"quicktake",image:"https://upload.wikimedia.org/wikipedia/commons/thumb/b/b2/Apple_Museum_%28Prague%29_QuickTake_200.jpg/500px-Apple_Museum_%28Prague%29_QuickTake_200.jpg"},
+
+// Newton
+{id:"newton-100",name:"Newton MessagePad 100",year:1993,msrp:699,est:false,category:"newton",image:"https://upload.wikimedia.org/wikipedia/commons/thumb/8/8d/Apple_Newton_MessagePad_H1000_in_NMAH.jpg/500px-Apple_Newton_MessagePad_H1000_in_NMAH.jpg"},
+{id:"newton-110",name:"Newton MessagePad 110",year:1994,msrp:599,est:true,category:"newton",image:"https://upload.wikimedia.org/wikipedia/commons/thumb/e/e6/My_Newtons.jpg/500px-My_Newtons.jpg"},
+{id:"newton-120",name:"Newton MessagePad 120",year:1994,msrp:599,est:true,category:"newton",image:"https://upload.wikimedia.org/wikipedia/commons/thumb/d/dc/Newton_MessagePad_120_%2852397269255%29.jpg/500px-Newton_MessagePad_120_%2852397269255%29.jpg"},
+{id:"newton-130",name:"Newton MessagePad 130",year:1996,msrp:799,est:true,category:"newton",image:"https://upload.wikimedia.org/wikipedia/commons/thumb/7/7f/Newton_MessagePad_130_%28516564546%29.jpg/500px-Newton_MessagePad_130_%28516564546%29.jpg"},
+{id:"newton-2000",name:"Newton MessagePad 2000",year:1997,msrp:949,est:true,category:"newton",image:"https://upload.wikimedia.org/wikipedia/commons/thumb/8/86/Apple_Newton_MessagePad_2000.jpg/500px-Apple_Newton_MessagePad_2000.jpg"},
+{id:"newton-2100",name:"Newton MessagePad 2100",year:1997,msrp:1049,est:true,category:"newton",image:"https://upload.wikimedia.org/wikipedia/commons/thumb/d/d5/MessagePad_2100_%28211946982%29.jpg/500px-MessagePad_2100_%28211946982%29.jpg"},
+{id:"emate-300",name:"eMate 300",year:1997,msrp:799,est:false,category:"newton",image:"https://upload.wikimedia.org/wikipedia/commons/thumb/f/fa/Apple_Newton_eMate_300_%28cropped%29.jpg/500px-Apple_Newton_eMate_300_%28cropped%29.jpg"},
+
+// iPod
+{id:"ipod-1",name:"iPod (1st gen)",year:2001,msrp:399,est:false,category:"ipod",image:"https://upload.wikimedia.org/wikipedia/commons/3/35/Ipod_1G.png"},
+{id:"ipod-3",name:"iPod (3rd gen)",year:2003,msrp:299,est:false,category:"ipod",image:"https://upload.wikimedia.org/wikipedia/commons/1/12/IPod_3G.jpg"},
+{id:"ipod-mini",name:"iPod mini",year:2004,msrp:249,est:false,category:"ipod",image:"https://upload.wikimedia.org/wikipedia/commons/thumb/a/a8/I_love_pink_BASICS_-_Flickr_-_BineBluete.jpg/500px-I_love_pink_BASICS_-_Flickr_-_BineBluete.jpg"},
+{id:"ipod-photo",name:"iPod photo",year:2004,msrp:499,est:false,category:"ipod",image:"https://upload.wikimedia.org/wikipedia/commons/3/35/Ipod_1G.png"},
+{id:"ipod-shuffle",name:"iPod shuffle (1st gen)",year:2005,msrp:99,est:false,category:"ipod",image:"https://upload.wikimedia.org/wikipedia/commons/thumb/e/ea/First_generation_I_iPod_Shuffle_in_its_packaging.jpg/500px-First_generation_I_iPod_Shuffle_in_its_packaging.jpg"},
+{id:"ipod-nano-1",name:"iPod nano (1st gen)",year:2005,msrp:199,est:false,category:"ipod",image:"https://upload.wikimedia.org/wikipedia/commons/thumb/c/cb/Apple_iPod_nano_grey_2G_and_white_1G-2006-09-15.jpg/500px-Apple_iPod_nano_grey_2G_and_white_1G-2006-09-15.jpg"},
+{id:"ipod-video",name:"iPod (Video/5th gen)",year:2005,msrp:299,est:false,category:"ipod",image:"https://upload.wikimedia.org/wikipedia/commons/3/35/Ipod_1G.png"},
+{id:"ipod-nano-3",name:"iPod nano (3rd gen)",year:2007,msrp:149,est:false,category:"ipod",image:"https://upload.wikimedia.org/wikipedia/commons/thumb/8/82/IPod_Family_2.png/500px-IPod_Family_2.png"},
+{id:"ipod-touch-1",name:"iPod touch (1st gen)",year:2007,msrp:299,est:false,category:"ipod",image:"https://upload.wikimedia.org/wikipedia/commons/thumb/8/82/IPod_Family_2.png/500px-IPod_Family_2.png"},
+{id:"ipod-classic",name:"iPod classic (6th gen)",year:2007,msrp:249,est:false,category:"ipod",image:"https://upload.wikimedia.org/wikipedia/commons/thumb/4/49/IPod_classic_silver_6G_160GB_in_box-2007-09-22.jpg/500px-IPod_classic_silver_6G_160GB_in_box-2007-09-22.jpg"},
+{id:"ipod-nano-6",name:"iPod nano (6th gen)",year:2010,msrp:149,est:false,category:"ipod",image:"https://upload.wikimedia.org/wikipedia/commons/thumb/e/ee/IPod_Nano_6G.png/500px-IPod_Nano_6G.png"},
+{id:"ipod-touch-7",name:"iPod touch (7th gen)",year:2019,msrp:199,est:false,category:"ipod",image:"https://upload.wikimedia.org/wikipedia/commons/thumb/b/b5/IPod_Touch_7.png/500px-IPod_Touch_7.png"},
+
+// iPhone
+{id:"iphone-1",name:"iPhone (Original)",year:2007,msrp:499,est:false,category:"iphone",image:"https://upload.wikimedia.org/wikipedia/commons/thumb/d/d0/Original_iPhone_docked.jpg/500px-Original_iPhone_docked.jpg"},
+{id:"iphone-3g",name:"iPhone 3G",year:2008,msrp:199,est:false,category:"iphone",image:"https://upload.wikimedia.org/wikipedia/commons/thumb/6/61/IPhone_3GS.jpg/500px-IPhone_3GS.jpg"},
+{id:"iphone-3gs",name:"iPhone 3GS",year:2009,msrp:199,est:false,category:"iphone",image:"https://upload.wikimedia.org/wikipedia/commons/thumb/6/6a/IPhone_3GS_-_bottom_view-0393.jpg/500px-IPhone_3GS_-_bottom_view-0393.jpg"},
+{id:"iphone-4",name:"iPhone 4",year:2010,msrp:199,est:false,category:"iphone",image:"https://upload.wikimedia.org/wikipedia/commons/thumb/5/59/IPhone_4_Mock_No_Shadow_PSD.png/500px-IPhone_4_Mock_No_Shadow_PSD.png"},
+{id:"iphone-4s",name:"iPhone 4S",year:2011,msrp:199,est:false,category:"iphone",image:"https://upload.wikimedia.org/wikipedia/commons/thumb/d/d2/IPhone_4S_No_shadow.png/500px-IPhone_4S_No_shadow.png"},
+{id:"iphone-5",name:"iPhone 5",year:2012,msrp:199,est:false,category:"iphone",image:"https://upload.wikimedia.org/wikipedia/commons/thumb/f/fa/IPhone_5.png/500px-IPhone_5.png"},
+{id:"iphone-5c",name:"iPhone 5c",year:2013,msrp:99,est:false,category:"iphone",image:"https://upload.wikimedia.org/wikipedia/commons/thumb/f/fa/IPhone_5.png/500px-IPhone_5.png"},
+{id:"iphone-5s",name:"iPhone 5s",year:2013,msrp:199,est:false,category:"iphone",image:"https://upload.wikimedia.org/wikipedia/commons/thumb/0/0e/IPhone_5s_Black.png/500px-IPhone_5s_Black.png"},
+{id:"iphone-6",name:"iPhone 6",year:2014,msrp:199,est:false,category:"iphone",image:"https://upload.wikimedia.org/wikipedia/commons/thumb/a/ae/IPhone_6_display_removed_1.jpg/500px-IPhone_6_display_removed_1.jpg"},
+{id:"iphone-6p",name:"iPhone 6 Plus",year:2014,msrp:299,est:false,category:"iphone",image:"https://upload.wikimedia.org/wikipedia/commons/thumb/e/ed/OnePlus_One_vs_LG_G3_vs_Apple_iPhone_6_Plus_vs_Samsung_Galaxy_Note_4_%2816299792506%29.jpg/500px-OnePlus_One_vs_LG_G3_vs_Apple_iPhone_6_Plus_vs_Samsung_Galaxy_Note_4_%2816299792506%29.jpg"},
+{id:"iphone-se1",name:"iPhone SE (1st gen)",year:2016,msrp:399,est:false,category:"iphone",image:"https://upload.wikimedia.org/wikipedia/commons/thumb/6/6b/IPhone_SE_rose_gold_rear.png/500px-IPhone_SE_rose_gold_rear.png"},
+{id:"iphone-7",name:"iPhone 7",year:2016,msrp:649,est:false,category:"iphone",image:"https://upload.wikimedia.org/wikipedia/commons/thumb/9/98/IPhone_6s_-_rear_view-92671.jpg/500px-IPhone_6s_-_rear_view-92671.jpg"},
+{id:"iphone-8",name:"iPhone 8",year:2017,msrp:699,est:false,category:"iphone",image:"https://upload.wikimedia.org/wikipedia/commons/thumb/c/c4/IPhones_6%2C_7%2C_8%2C_SE2_black_-_bottom_view.jpg/500px-IPhones_6%2C_7%2C_8%2C_SE2_black_-_bottom_view.jpg"},
+{id:"iphone-x",name:"iPhone X",year:2017,msrp:999,est:false,category:"iphone",image:"https://upload.wikimedia.org/wikipedia/commons/thumb/d/d2/IPhone_11_Pro%2C_iPhone_XS_and_iPhone_X_Carbon_Emissions_of_the_1st_Life_Cycle.png/500px-IPhone_11_Pro%2C_iPhone_XS_and_iPhone_X_Carbon_Emissions_of_the_1st_Life_Cycle.png"},
+{id:"iphone-xr",name:"iPhone XR",year:2018,msrp:749,est:false,category:"iphone",image:"https://upload.wikimedia.org/wikipedia/commons/thumb/5/55/IPhone_Xr_%28Red_-_Orange%29.jpg/500px-IPhone_Xr_%28Red_-_Orange%29.jpg"},
+{id:"iphone-xs",name:"iPhone XS",year:2018,msrp:999,est:false,category:"iphone",image:"https://upload.wikimedia.org/wikipedia/commons/thumb/4/4e/IPhone_XS.jpg/500px-IPhone_XS.jpg"},
+{id:"iphone-11",name:"iPhone 11",year:2019,msrp:699,est:false,category:"iphone",image:"https://upload.wikimedia.org/wikipedia/commons/thumb/4/48/IPhone_11_RED.jpg/500px-IPhone_11_RED.jpg"},
+{id:"iphone-11p",name:"iPhone 11 Pro",year:2019,msrp:999,est:false,category:"iphone",image:"https://upload.wikimedia.org/wikipedia/commons/thumb/e/e5/IPhone_11_Pro_%26_Apple_Watch_Series_5.jpg/500px-IPhone_11_Pro_%26_Apple_Watch_Series_5.jpg"},
+{id:"iphone-se2",name:"iPhone SE (2nd gen)",year:2020,msrp:399,est:false,category:"iphone",image:"https://upload.wikimedia.org/wikipedia/commons/e/e2/IPhone_SE_2020.png"},
+{id:"iphone-12",name:"iPhone 12",year:2020,msrp:799,est:false,category:"iphone",image:"https://upload.wikimedia.org/wikipedia/commons/thumb/b/ba/Iphone-12-product--red.png/500px-Iphone-12-product--red.png"},
+{id:"iphone-12p",name:"iPhone 12 Pro",year:2020,msrp:999,est:false,category:"iphone",image:"https://upload.wikimedia.org/wikipedia/commons/thumb/f/f7/IPhone_12_Pro_Max.png/500px-IPhone_12_Pro_Max.png"},
+{id:"iphone-13",name:"iPhone 13",year:2021,msrp:799,est:false,category:"iphone",image:"https://upload.wikimedia.org/wikipedia/commons/thumb/b/b5/Apple_iPhone_13_Pro_and_13_Pro_Max.jpg/500px-Apple_iPhone_13_Pro_and_13_Pro_Max.jpg"},
+{id:"iphone-13p",name:"iPhone 13 Pro",year:2021,msrp:999,est:false,category:"iphone",image:"https://upload.wikimedia.org/wikipedia/commons/thumb/b/b5/Apple_iPhone_13_Pro_and_13_Pro_Max.jpg/500px-Apple_iPhone_13_Pro_and_13_Pro_Max.jpg"},
+{id:"iphone-se3",name:"iPhone SE (3rd gen)",year:2022,msrp:429,est:false,category:"iphone",image:"https://upload.wikimedia.org/wikipedia/commons/thumb/7/7f/IPhone_SE_3rd_Gen.jpg/500px-IPhone_SE_3rd_Gen.jpg"},
+{id:"iphone-14",name:"iPhone 14",year:2022,msrp:799,est:false,category:"iphone",image:"https://upload.wikimedia.org/wikipedia/commons/thumb/d/d4/IPhone_14_Pro_-_3.jpg/500px-IPhone_14_Pro_-_3.jpg"},
+{id:"iphone-14p",name:"iPhone 14 Pro",year:2022,msrp:999,est:false,category:"iphone",image:"https://upload.wikimedia.org/wikipedia/commons/thumb/d/d4/IPhone_14_Pro_-_3.jpg/500px-IPhone_14_Pro_-_3.jpg"},
+{id:"iphone-15",name:"iPhone 15",year:2023,msrp:799,est:false,category:"iphone",image:"https://upload.wikimedia.org/wikipedia/commons/thumb/4/48/Apple_iPhone_15.jpg/500px-Apple_iPhone_15.jpg"},
+{id:"iphone-15p",name:"iPhone 15 Pro",year:2023,msrp:999,est:false,category:"iphone",image:"https://upload.wikimedia.org/wikipedia/commons/thumb/1/19/Apple_iPhone_15_Pro.jpg/500px-Apple_iPhone_15_Pro.jpg"},
+{id:"iphone-16",name:"iPhone 16",year:2024,msrp:799,est:false,category:"iphone",image:"https://upload.wikimedia.org/wikipedia/commons/thumb/6/6b/IPhone_16_packaging_%282025-12-01%29.jpg/500px-IPhone_16_packaging_%282025-12-01%29.jpg"},
+{id:"iphone-16p",name:"iPhone 16 Pro",year:2024,msrp:999,est:false,category:"iphone",image:"https://upload.wikimedia.org/wikipedia/commons/thumb/6/6b/IPhone_16_packaging_%282025-12-01%29.jpg/500px-IPhone_16_packaging_%282025-12-01%29.jpg"},
+
+// iPad
+{id:"ipad-1",name:"iPad (1st gen)",year:2010,msrp:499,est:false,category:"ipad",image:"https://upload.wikimedia.org/wikipedia/commons/thumb/7/7e/IPad-WiFi-1stGen.jpg/500px-IPad-WiFi-1stGen.jpg"},
+{id:"ipad-2",name:"iPad 2",year:2011,msrp:499,est:false,category:"ipad",image:"https://upload.wikimedia.org/wikipedia/commons/thumb/5/5b/Apple_Stickers_included_with_iPad_2.jpg/500px-Apple_Stickers_included_with_iPad_2.jpg"},
+{id:"ipad-3",name:"iPad (3rd gen, Retina)",year:2012,msrp:499,est:false,category:"ipad",image:"https://upload.wikimedia.org/wikipedia/commons/thumb/7/7e/IPad-WiFi-1stGen.jpg/500px-IPad-WiFi-1stGen.jpg"},
+{id:"ipad-mini1",name:"iPad mini (1st gen)",year:2012,msrp:329,est:false,category:"ipad",image:"https://upload.wikimedia.org/wikipedia/commons/thumb/b/b5/IPad_mini_3_mockup.png/500px-IPad_mini_3_mockup.png"},
+{id:"ipad-air1",name:"iPad Air (1st gen)",year:2013,msrp:499,est:false,category:"ipad",image:"https://upload.wikimedia.org/wikipedia/commons/thumb/7/7e/IPad-WiFi-1stGen.jpg/500px-IPad-WiFi-1stGen.jpg"},
+{id:"ipad-mini2",name:"iPad mini 2",year:2013,msrp:399,est:false,category:"ipad",image:"https://upload.wikimedia.org/wikipedia/commons/thumb/b/b5/IPad_mini_3_mockup.png/500px-IPad_mini_3_mockup.png"},
+{id:"ipad-air2",name:"iPad Air 2",year:2014,msrp:499,est:false,category:"ipad",image:"https://upload.wikimedia.org/wikipedia/commons/thumb/c/ce/Apple_iPad_Air_2_vs_iPad_Air_%2815462494089%29.jpg/500px-Apple_iPad_Air_2_vs_iPad_Air_%2815462494089%29.jpg"},
+{id:"ipad-pro1-12",name:'iPad Pro 12.9" (1st gen)',year:2015,msrp:799,est:false,category:"ipad",image:"https://upload.wikimedia.org/wikipedia/commons/thumb/1/1d/IPad_Pro_M2_%2812.9_inch%29_6th_Generation_2024.jpg/500px-IPad_Pro_M2_%2812.9_inch%29_6th_Generation_2024.jpg"},
+{id:"ipad-pro1-9",name:'iPad Pro 9.7" (1st gen)',year:2016,msrp:599,est:false,category:"ipad",image:"https://upload.wikimedia.org/wikipedia/commons/thumb/1/1d/IPad_Pro_M2_%2812.9_inch%29_6th_Generation_2024.jpg/500px-IPad_Pro_M2_%2812.9_inch%29_6th_Generation_2024.jpg"},
+{id:"ipad-5",name:"iPad (5th gen)",year:2017,msrp:329,est:false,category:"ipad",image:"https://upload.wikimedia.org/wikipedia/commons/thumb/d/d2/IPad_10.2%E2%80%91inch.png/500px-IPad_10.2%E2%80%91inch.png"},
+{id:"ipad-pro2-12",name:'iPad Pro 12.9" (2nd gen)',year:2017,msrp:799,est:false,category:"ipad",image:"https://upload.wikimedia.org/wikipedia/commons/thumb/1/1d/IPad_Pro_M2_%2812.9_inch%29_6th_Generation_2024.jpg/500px-IPad_Pro_M2_%2812.9_inch%29_6th_Generation_2024.jpg"},
+{id:"ipad-pro3-11",name:'iPad Pro 11" (2018)',year:2018,msrp:799,est:false,category:"ipad",image:"https://upload.wikimedia.org/wikipedia/commons/thumb/d/df/Apple_A12X.jpg/500px-Apple_A12X.jpg"},
+{id:"ipad-7",name:"iPad (7th gen)",year:2019,msrp:329,est:false,category:"ipad",image:"https://upload.wikimedia.org/wikipedia/commons/thumb/d/d2/IPad_10.2%E2%80%91inch.png/500px-IPad_10.2%E2%80%91inch.png"},
+{id:"ipad-air4",name:"iPad Air (4th gen)",year:2020,msrp:599,est:false,category:"ipad",image:"https://upload.wikimedia.org/wikipedia/commons/thumb/b/b5/M2_iPad_Air_front_Camera_and_Apple_Pencil.jpg/500px-M2_iPad_Air_front_Camera_and_Apple_Pencil.jpg"},
+{id:"ipad-mini6",name:"iPad mini (6th gen)",year:2021,msrp:499,est:false,category:"ipad",image:"https://upload.wikimedia.org/wikipedia/commons/thumb/b/b5/IPad_mini_3_mockup.png/500px-IPad_mini_3_mockup.png"},
+{id:"ipad-10",name:"iPad (10th gen)",year:2022,msrp:449,est:false,category:"ipad",image:"https://upload.wikimedia.org/wikipedia/commons/thumb/d/d2/IPad_10.2%E2%80%91inch.png/500px-IPad_10.2%E2%80%91inch.png"},
+{id:"ipad-pro-m2",name:"iPad Pro (M2, 2022)",year:2022,msrp:799,est:false,category:"ipad",image:"https://upload.wikimedia.org/wikipedia/commons/thumb/1/1d/IPad_Pro_M2_%2812.9_inch%29_6th_Generation_2024.jpg/500px-IPad_Pro_M2_%2812.9_inch%29_6th_Generation_2024.jpg"},
+{id:"ipad-air-m2",name:"iPad Air (M2, 2024)",year:2024,msrp:599,est:false,category:"ipad",image:"https://upload.wikimedia.org/wikipedia/commons/thumb/b/b5/M2_iPad_Air_front_Camera_and_Apple_Pencil.jpg/500px-M2_iPad_Air_front_Camera_and_Apple_Pencil.jpg"},
+{id:"ipad-pro-m4",name:"iPad Pro (M4, 2024)",year:2024,msrp:999,est:false,category:"ipad",image:"https://upload.wikimedia.org/wikipedia/commons/thumb/f/fb/M4_iPad_Pro_front_camera_and_Apple_pencil.jpg/500px-M4_iPad_Pro_front_camera_and_Apple_pencil.jpg"},
+
+// Apple Watch
+{id:"watch-0",name:"Apple Watch (Series 0)",year:2015,msrp:349,est:false,category:"apple-watch",image:"https://upload.wikimedia.org/wikipedia/commons/thumb/b/b2/Apple_Watch_Sport.jpg/500px-Apple_Watch_Sport.jpg"},
+{id:"watch-1",name:"Apple Watch Series 1",year:2016,msrp:269,est:false,category:"apple-watch",image:"https://upload.wikimedia.org/wikipedia/commons/thumb/b/b2/Apple_Watch_Sport.jpg/500px-Apple_Watch_Sport.jpg"},
+{id:"watch-3",name:"Apple Watch Series 3",year:2017,msrp:329,est:false,category:"apple-watch",image:"https://upload.wikimedia.org/wikipedia/commons/thumb/c/c6/Apple_Watch_back_sensors.jpg/500px-Apple_Watch_back_sensors.jpg"},
+{id:"watch-4",name:"Apple Watch Series 4",year:2018,msrp:399,est:false,category:"apple-watch",image:"https://upload.wikimedia.org/wikipedia/commons/thumb/d/d0/Apple_Watch_Series_4_40mm_space_gray_Aluminum.jpg/500px-Apple_Watch_Series_4_40mm_space_gray_Aluminum.jpg"},
+{id:"watch-5",name:"Apple Watch Series 5",year:2019,msrp:399,est:false,category:"apple-watch",image:"https://upload.wikimedia.org/wikipedia/commons/thumb/d/d0/Apple_Watch_Series_4_40mm_space_gray_Aluminum.jpg/500px-Apple_Watch_Series_4_40mm_space_gray_Aluminum.jpg"},
+{id:"watch-se",name:"Apple Watch SE",year:2020,msrp:279,est:false,category:"apple-watch",image:"https://upload.wikimedia.org/wikipedia/commons/thumb/a/a1/Apple_Watch_SE_2_%28GPS_%2B_Cellular%2C_40mm%2C_Midnight%29_-_Backside.jpg/500px-Apple_Watch_SE_2_%28GPS_%2B_Cellular%2C_40mm%2C_Midnight%29_-_Backside.jpg"},
+{id:"watch-6",name:"Apple Watch Series 6",year:2020,msrp:399,est:false,category:"apple-watch",image:"https://upload.wikimedia.org/wikipedia/commons/thumb/d/d0/Apple_Watch_Series_4_40mm_space_gray_Aluminum.jpg/500px-Apple_Watch_Series_4_40mm_space_gray_Aluminum.jpg"},
+{id:"watch-7",name:"Apple Watch Series 7",year:2021,msrp:399,est:false,category:"apple-watch",image:"https://upload.wikimedia.org/wikipedia/commons/thumb/8/8d/Apple_Watch_Series_7%3B_January_2022_%2801%29.jpg/500px-Apple_Watch_Series_7%3B_January_2022_%2801%29.jpg"},
+{id:"watch-ultra",name:"Apple Watch Ultra",year:2022,msrp:799,est:false,category:"apple-watch",image:"https://upload.wikimedia.org/wikipedia/commons/thumb/9/91/Apple_Watch_Ultra_-_2.jpg/500px-Apple_Watch_Ultra_-_2.jpg"},
+{id:"watch-9",name:"Apple Watch Series 9",year:2023,msrp:399,est:false,category:"apple-watch",image:"https://upload.wikimedia.org/wikipedia/commons/thumb/3/39/Apple_Watch_Series_9_1_2023-11-14.jpg/500px-Apple_Watch_Series_9_1_2023-11-14.jpg"},
+{id:"watch-ultra2",name:"Apple Watch Ultra 2",year:2023,msrp:799,est:false,category:"apple-watch",image:"https://upload.wikimedia.org/wikipedia/commons/thumb/3/33/Apple_Watch_Ultra_2.jpg/500px-Apple_Watch_Ultra_2.jpg"},
+{id:"watch-10",name:"Apple Watch Series 10",year:2024,msrp:399,est:false,category:"apple-watch",image:"https://upload.wikimedia.org/wikipedia/commons/thumb/0/06/Apple_Watch_Series_10.png/500px-Apple_Watch_Series_10.png"},
+
+// AirPods
+{id:"airpods-1",name:"AirPods (1st gen)",year:2016,msrp:159,est:false,category:"airpods",image:"https://upload.wikimedia.org/wikipedia/commons/thumb/8/83/AirPods_%28cropped%29.jpg/500px-AirPods_%28cropped%29.jpg"},
+{id:"airpods-2",name:"AirPods (2nd gen)",year:2019,msrp:159,est:false,category:"airpods",image:"https://upload.wikimedia.org/wikipedia/commons/thumb/8/83/AirPods_%28cropped%29.jpg/500px-AirPods_%28cropped%29.jpg"},
+{id:"airpods-pro1",name:"AirPods Pro (1st gen)",year:2019,msrp:249,est:false,category:"airpods",image:"https://upload.wikimedia.org/wikipedia/commons/thumb/1/13/Apple_AirPods_and_Apple_AirPods_Pro_at_the_Media_Markt%2C_Rotterdam-Centrum%2C_Rotterdam_%282021%29_01.jpg/500px-Apple_AirPods_and_Apple_AirPods_Pro_at_the_Media_Markt%2C_Rotterdam-Centrum%2C_Rotterdam_%282021%29_01.jpg"},
+{id:"airpods-max",name:"AirPods Max",year:2020,msrp:549,est:false,category:"airpods",image:"https://upload.wikimedia.org/wikipedia/commons/thumb/3/33/Apple_airpods_max_with_case.jpg/500px-Apple_airpods_max_with_case.jpg"},
+{id:"airpods-3",name:"AirPods (3rd gen)",year:2021,msrp:179,est:false,category:"airpods",image:"https://upload.wikimedia.org/wikipedia/commons/thumb/8/83/AirPods_%28cropped%29.jpg/500px-AirPods_%28cropped%29.jpg"},
+{id:"airpods-pro2",name:"AirPods Pro 2",year:2022,msrp:249,est:false,category:"airpods",image:"https://upload.wikimedia.org/wikipedia/commons/thumb/4/4c/AirPods_Pro_case.jpg/500px-AirPods_Pro_case.jpg"},
+{id:"airpods-4",name:"AirPods 4",year:2024,msrp:129,est:false,category:"airpods",image:"https://upload.wikimedia.org/wikipedia/commons/thumb/8/83/AirPods_%28cropped%29.jpg/500px-AirPods_%28cropped%29.jpg"},
+{id:"airpods-4anc",name:"AirPods 4 (ANC)",year:2024,msrp:179,est:false,category:"airpods",image:"https://upload.wikimedia.org/wikipedia/commons/thumb/8/83/AirPods_%28cropped%29.jpg/500px-AirPods_%28cropped%29.jpg"},
+{id:"airpods-max-c",name:"AirPods Max (USB-C)",year:2024,msrp:549,est:false,category:"airpods",image:"https://upload.wikimedia.org/wikipedia/commons/thumb/3/33/Apple_airpods_max_with_case.jpg/500px-Apple_airpods_max_with_case.jpg"},
+{id:"airpods-pro2ha",name:"AirPods Pro 2 (Hearing Aid)",year:2024,msrp:249,est:false,category:"airpods",image:"https://upload.wikimedia.org/wikipedia/commons/thumb/4/4c/AirPods_Pro_case.jpg/500px-AirPods_Pro_case.jpg"},
+
+// HomePod
+{id:"homepod-1",name:"HomePod (2018)",year:2018,msrp:349,est:false,category:"homepod",image:"https://upload.wikimedia.org/wikipedia/commons/thumb/a/ae/An_Apple_HomePod_speaker_.png/500px-An_Apple_HomePod_speaker_.png"},
+{id:"homepod-mini",name:"HomePod mini",year:2020,msrp:99,est:false,category:"homepod",image:"https://upload.wikimedia.org/wikipedia/commons/thumb/b/b9/Apple_HomePod_mini.jpg/500px-Apple_HomePod_mini.jpg"},
+{id:"homepod-2",name:"HomePod (2nd gen)",year:2023,msrp:299,est:false,category:"homepod",image:"https://upload.wikimedia.org/wikipedia/commons/thumb/a/ae/An_Apple_HomePod_speaker_.png/500px-An_Apple_HomePod_speaker_.png"},
+
+// Apple TV
+{id:"atv-1",name:"Apple TV (1st gen)",year:2007,msrp:299,est:false,category:"apple-tv",image:"https://upload.wikimedia.org/wikipedia/commons/thumb/3/3e/Apple_TV.jpg/500px-Apple_TV.jpg"},
+{id:"atv-2",name:"Apple TV (2nd gen)",year:2010,msrp:99,est:false,category:"apple-tv",image:"https://upload.wikimedia.org/wikipedia/commons/thumb/a/a0/AppleTV_frontal.png/500px-AppleTV_frontal.png"},
+{id:"atv-3",name:"Apple TV (3rd gen)",year:2012,msrp:99,est:false,category:"apple-tv",image:"https://upload.wikimedia.org/wikipedia/commons/thumb/7/72/Apple_TV_2nd_Generation.jpg/500px-Apple_TV_2nd_Generation.jpg"},
+{id:"atv-hd",name:"Apple TV HD (4th gen)",year:2015,msrp:149,est:false,category:"apple-tv",image:"https://upload.wikimedia.org/wikipedia/commons/thumb/8/8e/A1842.png/500px-A1842.png"},
+{id:"atv-4k1",name:"Apple TV 4K (1st gen)",year:2017,msrp:179,est:false,category:"apple-tv",image:"https://upload.wikimedia.org/wikipedia/commons/thumb/8/8e/A1842.png/500px-A1842.png"},
+{id:"atv-4k2",name:"Apple TV 4K (2nd gen)",year:2021,msrp:179,est:false,category:"apple-tv",image:"https://upload.wikimedia.org/wikipedia/commons/thumb/b/b2/A2169.png/500px-A2169.png"},
+{id:"atv-4k3",name:"Apple TV 4K (3rd gen)",year:2022,msrp:129,est:false,category:"apple-tv",image:"https://upload.wikimedia.org/wikipedia/commons/thumb/8/81/Apple_TV_4K_4gen_64gb.jpg/500px-Apple_TV_4K_4gen_64gb.jpg"},
+
+// Vision Pro
+{id:"vision-pro",name:"Apple Vision Pro",year:2024,msrp:3499,est:false,category:"vision-pro",image:"https://upload.wikimedia.org/wikipedia/commons/thumb/8/8b/Apple_Vision_Pro_with_charger_%28cropped%29.jpg/500px-Apple_Vision_Pro_with_charger_%28cropped%29.jpg"},
+];
+
+// ── CATEGORIES ──
+const CATEGORIES={"pre-mac":{label:"Pre-Mac Era",order:0},"compact-mac":{label:"Compact Macs",order:1},"mac-ii":{label:"Mac II Family",order:2},"quadra-centris":{label:"Quadra & Centris",order:3},"performa":{label:"Performa",order:4},"powerbook":{label:"PowerBook & Duo",order:5},"ibook":{label:"iBook",order:6},"power-mac":{label:"Power Mac",order:7},"imac":{label:"iMac",order:8},"macbook":{label:"MacBook Family",order:9},"mac-mini":{label:"Mac mini",order:10},"mac-pro":{label:"Mac Pro",order:11},"mac-studio":{label:"Mac Studio",order:12},"xserve":{label:"Xserve",order:13},"quicktake":{label:"QuickTake",order:14},"newton":{label:"Newton",order:15},"ipod":{label:"iPod",order:16},"iphone":{label:"iPhone",order:17},"ipad":{label:"iPad",order:18},"apple-watch":{label:"Apple Watch",order:19},"airpods":{label:"AirPods",order:20},"homepod":{label:"HomePod",order:21},"apple-tv":{label:"Apple TV",order:22},"vision-pro":{label:"Vision Pro",order:23}};
+
+// ── CPI FALLBACK (BLS CPI-U Annual Averages) ──
+const CPI_FALLBACK={1976:56.9,1977:60.6,1978:65.2,1979:72.6,1980:82.4,1981:90.9,1982:96.5,1983:99.6,1984:103.9,1985:107.6,1986:109.6,1987:113.6,1988:118.3,1989:124.0,1990:130.7,1991:136.2,1992:140.3,1993:144.5,1994:148.2,1995:152.4,1996:156.9,1997:160.5,1998:163.0,1999:166.6,2000:172.2,2001:177.1,2002:179.9,2003:184.0,2004:188.9,2005:195.3,2006:201.6,2007:207.3,2008:215.3,2009:214.5,2010:218.1,2011:224.9,2012:229.6,2013:233.0,2014:236.7,2015:237.0,2016:240.0,2017:245.1,2018:251.1,2019:255.7,2020:258.8,2021:271.0,2022:292.7,2023:304.7,2024:315.6,2025:323.0,2026:330.0};
+
+// ── STATE ──
+const PRODUCT_MAP=new Map(PRODUCTS.map(p=>[p.id,p]));
+const state={checkedIds:new Set(),viewMode:"category",searchQuery:"",theme:"light",cpiData:Object.assign({},CPI_FALLBACK),eurRate:0.92,apiStatus:{cpi:"fallback",eur:"fallback"}};
+
+// ── FORMATTING ──
+const fmtUSD=new Intl.NumberFormat('en-US',{style:'currency',currency:'USD',maximumFractionDigits:0});
+const fmtEUR=new Intl.NumberFormat('fr-FR',{style:'currency',currency:'EUR',maximumFractionDigits:0});
+
+function adjustForInflation(msrp,year){
+  const now=new Date().getFullYear();
+  const target=Math.min(now,2026);
+  const currentCPI=state.cpiData[target]||CPI_FALLBACK[2026];
+  const yearCPI=state.cpiData[year]||CPI_FALLBACK[year];
+  if(!yearCPI) return msrp;
+  return msrp*(currentCPI/yearCPI);
+}
+function toEUR(usd){return usd*state.eurRate;}
+
+// ── IMAGE FALLBACK ──
+function hashHue(s){let h=0;for(let i=0;i<s.length;i++){h=s.charCodeAt(i)+((h<<5)-h);}return Math.abs(h)%360;}
+function imgError(el,name){
+  const initials=name.replace(/^Apple\s*/i,'').split(/[\s\-\/]+/).map(w=>w[0]||'').join('').substring(0,3).toUpperCase();
+  const hue=hashHue(name);
+  el.outerHTML='<svg viewBox="0 0 200 150" xmlns="http://www.w3.org/2000/svg" class="fallback-svg"><rect width="200" height="150" rx="8" fill="hsl('+hue+',25%,88%)"/><text x="100" y="82" text-anchor="middle" font-size="36" font-weight="600" fill="hsl('+hue+',35%,40%)" font-family="system-ui">'+initials+'</text></svg>';
+}
+
+// ── RENDER ──
+function getFiltered(){
+  const q=state.searchQuery.toLowerCase().trim();
+  if(!q) return PRODUCTS;
+  return PRODUCTS.filter(p=>p.name.toLowerCase().includes(q)||(CATEGORIES[p.category]?.label||'').toLowerCase().includes(q)||String(p.year).includes(q));
+}
+function badge(items){
+  const total=items.length;
+  const owned=items.filter(p=>state.checkedIds.has(p.id)).length;
+  return '<span class="section-badge">'+total+' product'+(total!==1?'s':'')+(owned>0?', '+owned+' owned':'')+'</span>';
+}
+function cardHTML(p){
+  const checked=state.checkedIds.has(p.id);
+  const adj=adjustForInflation(p.msrp,p.year);
+  const eur=toEUR(adj);
+  const eName=p.name.replace(/'/g,"\\'").replace(/"/g,'&quot;');
+  return '<article class="product-card'+(checked?' checked':'')+'" data-id="'+p.id+'"><div class="card-check">'+(checked?'&#10003;':'')+'</div><div class="card-img-wrap"><img src="'+p.image+'" alt="'+p.name+'" loading="lazy" onerror="imgError(this,\''+eName+'\')"></div><div class="card-body"><div class="card-name">'+p.name+'</div><div class="card-year">'+p.year+'</div><div class="card-prices"><div class="price-row"><span class="price-label">MSRP</span><span class="price-value price-original'+(p.est?' est':'')+'">'+fmtUSD.format(p.msrp)+'</span></div><div class="price-row"><span class="price-label">Today USD</span><span class="price-value price-adjusted">'+fmtUSD.format(adj)+'</span></div><div class="price-row"><span class="price-label">Today EUR</span><span class="price-value price-eur">'+fmtEUR.format(eur)+'</span></div></div></div></article>';
+}
+function render(){
+  const items=getFiltered();
+  const app=document.getElementById('app');
+  let html='';
+  if(items.length===0){html='<div class="empty-state">No products match your search.</div>';}
+  else if(state.viewMode==='category'){
+    const groups={};items.forEach(p=>{(groups[p.category]||=[]).push(p);});
+    Object.entries(groups).sort(([a],[b])=>(CATEGORIES[a]?.order||99)-(CATEGORIES[b]?.order||99)).forEach(([cat,prods])=>{
+      const label=CATEGORIES[cat]?.label||cat;
+      html+='<div class="section-group"><div class="section-header"><h2 class="section-title">'+label+'</h2>'+badge(prods)+'</div><div class="card-grid">'+prods.map(cardHTML).join('')+'</div></div>';
+    });
+  } else {
+    const groups={};items.forEach(p=>{(groups[p.year]||=[]).push(p);});
+    Object.keys(groups).sort((a,b)=>a-b).forEach(yr=>{
+      const prods=groups[yr];
+      html+='<div class="section-group"><div class="section-header"><h2 class="section-title" style="font-size:1.8rem;color:var(--text-tertiary);opacity:0.6">'+yr+'</h2>'+badge(prods)+'</div><div class="card-grid">'+prods.map(cardHTML).join('')+'</div></div>';
+    });
+  }
+  app.innerHTML=html;
+  updateFooter();
+}
+
+// ── FOOTER ──
+function updateFooter(){
+  let totalOrig=0,totalAdj=0;
+  state.checkedIds.forEach(id=>{const p=PRODUCT_MAP.get(id);if(p){totalOrig+=p.msrp;totalAdj+=adjustForInflation(p.msrp,p.year);}});
+  document.getElementById('footCount').textContent=state.checkedIds.size+' / '+PRODUCTS.length;
+  document.getElementById('footOriginal').textContent=fmtUSD.format(totalOrig);
+  document.getElementById('footAdjusted').textContent=fmtUSD.format(totalAdj);
+  document.getElementById('footEur').textContent=fmtEUR.format(toEUR(totalAdj));
+}
+
+// ── EVENT HANDLERS ──
+document.getElementById('app').addEventListener('click',e=>{
+  const card=e.target.closest('[data-id]');
+  if(!card) return;
+  const id=card.dataset.id;
+  if(state.checkedIds.has(id)) state.checkedIds.delete(id); else state.checkedIds.add(id);
+  render();
+});
+let searchTimer;
+function onSearchInput(){clearTimeout(searchTimer);searchTimer=setTimeout(()=>{state.searchQuery=document.getElementById('searchBox').value;render();},150);}
+function setViewMode(mode){state.viewMode=mode;document.getElementById('btnCategory').classList.toggle('active',mode==='category');document.getElementById('btnYear').classList.toggle('active',mode==='year');render();}
+function toggleTheme(){state.theme=state.theme==='light'?'dark':'light';document.documentElement.dataset.theme=state.theme;document.getElementById('btnTheme').innerHTML=state.theme==='dark'?'&#9788;':'&#9789;';}
+function clearAll(){state.checkedIds.clear();render();}
+function exportChecked(){
+  const checked=PRODUCTS.filter(p=>state.checkedIds.has(p.id));
+  if(checked.length===0){alert('No products checked.');return;}
+  const lines=['Apple 50 Years - My Collection','='.repeat(42),''];
+  let tO=0,tA=0;
+  checked.forEach(p=>{const adj=adjustForInflation(p.msrp,p.year);tO+=p.msrp;tA+=adj;
+    lines.push(p.name+' ('+p.year+')');
+    lines.push('  MSRP:      '+fmtUSD.format(p.msrp)+(p.est?' (est.)':''));
+    lines.push('  Today USD: '+fmtUSD.format(adj));
+    lines.push('  Today EUR: '+fmtEUR.format(toEUR(adj)));lines.push('');});
+  lines.push('='.repeat(42));
+  lines.push('Total checked: '+checked.length);
+  lines.push('Original USD:  '+fmtUSD.format(tO));
+  lines.push('Today USD:     '+fmtUSD.format(tA));
+  lines.push('Today EUR:     '+fmtEUR.format(toEUR(tA)));
+  const blob=new Blob([lines.join('\n')],{type:'text/plain'});
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement('a');a.href=url;a.download='apple-50-years-checklist.txt';
+  document.body.appendChild(a);a.click();document.body.removeChild(a);URL.revokeObjectURL(url);
+}
+
+// ── API FETCHING ──
+async function fetchCPI(){
+  try{
+    const yr=new Date().getFullYear(),s=Math.max(2020,yr-6);
+    const res=await fetch('https://api.bls.gov/publicAPI/v1/timeseries/data/',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({seriesid:['CUUR0000SA0'],startyear:String(s),endyear:String(yr)})});
+    const json=await res.json();
+    if(json.status==='REQUEST_SUCCEEDED'&&json.Results?.series?.[0]?.data){
+      const byYear={};
+      json.Results.series[0].data.forEach(d=>{
+        const y=parseInt(d.year);
+        if(d.period==='M13'||d.period==='S01'){byYear[y]=parseFloat(d.value);}
+        else if(d.period.startsWith('M')){
+          if(!byYear[y]) byYear[y]={sum:0,count:0};
+          if(typeof byYear[y]==='object'){byYear[y].sum+=parseFloat(d.value);byYear[y].count++;}
+        }
+      });
+      Object.entries(byYear).forEach(([y,v])=>{
+        if(typeof v==='object'&&v.count>0) state.cpiData[y]=v.sum/v.count;
+        else if(typeof v==='number') state.cpiData[y]=v;
+      });
+      state.apiStatus.cpi='loaded';
+    }
+  }catch(e){/* fallback stays */}
+}
+async function fetchEUR(){
+  try{
+    const res=await fetch('https://open.er-api.com/v6/latest/USD');
+    const json=await res.json();
+    if(json.result==='success'&&json.rates?.EUR){state.eurRate=json.rates.EUR;state.apiStatus.eur='loaded';}
+  }catch(e){/* fallback stays */}
+}
+function updateApiStatus(){
+  const el=document.getElementById('apiStatus');
+  const cOk=state.apiStatus.cpi==='loaded',eOk=state.apiStatus.eur==='loaded';
+  el.innerHTML='<span class="dot '+(cOk?'dot-ok':'dot-warn')+'"></span>CPI: '+(cOk?'Live':'Fallback')+' &nbsp; <span class="dot '+(eOk?'dot-ok':'dot-warn')+'"></span>EUR/USD: '+(eOk?state.eurRate.toFixed(4):'Fallback ('+state.eurRate+')');
+}
+
+// ── INIT ──
+render();updateApiStatus();
+Promise.allSettled([fetchCPI(),fetchEUR()]).then(()=>{render();updateApiStatus();});
+</script>
+</body>
+</html>
