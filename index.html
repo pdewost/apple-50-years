@@ -292,6 +292,13 @@ main { max-width: 1400px; margin: 0 auto; padding: 24px; }
   background: var(--accent); color: #fff; border-color: var(--accent);
 }
 .journey-actions .btn-primary:hover { background: var(--accent-hover); }
+.journey-cta {
+  text-align: center; margin-top: 18px; padding-top: 14px;
+  border-top: 1px solid var(--border-light); font-size: 0.85rem; color: var(--text-tertiary);
+}
+.journey-cta a { color: var(--accent); text-decoration: none; font-weight: 600; }
+.journey-cta a:hover { text-decoration: underline; }
+
 .btn-journey {
   display: none; background: linear-gradient(135deg, var(--accent), #30D158) !important;
   color: #fff !important; border: none !important;
@@ -401,7 +408,7 @@ body.staging .product-card[data-triage="wrong-image"] .card-img-actions { displa
       <input type="text" class="search-box" id="searchBox" placeholder="Search products..." oninput="onSearchInput()">
       <button class="btn" id="btnTheme" onclick="toggleTheme()" title="Toggle dark mode">&#9789;</button>
       <button class="btn btn-journey" onclick="showJourney()" title="My Apple Journey">My Journey</button>
-      <button class="btn" onclick="exportChecked()" title="Export checked list">Export</button>
+      <button class="btn" onclick="exportChecked()" title="Export as HTML tile">Export</button>
       <button class="btn" onclick="clearAll()" title="Clear all selections">Clear</button>
       <span class="staging-controls">
         <button class="btn" onclick="runAutoDetect()" title="Auto-detect image/name mismatches" style="background:#FF9F0A;color:#fff;border-color:#FF9F0A">Auto-Detect</button>
@@ -950,7 +957,9 @@ function showJourney(){
     '<div class="journey-actions">'+
     '<button class="btn btn-primary" onclick="copyJourney()" id="btnCopyJ">Copy</button>'+
     (navigator.share?'<button class="btn" onclick="shareJourney()">Share</button>':'')+
+    '<button class="btn" onclick="exportChecked()">Export HTML</button>'+
     '</div>'+
+    '<div class="journey-cta">What about you?<br><a href="https://pdewost.github.io/apple-50-years/" target="_blank" rel="noopener">Build your Apple journey &rarr;</a></div>'+
     '</div></div>';
 
   // Store text for copy/share
@@ -1001,23 +1010,67 @@ function setViewMode(mode){state.viewMode=mode;document.getElementById('btnCateg
 function toggleTheme(){state.theme=state.theme==='light'?'dark':'light';document.documentElement.dataset.theme=state.theme;document.getElementById('btnTheme').innerHTML=state.theme==='dark'?'&#9788;':'&#9789;';}
 function clearAll(){state.checkedIds.clear();render();}
 function exportChecked(){
-  const checked=PRODUCTS.filter(p=>state.checkedIds.has(p.id));
+  const checked=PRODUCTS.filter(p=>state.checkedIds.has(p.id)).sort((a,b)=>a.year-b.year);
   if(checked.length===0){alert('No products checked.');return;}
-  const lines=['Apple 50 Years - My Collection','='.repeat(42),''];
-  let tO=0,tA=0;
-  checked.forEach(p=>{const adj=adjustForInflation(p.msrp,p.year);tO+=p.msrp;tA+=adj;
-    lines.push(p.name+' ('+p.year+')');
-    lines.push('  MSRP:      '+fmtUSD.format(p.msrp)+(p.est?' (est.)':''));
-    lines.push('  Today USD: '+fmtUSD.format(adj));
-    lines.push('  Today EUR: '+fmtEUR.format(toEUR(adj)));lines.push('');});
-  lines.push('='.repeat(42));
-  lines.push('Total checked: '+checked.length);
-  lines.push('Original USD:  '+fmtUSD.format(tO));
-  lines.push('Today USD:     '+fmtUSD.format(tA));
-  lines.push('Today EUR:     '+fmtEUR.format(toEUR(tA)));
-  const blob=new Blob([lines.join('\n')],{type:'text/plain'});
+  const years=checked.map(p=>p.year);
+  const minY=Math.min(...years),maxY=Math.max(...years);
+  let totalAdj=0;
+  checked.forEach(p=>{totalAdj+=adjustForInflation(p.msrp,p.year);});
+  const encoded=encodeSelection(state.checkedIds);
+  const appUrl='https://pdewost.github.io/apple-50-years/#s='+encoded;
+  const maxTh=30;const vis=checked.slice(0,maxTh);const extra=checked.length-maxTh;
+  const thumbTags=vis.map(p=>'      <img src="'+(state.imageOverrides[p.id]||p.image)+'" alt="'+p.name.replace(/"/g,'&quot;')+'" title="'+p.name.replace(/"/g,'&quot;')+' ('+p.year+')">').join('\n')+(extra>0?'\n      <span style="display:inline-flex;align-items:center;justify-content:center;width:48px;height:36px;border-radius:4px;background:rgba(41,151,255,0.12);color:#2997FF;font-size:0.7rem;font-weight:600">+'+extra+'</span>':'');
+  const htmlDoc=`<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>My Apple Journey \u2014 50 Years</title>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@500;600;700&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{min-height:100vh;display:flex;align-items:center;justify-content:center;background:#000;font-family:'Outfit',-apple-system,sans-serif;color:#F5F5F7;padding:24px}
+.card{max-width:520px;width:100%;padding:32px;background:#1C1C1E;border-radius:20px;box-shadow:0 8px 32px rgba(0,0,0,0.4)}
+.title{font-size:1.2rem;font-weight:700;margin-bottom:16px;display:flex;align-items:center;gap:8px}
+.thumbs{display:flex;flex-wrap:wrap;gap:4px;justify-content:center;margin-bottom:20px}
+.thumbs img{width:48px;height:36px;object-fit:contain;border-radius:4px;border:1px solid #38383A;background:#000;padding:2px}
+.text{text-align:center;line-height:1.6;margin-bottom:20px}
+.count{font-size:1.8rem;font-weight:700;display:block;background:linear-gradient(135deg,#0071E3,#30D158);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.value{font-size:1.4rem;font-weight:700;color:#2997FF;-webkit-text-fill-color:#2997FF}
+.hash{color:#6E6E73;font-size:0.85rem}
+.cta{text-align:center;margin-top:24px;padding-top:16px;border-top:1px solid #38383A;font-size:0.95rem}
+.cta a{color:#2997FF;text-decoration:none;font-weight:600}
+.cta a:hover{text-decoration:underline}
+.source{text-align:center;margin-top:12px;font-size:0.65rem;color:#48484A}
+.source a{color:#48484A}
+</style>
+</head>
+<body>
+<div class="card">
+  <div class="title">\u{F8FF} My Apple Journey</div>
+  <div class="thumbs">
+${thumbTags}
+  </div>
+  <div class="text">
+    From <strong>${minY}</strong> to <strong>${maxY}</strong>, I have owned
+    <span class="count">${checked.length} Apple devices</span>
+    <span class="hash">for a total #LifetimeCustomerValue of</span><br>
+    <span class="value">${fmtUSD.format(totalAdj)}</span><br>
+    <span class="hash">(today\u2019s dollars)</span>
+  </div>
+  <div class="cta">
+    What about you?<br>
+    <a href="${appUrl}" target="_blank" rel="noopener">Build your Apple journey \u2192</a>
+  </div>
+  <div class="source">
+    <a href="https://pdewost.github.io/apple-50-years/">Apple 50 Years \u2014 Interactive Checklist</a>
+  </div>
+</div>
+</body>
+</html>`;
+  const blob=new Blob([htmlDoc],{type:'text/html'});
   const url=URL.createObjectURL(blob);
-  const a=document.createElement('a');a.href=url;a.download='apple-50-years-checklist.txt';
+  const a=document.createElement('a');a.href=url;a.download='my-apple-journey.html';
   document.body.appendChild(a);a.click();document.body.removeChild(a);URL.revokeObjectURL(url);
 }
 
