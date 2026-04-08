@@ -97,14 +97,22 @@ body {
 .header-controls {
   display: flex; align-items: center; gap: 8px; flex-wrap: wrap;
 }
+.search-wrap { position: relative; display: inline-flex; align-items: center; }
 .search-box {
-  padding: 8px 14px; border-radius: var(--radius-md);
+  padding: 8px 30px 8px 14px; border-radius: var(--radius-md);
   border: 1px solid var(--border); background: var(--bg-secondary);
   color: var(--text-primary); font-size: 0.875rem; font-family: var(--font-body);
   width: 220px; outline: none; transition: border var(--transition-fast), box-shadow var(--transition-fast);
 }
 .search-box:focus { border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-light); }
 .search-box::placeholder { color: var(--text-tertiary); }
+.search-clear {
+  position: absolute; right: 8px; top: 50%; transform: translateY(-50%);
+  background: none; border: none; cursor: pointer; font-size: 1rem;
+  color: var(--text-tertiary); display: none; padding: 0 2px; line-height: 1;
+}
+.search-clear:hover { color: var(--text-primary); }
+.search-wrap.has-text .search-clear { display: block; }
 
 .btn {
   display: inline-flex; align-items: center; gap: 6px;
@@ -261,27 +269,31 @@ main { max-width: 1400px; margin: 0 auto; padding: 24px; }
   justify-content: center;
 }
 .journey-thumb {
-  width: 48px; height: 36px; object-fit: contain; border-radius: 4px;
-  border: 1px solid var(--border-light); background: var(--bg-primary); padding: 2px;
+  width: 64px; height: 48px; object-fit: contain; border-radius: 6px;
+  border: 1px solid var(--border-light); background: var(--bg-primary); padding: 3px;
 }
 .journey-more {
   display: inline-flex; align-items: center; justify-content: center;
-  width: 48px; height: 36px; border-radius: 4px; background: var(--accent-light);
-  color: var(--accent); font-size: 0.7rem; font-weight: 600;
+  width: 64px; height: 48px; border-radius: 6px; background: var(--accent-light);
+  color: var(--accent); font-size: 0.75rem; font-weight: 600;
 }
 .journey-text {
   text-align: center; font-family: var(--font-display); font-size: 1.05rem;
   line-height: 1.6; margin-bottom: 20px; color: var(--text-primary);
 }
 .journey-text .j-count {
-  font-size: 1.8rem; font-weight: 700; display: block;
+  font-size: 2rem; font-weight: 700; display: block;
   background: linear-gradient(135deg, var(--accent), #30D158);
   -webkit-background-clip: text; -webkit-text-fill-color: transparent;
   background-clip: text;
 }
 .journey-text .j-value {
-  font-size: 1.4rem; font-weight: 700; color: var(--accent);
+  font-size: 2.2rem; font-weight: 700; color: var(--accent);
   -webkit-text-fill-color: var(--accent);
+}
+.journey-items {
+  font-size: 0.7rem; color: var(--text-tertiary); text-align: center;
+  margin-bottom: 16px; line-height: 1.6; max-height: 80px; overflow-y: auto;
 }
 .journey-text .j-hash { color: var(--text-tertiary); font-size: 0.85rem; }
 .journey-url {
@@ -463,7 +475,7 @@ body.staging .product-card[data-triage="wrong-image"] .card-img-actions { displa
         <button class="btn active" id="btnCategory" onclick="setViewMode('category')">By Product</button>
         <button class="btn" id="btnYear" onclick="setViewMode('year')">By Year</button>
       </div>
-      <input type="text" class="search-box" id="searchBox" placeholder="Search products..." oninput="onSearchInput()">
+      <div class="search-wrap" id="searchWrap"><input type="text" class="search-box" id="searchBox" placeholder="Search products..." oninput="onSearchInput()"><button class="search-clear" onclick="clearSearch()" title="Clear">&times;</button></div>
       <button class="btn" id="btnTheme" onclick="toggleTheme()" title="Toggle dark mode">&#9789;</button>
       <button class="btn btn-journey" onclick="showJourney()" title="'+t('journeyTitle')+'">My Journey</button>
       <button class="btn" onclick="exportChecked()" title="Export as HTML tile">Export</button>
@@ -1101,6 +1113,7 @@ function showJourney(){
     '<button class="journey-close" onclick="closeJourney()">&times;</button>'+
     '<div class="journey-title"><span>&#63743;</span>'+t('journeyTitle')+'</div>'+
     '<div class="journey-thumbs">'+thumbsHTML+'</div>'+
+    '<div class="journey-items">'+checked.map(p=>p.name+' ('+p.year+')'+(getQty(p.id)>1?' \u00d7'+getQty(p.id):'')).join(' \u00b7 ')+'</div>'+
     '<div class="journey-text">'+
     t('journeyFrom')+' <strong>'+minY+'</strong> '+t('journeyTo')+' <strong>'+maxY+'</strong>'+t('journeyOwned')+
     '<span class="j-count">'+checked.length+' '+t('journeyDevices')+'</span>'+
@@ -1165,7 +1178,18 @@ document.getElementById('app').addEventListener('click',e=>{
   render();
 });
 let searchTimer;
-function onSearchInput(){clearTimeout(searchTimer);searchTimer=setTimeout(()=>{state.searchQuery=document.getElementById('searchBox').value;render();},150);}
+function onSearchInput(){
+  clearTimeout(searchTimer);
+  const box=document.getElementById('searchBox');
+  document.getElementById('searchWrap').classList.toggle('has-text',box.value.length>0);
+  searchTimer=setTimeout(()=>{state.searchQuery=box.value;render();},150);
+}
+function clearSearch(){
+  const box=document.getElementById('searchBox');
+  box.value='';state.searchQuery='';
+  document.getElementById('searchWrap').classList.remove('has-text');
+  render();box.focus();
+}
 function setViewMode(mode){state.viewMode=mode;document.getElementById('btnCategory').classList.toggle('active',mode==='category');document.getElementById('btnYear').classList.toggle('active',mode==='year');render();}
 function toggleTheme(){state.theme=state.theme==='light'?'dark':'light';document.documentElement.dataset.theme=state.theme;document.getElementById('btnTheme').innerHTML=state.theme==='dark'?'&#9788;':'&#9789;';}
 function toggleLang(){state.lang=state.lang==='en'?'fr':'en';updateLangUI();render();}
