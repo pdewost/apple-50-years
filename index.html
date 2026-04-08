@@ -327,6 +327,23 @@ body.has-checked .btn-journey { display: inline-flex; }
 .lang-toggle span.active { opacity: 1; background: var(--accent-light); }
 .lang-toggle span:hover { opacity: 0.8; }
 
+.cat-nav {
+  display: none; max-width: 1400px; margin: 0 auto;
+  padding: 8px 24px; overflow-x: auto; white-space: nowrap;
+  -webkit-overflow-scrolling: touch; scrollbar-width: none;
+}
+.cat-nav::-webkit-scrollbar { display: none; }
+body.show-catnav .cat-nav { display: block; }
+.cat-nav-pill {
+  display: inline-block; padding: 4px 12px; margin-right: 6px;
+  border-radius: 20px; font-size: 0.75rem; font-weight: 500;
+  background: var(--bg-card); border: 1px solid var(--border-light);
+  color: var(--text-secondary); cursor: pointer; transition: all var(--transition-fast);
+  text-decoration: none; font-family: var(--font-body);
+}
+.cat-nav-pill:hover { border-color: var(--accent); color: var(--accent); }
+.cat-nav-pill.active { background: var(--accent); color: #fff; border-color: var(--accent); }
+
 .intro-section {
   max-width: 700px; margin: 0 auto 32px; text-align: center;
   padding: 24px; line-height: 1.7; color: var(--text-secondary);
@@ -469,6 +486,7 @@ body.staging .product-card[data-triage="wrong-image"] .card-img-actions { displa
     <button class="btn" onclick="setTriageFilter('validated')"><span class="sp-dot green"></span> Validated</button>
   </div>
 </header>
+<div class="cat-nav" id="catNav"></div>
 
 <main id="app"></main>
 
@@ -537,7 +555,8 @@ const PRODUCTS=[
 {id:"performa-5200",name:"Macintosh Performa 5200",year:1995,msrp:1900,est:true,category:"performa",image:"https://upload.wikimedia.org/wikipedia/commons/thumb/d/df/Macintosh_Performa_5200.jpg/500px-Macintosh_Performa_5200.jpg",url:"https://en.wikipedia.org/wiki/Macintosh_Performa_5200",cpu:"PowerPC 603"},
 {id:"performa-6400",name:"Macintosh Performa 6400",year:1996,msrp:2400,est:true,category:"performa",image:"https://upload.wikimedia.org/wikipedia/commons/thumb/5/50/Macintosh_Performa_6400.jpg/500px-Macintosh_Performa_6400.jpg",url:"https://en.wikipedia.org/wiki/Macintosh_Performa_6400",cpu:"PowerPC 603e"},
 
-// PowerBook & Duo
+// Portable, PowerBook & Duo
+{id:"mac-portable",name:"Macintosh Portable",year:1989,msrp:6500,est:false,category:"powerbook",image:"https://upload.wikimedia.org/wikipedia/commons/thumb/c/c3/Macintosh_Portable-IMG_7541.jpg/500px-Macintosh_Portable-IMG_7541.jpg",url:"https://en.wikipedia.org/wiki/Macintosh_Portable",cpu:"Motorola 68000"},
 {id:"pb-100",name:"PowerBook 100",year:1991,msrp:2500,est:false,category:"powerbook",image:"https://upload.wikimedia.org/wikipedia/commons/thumb/5/58/Powerbook_100_pose.jpg/500px-Powerbook_100_pose.jpg",url:"https://en.wikipedia.org/wiki/PowerBook_100",cpu:"Motorola 68000"},
 {id:"pb-140",name:"PowerBook 140",year:1991,msrp:2900,est:false,category:"powerbook",image:"https://upload.wikimedia.org/wikipedia/commons/thumb/8/89/Macintosh_PowerBook_140.jpg/500px-Macintosh_PowerBook_140.jpg",url:"https://en.wikipedia.org/wiki/PowerBook_140",cpu:"Motorola 68030"},
 {id:"pb-170",name:"PowerBook 170",year:1991,msrp:4599,est:false,category:"powerbook",image:"https://upload.wikimedia.org/wikipedia/en/thumb/e/e3/PowerBook_170.jpg/500px-PowerBook_170.jpg",url:"https://en.wikipedia.org/wiki/PowerBook_170",cpu:"Motorola 68030"},
@@ -791,50 +810,50 @@ const CATEGORIES={"pre-mac":{label:"Pre-Mac Era",order:0},"compact-mac":{label:"
 const STRINGS={
 en:{
   title:' 50 Years (1976\u20132026)',
-  byProduct:'By Product',byYear:'By Year',myJourney:'My Journey',
+  byProduct:'By Product',byYear:'By Year',myShelf:'My Apple Shelf',
   export:'Export',clear:'Clear',search:'Search products...',
   checked:'Checked',origLabel:'Original $',todayLabel:"Today's $",
   msrp:'MSRP',todayCardLabel:'Today $',qty:'Qty:',specs:'Specs',
   products:'product',productsPlural:'products',owned:'owned',
   noResults:'No products match your search.',
   noChecked:'No products checked.',
-  introTitle:'50 years of Apple, one checklist',
-  introP1:'From the Apple\u00a0I in a garage (1976) to the Vision\u00a0Pro on your face (2024), Apple has shipped over 200 landmark hardware products.',
-  introP2:'Check every Mac, iPhone, iPad, iPod, Watch, and accessory you\u2019ve ever owned. The app computes your <strong>#LifetimeCustomerValue</strong> in today\u2019s inflation-adjusted dollars \u2014 and lets you share the result.',
-  introP3:'Prices are original US MSRPs adjusted with BLS CPI\u2011U data. EUR conversion is live.',
+  introTitle:'How much of an Apple superfan are you?',
+  introP1:'Mark every Apple product you\u2019ve ever owned \u2014 from the original Apple\u00a0I in a garage (1976) to the Vision\u00a0Pro (2024). That\u2019s over 250 products across Mac, iPhone, iPad, iPod, Apple\u00a0Watch, and accessories.',
+  introP2:'The app adds up your <strong>#LifetimeCustomerValue</strong> in today\u2019s inflation-adjusted dollars. Your total spending tells the story of your relationship with Apple over time.',
+  introP3:'When you\u2019re done, hit <strong>\u201cMy Apple Shelf\u201d</strong> to see your personal collection tile \u2014 and share it.',
   introCta:'\u2193 Start checking \u2193',
-  journeyTitle:' My Apple Journey',
+  journeyTitle:' My Apple Shelf',
   journeyFrom:'From',journeyTo:'to',journeyOwned:', I have owned',
   journeyDevices:'Apple devices',
   journeyHash:'for a total #LifetimeCustomerValue of',
   journeyDollars:"(today's value)",
   journeyCta:'What about you?',
-  journeyCtaLink:'Build your Apple journey \u2192',
-  copy:'Copy',share:'Share',exportHtml:'Export HTML',
+  journeyCtaLink:'Build your own Apple Shelf \u2192',
+  copy:'Copy',share:'Share',exportHtml:'Export HTML',saveImage:'Save Image',
   copied:'Copied!',
 },
 fr:{
   title:' 50 ans (1976\u20132026)',
-  byProduct:'Par Produit',byYear:'Par Ann\u00e9e',myJourney:'Mon Parcours',
+  byProduct:'Par Produit',byYear:'Par Ann\u00e9e',myShelf:'Mon \u00c9tag\u00e8re Apple',
   export:'Exporter',clear:'Effacer',search:'Rechercher...',
   checked:'S\u00e9lection',origLabel:'\u20ac d\u2019origine',todayLabel:'\u20ac actualis\u00e9s',
   msrp:'Prix',todayCardLabel:'\u20ac actuel',qty:'Qt\u00e9\u00a0:',specs:'Fiche',
   products:'produit',productsPlural:'produits',owned:'poss\u00e9d\u00e9',
   noResults:'Aucun produit ne correspond \u00e0 votre recherche.',
   noChecked:'Aucun produit s\u00e9lectionn\u00e9.',
-  introTitle:'50 ans d\u2019Apple, une checklist',
-  introP1:'De l\u2019Apple\u00a0I dans un garage (1976) au Vision\u00a0Pro sur votre visage (2024), Apple a lanc\u00e9 plus de 200\u00a0produits mat\u00e9riels marquants.',
-  introP2:'Cochez chaque Mac, iPhone, iPad, iPod, Watch et accessoire que vous avez poss\u00e9d\u00e9. L\u2019appli calcule votre <strong>#LifetimeCustomerValue</strong> en dollars ajust\u00e9s de l\u2019inflation \u2014 et vous permet de partager le r\u00e9sultat.',
-  introP3:'Les prix sont les MSRP US d\u2019origine, ajust\u00e9s avec les donn\u00e9es IPC du BLS. La conversion EUR est en temps r\u00e9el.',
+  introTitle:'\u00cates-vous un vrai superfan Apple\u00a0?',
+  introP1:'Cochez chaque produit Apple que vous avez poss\u00e9d\u00e9 \u2014 de l\u2019Apple\u00a0I dans un garage (1976) au Vision\u00a0Pro (2024). Plus de 250\u00a0produits\u00a0: Mac, iPhone, iPad, iPod, Apple\u00a0Watch et accessoires.',
+  introP2:'L\u2019appli calcule votre <strong>#LifetimeCustomerValue</strong> en monnaie ajust\u00e9e de l\u2019inflation. Votre total raconte l\u2019histoire de votre relation avec Apple.',
+  introP3:'Quand c\u2019est fait, cliquez sur <strong>\u00ab\u00a0Mon \u00c9tag\u00e8re Apple\u00a0\u00bb</strong> pour voir et partager votre collection.',
   introCta:'\u2193 Commencez \u00e0 cocher \u2193',
-  journeyTitle:' Mon Parcours Apple',
+  journeyTitle:' Mon \u00c9tag\u00e8re Apple',
   journeyFrom:'De',journeyTo:'\u00e0',journeyOwned:', j\u2019ai poss\u00e9d\u00e9',
   journeyDevices:'appareils Apple',
   journeyHash:'pour une #LifetimeCustomerValue totale de',
   journeyDollars:'(valeur actualis\u00e9e)',
   journeyCta:'Et vous\u00a0?',
-  journeyCtaLink:'Composez votre parcours Apple \u2192',
-  copy:'Copier',share:'Partager',exportHtml:'Exporter HTML',
+  journeyCtaLink:'Composez votre \u00c9tag\u00e8re Apple \u2192',
+  copy:'Copier',share:'Partager',exportHtml:'Exporter HTML',saveImage:'Sauver Image',
   copied:'Copi\u00e9\u00a0!',
 }
 };
@@ -996,11 +1015,17 @@ function render(){
   if(items.length===0){html='<div class="empty-state">'+t('noResults')+'</div>';}
   else if(state.viewMode==='category'){
     const groups={};items.forEach(p=>{(groups[p.category]||=[]).push(p);});
-    Object.entries(groups).sort(([a],[b])=>(CATEGORIES[a]?.order||99)-(CATEGORIES[b]?.order||99)).forEach(([cat,prods])=>{
+    const sorted=Object.entries(groups).sort(([a],[b])=>(CATEGORIES[a]?.order??99)-(CATEGORIES[b]?.order??99));
+    sorted.forEach(([cat,prods])=>{
       const label=CATEGORIES[cat]?.label||cat;
-      html+='<div class="section-group"><div class="section-header"><h2 class="section-title">'+label+'</h2>'+badge(prods)+'</div><div class="card-grid">'+prods.map(cardHTML).join('')+'</div></div>';
+      html+='<div class="section-group" id="cat-'+cat+'"><div class="section-header"><h2 class="section-title">'+label+'</h2>'+badge(prods)+'</div><div class="card-grid">'+prods.map(cardHTML).join('')+'</div></div>';
     });
+    // Category nav
+    const navEl=document.getElementById('catNav');
+    navEl.innerHTML=sorted.map(([cat])=>'<a class="cat-nav-pill" href="#cat-'+cat+'" onclick="event.preventDefault();document.getElementById(\'cat-'+cat+'\').scrollIntoView({behavior:\'smooth\',block:\'start\'})">'+CATEGORIES[cat]?.label+'</a>').join('');
+    document.body.classList.add('show-catnav');
   } else {
+    document.body.classList.remove('show-catnav');
     const groups={};items.forEach(p=>{(groups[p.year]||=[]).push(p);});
     Object.keys(groups).sort((a,b)=>a-b).forEach(yr=>{
       const prods=groups[yr];
@@ -1072,7 +1097,7 @@ function showJourney(){
   const html='<div class="journey-overlay" onclick="if(event.target===this)closeJourney()">'+
     '<div class="journey-card">'+
     '<button class="journey-close" onclick="closeJourney()">&times;</button>'+
-    '<div class="journey-title"><span>&#63743;</span> My Apple Journey</div>'+
+    '<div class="journey-title"><span>&#63743;</span>'+t('journeyTitle')+'</div>'+
     '<div class="journey-thumbs">'+thumbsHTML+'</div>'+
     '<div class="journey-text">'+
     t('journeyFrom')+' <strong>'+minY+'</strong> '+t('journeyTo')+' <strong>'+maxY+'</strong>'+t('journeyOwned')+
@@ -1086,6 +1111,7 @@ function showJourney(){
     '<button class="btn btn-primary" onclick="copyJourney()" id="btnCopyJ">'+t('copy')+'</button>'+
     (navigator.share?'<button class="btn" onclick="shareJourney()">'+t('share')+'</button>':'')+
     '<button class="btn" onclick="exportChecked()">'+t('exportHtml')+'</button>'+
+    '<button class="btn" onclick="saveJourneyImage()">'+t('saveImage')+'</button>'+
     '</div>'+
     '<div class="journey-cta">What about you?<br><a href="https://pdewost.github.io/apple-50-years/" target="_blank" rel="noopener">'+t('journeyCtaLink')+'</a></div>'+
     '</div></div>';
@@ -1117,11 +1143,34 @@ function copyJourney(){
 function shareJourney(){
   if(navigator.share){
     navigator.share({
-      title:'My Apple Journey \u2014 50 Years',
+      title:t('journeyTitle')+' \u2014 50 Years',
       text:window._journeyText,
       url:window._journeyUrl
     }).catch(()=>{});
   }else{copyJourney();}
+}
+
+function saveJourneyImage(){
+  // Load html2canvas on demand, then capture the journey card
+  if(window.html2canvas){
+    captureCard();
+  }else{
+    const s=document.createElement('script');
+    s.src='https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js';
+    s.onload=captureCard;
+    s.onerror=()=>alert('Could not load image library. Try Export HTML instead.');
+    document.head.appendChild(s);
+  }
+}
+function captureCard(){
+  const card=document.querySelector('.journey-card');
+  if(!card) return;
+  html2canvas(card,{backgroundColor:'#1C1C1E',scale:2,useCORS:true,logging:false}).then(canvas=>{
+    const a=document.createElement('a');
+    a.download='my-apple-shelf.png';
+    a.href=canvas.toDataURL('image/png');
+    a.click();
+  }).catch(()=>alert('Image capture failed. Try Export HTML instead.'));
 }
 
 function setQty(id,qty){state.quantities[id]=qty;updateFooter();}
@@ -1147,7 +1196,7 @@ function updateLangUI(){
   document.getElementById('btnCategory').textContent=t('byProduct');
   document.getElementById('btnYear').textContent=t('byYear');
   document.getElementById('searchBox').placeholder=t('search');
-  document.querySelector('.btn-journey').textContent=t('myJourney');
+  document.querySelector('.btn-journey').textContent=t('myShelf');
   document.querySelector('[onclick="exportChecked()"]').textContent=t('export');
   document.querySelector('[onclick="clearAll()"]').textContent=t('clear');
   document.getElementById('footCount').previousElementSibling.textContent=t('checked');
