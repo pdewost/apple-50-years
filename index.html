@@ -315,15 +315,17 @@ main { max-width: 1400px; margin: 0 auto; padding: 24px; }
 body.has-checked .btn-journey { display: inline-flex; }
 
 .lang-toggle {
-  display: inline-flex; gap: 2px; align-items: center;
-  border: 1px solid var(--border); border-radius: var(--radius-md);
-  overflow: hidden; font-size: 0.85rem; cursor: pointer;
+  display: inline-flex; gap: 0; align-items: center;
+  border: 1px solid var(--border); border-radius: 8px;
+  overflow: hidden; font-size: 0.9rem; cursor: pointer;
+  margin-left: 8px; vertical-align: middle;
 }
 .lang-toggle span {
-  padding: 5px 8px; transition: all var(--transition-fast); line-height: 1;
+  padding: 3px 5px; transition: all var(--transition-fast); line-height: 1;
+  opacity: 0.4;
 }
-.lang-toggle span.active { background: var(--accent-light); }
-.lang-toggle span:hover { background: var(--bg-card-hover); }
+.lang-toggle span.active { opacity: 1; background: var(--accent-light); }
+.lang-toggle span:hover { opacity: 0.8; }
 
 .intro-section {
   max-width: 700px; margin: 0 auto 32px; text-align: center;
@@ -439,14 +441,13 @@ body.staging .product-card[data-triage="wrong-image"] .card-img-actions { displa
 </div>
 <header class="site-header">
   <div class="header-top">
-    <div class="site-title"><span>&#63743;</span> 50 Years (1976–2026)</div>
+    <div class="site-title"><span>&#63743;</span> <span id="titleText">50 Years (1976–2026)</span> <span class="lang-toggle" onclick="event.stopPropagation();toggleLang()"><span id="flagEn">&#127482;&#127480;</span><span id="flagFr">&#127467;&#127479;</span></span></div>
     <div class="header-controls">
       <div class="nav-toggle">
         <button class="btn active" id="btnCategory" onclick="setViewMode('category')">By Product</button>
         <button class="btn" id="btnYear" onclick="setViewMode('year')">By Year</button>
       </div>
       <input type="text" class="search-box" id="searchBox" placeholder="Search products..." oninput="onSearchInput()">
-      <div class="lang-toggle" onclick="toggleLang()"><span id="flagEn">EN</span><span id="flagFr">FR</span></div>
       <button class="btn" id="btnTheme" onclick="toggleTheme()" title="Toggle dark mode">&#9789;</button>
       <button class="btn btn-journey" onclick="showJourney()" title="'+t('journeyTitle')+'">My Journey</button>
       <button class="btn" onclick="exportChecked()" title="Export as HTML tile">Export</button>
@@ -474,9 +475,8 @@ body.staging .product-card[data-triage="wrong-image"] .card-img-actions { displa
 <footer class="site-footer">
   <div class="footer-inner">
     <div class="footer-stat"><span class="footer-label">Checked</span><span class="footer-value" id="footCount">0 / 0</span></div>
-    <div class="footer-stat"><span class="footer-label">Original USD</span><span class="footer-value" id="footOriginal">$0</span></div>
-    <div class="footer-stat"><span class="footer-label">Today's USD</span><span class="footer-value" id="footAdjusted">$0</span></div>
-    <div class="footer-stat"><span class="footer-label">Today's EUR</span><span class="footer-value eur" id="footEur">&euro;0</span></div>
+    <div class="footer-stat"><span class="footer-label" id="footOrigLabel">Original $</span><span class="footer-value" id="footOriginal">$0</span></div>
+    <div class="footer-stat"><span class="footer-label" id="footTodayLabel">Today's $</span><span class="footer-value" id="footAdjusted">$0</span></div>
   </div>
 </footer>
 
@@ -792,8 +792,8 @@ en:{
   title:' 50 Years (1976\u20132026)',
   byProduct:'By Product',byYear:'By Year',myJourney:'My Journey',
   export:'Export',clear:'Clear',search:'Search products...',
-  checked:'Checked',origUsd:'Original USD',todayUsd:"Today's USD",todayEur:"Today's EUR",
-  msrp:'MSRP',todayUsdLabel:'Today USD',todayEurLabel:'Today EUR',qty:'Qty:',specs:'Specs',
+  checked:'Checked',origLabel:'Original $',todayLabel:"Today's $",
+  msrp:'MSRP',todayCardLabel:'Today $',qty:'Qty:',specs:'Specs',
   products:'product',productsPlural:'products',owned:'owned',
   noResults:'No products match your search.',
   noChecked:'No products checked.',
@@ -806,7 +806,7 @@ en:{
   journeyFrom:'From',journeyTo:'to',journeyOwned:', I have owned',
   journeyDevices:'Apple devices',
   journeyHash:'for a total #LifetimeCustomerValue of',
-  journeyDollars:"(today's dollars)",
+  journeyDollars:"(today's value)",
   journeyCta:'What about you?',
   journeyCtaLink:'Build your Apple journey \u2192',
   copy:'Copy',share:'Share',exportHtml:'Export HTML',
@@ -816,8 +816,8 @@ fr:{
   title:' 50 ans (1976\u20132026)',
   byProduct:'Par Produit',byYear:'Par Ann\u00e9e',myJourney:'Mon Parcours',
   export:'Exporter',clear:'Effacer',search:'Rechercher...',
-  checked:'S\u00e9lection',origUsd:'USD d\u2019origine',todayUsd:'USD actualis\u00e9s',todayEur:'EUR actualis\u00e9s',
-  msrp:'Prix',todayUsdLabel:'USD actuel',todayEurLabel:'EUR actuel',qty:'Qt\u00e9\u00a0:',specs:'Fiche',
+  checked:'S\u00e9lection',origLabel:'\u20ac d\u2019origine',todayLabel:'\u20ac actualis\u00e9s',
+  msrp:'Prix',todayCardLabel:'\u20ac actuel',qty:'Qt\u00e9\u00a0:',specs:'Fiche',
   products:'produit',productsPlural:'produits',owned:'poss\u00e9d\u00e9',
   noResults:'Aucun produit ne correspond \u00e0 votre recherche.',
   noChecked:'Aucun produit s\u00e9lectionn\u00e9.',
@@ -830,7 +830,7 @@ fr:{
   journeyFrom:'De',journeyTo:'\u00e0',journeyOwned:', j\u2019ai poss\u00e9d\u00e9',
   journeyDevices:'appareils Apple',
   journeyHash:'pour une #LifetimeCustomerValue totale de',
-  journeyDollars:'(dollars actualis\u00e9s)',
+  journeyDollars:'(valeur actualis\u00e9e)',
   journeyCta:'Et vous\u00a0?',
   journeyCtaLink:'Composez votre parcours Apple \u2192',
   copy:'Copier',share:'Partager',exportHtml:'Exporter HTML',
@@ -913,6 +913,9 @@ function runAutoDetect(){
 // ── FORMATTING ──
 const fmtUSD=new Intl.NumberFormat('en-US',{style:'currency',currency:'USD',maximumFractionDigits:0});
 const fmtEUR=new Intl.NumberFormat('fr-FR',{style:'currency',currency:'EUR',maximumFractionDigits:0});
+const FIXED_EUR_RATE=0.8607; // EUR per 1 USD, April 8 2026
+function fmtLocal(usd){return state.lang==='fr'?fmtEUR.format(usd*FIXED_EUR_RATE):fmtUSD.format(usd);}
+function fmtLocalRaw(usd){return state.lang==='fr'?usd*FIXED_EUR_RATE:usd;}
 
 function adjustForInflation(msrp,year){
   const now=new Date().getFullYear();
@@ -979,7 +982,7 @@ function cardHTML(p){
     '<button class="triage-btn'+(tf==='wrong-price'?' active-wrong-price':'')+'" title="Wrong price" onclick="event.stopPropagation();setTriage(\''+p.id+'\',\'wrong-price\')">&#36;</button>'+
     '<button class="triage-btn'+(tf==='validated'?' active-validated':'')+'" title="Validated" onclick="event.stopPropagation();setTriage(\''+p.id+'\',\'validated\')">&#10003;</button>'+
     '</div>';
-  return '<article class="product-card'+(checked?' checked':'')+'"'+triageAttr+' data-id="'+p.id+'"><div class="card-check">'+(checked?'&#10003;':'')+'</div><div class="card-img-wrap"><img src="'+imgSrc+'" alt="'+p.name+'" loading="lazy" onerror="imgError(this,\''+eName+'\')"></div>'+imgMeta+imgActions+'<div class="card-body"><div class="card-name">'+p.name+'</div><div class="card-year">'+p.year+'</div>'+(p.cpu?'<div class="card-cpu">'+p.cpu+'</div>':'')+'<div class="card-qty"><span>'+t('qty')+'</span><select onchange="event.stopPropagation();setQty(\''+p.id+'\',+this.value)">'+[1,2,4,8,16].map(n=>'<option value="'+n+'"'+(getQty(p.id)===n?' selected':'')+'>'+n+(n===16?'+':'')+'</option>').join('')+'</select></div><div class="card-prices"><div class="price-row"><span class="price-label">'+t('msrp')+'</span><span class="price-value price-original'+(p.est?' est':'')+'">'+fmtUSD.format(p.msrp)+'</span></div><div class="price-row"><span class="price-label">'+t('todayUsdLabel')+'</span><span class="price-value price-adjusted">'+fmtUSD.format(adj)+'</span></div><div class="price-row"><span class="price-label">'+t('todayEurLabel')+'</span><span class="price-value price-eur">'+fmtEUR.format(eur)+'</span></div></div>'+refLink+'</div>'+tBar+'</article>';
+  return '<article class="product-card'+(checked?' checked':'')+'"'+triageAttr+' data-id="'+p.id+'"><div class="card-check">'+(checked?'&#10003;':'')+'</div><div class="card-img-wrap"><img src="'+imgSrc+'" alt="'+p.name+'" loading="lazy" onerror="imgError(this,\''+eName+'\')"></div>'+imgMeta+imgActions+'<div class="card-body"><div class="card-name">'+p.name+'</div><div class="card-year">'+p.year+'</div>'+(p.cpu?'<div class="card-cpu">'+p.cpu+'</div>':'')+'<div class="card-qty"><span>'+t('qty')+'</span><select onchange="event.stopPropagation();setQty(\''+p.id+'\',+this.value)">'+[1,2,4,8,16].map(n=>'<option value="'+n+'"'+(getQty(p.id)===n?' selected':'')+'>'+n+(n===16?'+':'')+'</option>').join('')+'</select></div><div class="card-prices"><div class="price-row"><span class="price-label">'+t('msrp')+'</span><span class="price-value price-original'+(p.est?' est':'')+'">'+fmtLocal(p.msrp)+'</span></div><div class="price-row"><span class="price-label">'+t('todayCardLabel')+'</span><span class="price-value price-adjusted">'+fmtLocal(adj)+'</span></div></div>'+refLink+'</div>'+tBar+'</article>';
 }
 function render(){
   const items=getFiltered();
@@ -1012,9 +1015,10 @@ function updateFooter(){
   let totalOrig=0,totalAdj=0;
   Object.entries(state.quantities).forEach(([id,qty])=>{if(qty<1)return;const p=PRODUCT_MAP.get(id);if(p){totalOrig+=p.msrp*qty;totalAdj+=adjustForInflation(p.msrp,p.year)*qty;}});
   document.getElementById('footCount').textContent=checkedCount()+' / '+PRODUCTS.length;
-  document.getElementById('footOriginal').textContent=fmtUSD.format(totalOrig);
-  document.getElementById('footAdjusted').textContent=fmtUSD.format(totalAdj);
-  document.getElementById('footEur').textContent=fmtEUR.format(toEUR(totalAdj));
+  document.getElementById('footOriginal').textContent=fmtLocal(totalOrig);
+  document.getElementById('footAdjusted').textContent=fmtLocal(totalAdj);
+  document.getElementById('footOrigLabel').textContent=t('origLabel');
+  document.getElementById('footTodayLabel').textContent=t('todayLabel');
   document.body.classList.toggle('has-checked',checkedCount()>0);
 }
 
@@ -1062,7 +1066,7 @@ function showJourney(){
     return '<img class="journey-thumb" src="'+(state.imageOverrides[p.id]||p.image)+'" alt="'+p.name+'" title="'+p.name+' ('+p.year+')" onerror="imgError(this,\''+eName+'\')">';
   }).join('')+(extra>0?'<span class="journey-more">+'+extra+'</span>':'');
 
-  const summaryText=t('journeyFrom')+' '+minY+' '+t('journeyTo')+' '+maxY+t('journeyOwned')+'\n'+checked.length+' '+t('journeyDevices')+'\n'+t('journeyHash')+'\n'+fmtUSD.format(totalAdj)+' '+t('journeyDollars');
+  const summaryText=t('journeyFrom')+' '+minY+' '+t('journeyTo')+' '+maxY+t('journeyOwned')+'\n'+checked.length+' '+t('journeyDevices')+'\n'+t('journeyHash')+'\n'+fmtLocal(totalAdj)+' '+t('journeyDollars');
 
   const html='<div class="journey-overlay" onclick="if(event.target===this)closeJourney()">'+
     '<div class="journey-card">'+
@@ -1073,8 +1077,8 @@ function showJourney(){
     t('journeyFrom')+' <strong>'+minY+'</strong> '+t('journeyTo')+' <strong>'+maxY+'</strong>'+t('journeyOwned')+
     '<span class="j-count">'+checked.length+' '+t('journeyDevices')+'</span>'+
     '<span class="j-hash">for a total #LifetimeCustomerValue of</span><br>'+
-    '<span class="j-value">'+fmtUSD.format(totalAdj)+'</span>'+
-    '<br><span class="j-hash">(today\'s dollars)</span>'+
+    '<span class="j-value">'+fmtLocal(totalAdj)+'</span>'+
+    '<br><span class="j-hash">'+t('journeyDollars')+'</span>'+
     '</div>'+
     '<input class="journey-url" type="text" value="'+shareUrl+'" readonly onclick="this.select()">'+
     '<div class="journey-actions">'+
@@ -1138,7 +1142,7 @@ function toggleLang(){state.lang=state.lang==='en'?'fr':'en';updateLangUI();rend
 function updateLangUI(){
   document.getElementById('flagEn').classList.toggle('active',state.lang==='en');
   document.getElementById('flagFr').classList.toggle('active',state.lang==='fr');
-  document.querySelector('.site-title').innerHTML='<span>&#63743;</span> '+t('title');
+  document.getElementById('titleText').textContent=t('title').replace(/^\s/,'');
   document.getElementById('btnCategory').textContent=t('byProduct');
   document.getElementById('btnYear').textContent=t('byYear');
   document.getElementById('searchBox').placeholder=t('search');
@@ -1146,9 +1150,8 @@ function updateLangUI(){
   document.querySelector('[onclick="exportChecked()"]').textContent=t('export');
   document.querySelector('[onclick="clearAll()"]').textContent=t('clear');
   document.getElementById('footCount').previousElementSibling.textContent=t('checked');
-  document.getElementById('footOriginal').previousElementSibling.textContent=t('origUsd');
-  document.getElementById('footAdjusted').previousElementSibling.textContent=t('todayUsd');
-  document.getElementById('footEur').previousElementSibling.textContent=t('todayEur');
+  document.getElementById('footOrigLabel').textContent=t('origLabel');
+  document.getElementById('footTodayLabel').textContent=t('todayLabel');
 }
 function clearAll(){state.quantities={};render();}
 function exportChecked(){
@@ -1197,7 +1200,7 @@ ${thumbTags}
     From <strong>${minY}</strong> to <strong>${maxY}</strong>, I have owned
     <span class="count">${checked.length} Apple devices</span>
     <span class="hash">for a total #LifetimeCustomerValue of</span><br>
-    <span class="value">${fmtUSD.format(totalAdj)}</span><br>
+    <span class="value">${fmtLocal(totalAdj)}</span><br>
     <span class="hash">(today\u2019s dollars)</span>
   </div>
   <div class="cta">
