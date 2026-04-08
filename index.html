@@ -171,7 +171,15 @@ main { max-width: 1400px; margin: 0 auto; padding: 24px; }
 .card-body { padding: 12px 14px 14px; }
 .card-name { font-family: var(--font-display); font-weight: 600; font-size: 0.95rem; margin-bottom: 2px; line-height: 1.3; }
 .card-year { font-size: 0.75rem; color: var(--text-tertiary); margin-bottom: 2px; }
-.card-cpu { font-size: 0.7rem; color: var(--text-tertiary); margin-bottom: 8px; font-style: italic; opacity: 0.8; }
+.card-cpu { font-size: 0.7rem; color: var(--text-tertiary); margin-bottom: 4px; font-style: italic; opacity: 0.8; }
+.card-qty { display: none; margin-bottom: 6px; }
+.product-card.checked .card-qty { display: flex; align-items: center; gap: 6px; font-size: 0.75rem; color: var(--text-secondary); }
+.card-qty select {
+  padding: 2px 6px; border-radius: 6px; border: 1px solid var(--border);
+  background: var(--bg-secondary); color: var(--text-primary);
+  font-size: 0.75rem; font-family: var(--font-body); cursor: pointer;
+}
+.card-qty select:focus { outline: none; border-color: var(--accent); }
 .card-prices { display: flex; flex-direction: column; gap: 2px; font-size: 0.8rem; }
 .price-row { display: flex; justify-content: space-between; }
 .price-label { color: var(--text-tertiary); }
@@ -553,6 +561,7 @@ const PRODUCTS=[
 {id:"imac-m1",name:"iMac (M1, 2021)",year:2021,msrp:1299,est:false,category:"imac",image:"https://upload.wikimedia.org/wikipedia/commons/thumb/6/62/M1_iMac_blue_model.jpg/500px-M1_iMac_blue_model.jpg",url:"https://en.wikipedia.org/wiki/iMac_%28M1%2C_2021%29",cpu:"Apple M1"},
 {id:"imac-m3",name:"iMac (M3, 2023)",year:2023,msrp:1299,est:false,category:"imac",image:"https://upload.wikimedia.org/wikipedia/commons/thumb/4/41/IMac_M4_2024.jpg/500px-IMac_M4_2024.jpg",url:"https://en.wikipedia.org/wiki/iMac_%28M3%2C_2023%29",cpu:"Apple M3"},
 {id:"imac-m4",name:"iMac (M4, 2024)",year:2024,msrp:1299,est:false,category:"imac",image:"https://upload.wikimedia.org/wikipedia/commons/thumb/4/41/IMac_M4_2024.jpg/500px-IMac_M4_2024.jpg",url:"https://en.wikipedia.org/wiki/iMac_%28M4%2C_2024%29",cpu:"Apple M4"},
+{id:"imac-m5",name:"iMac (M5, 2026)",year:2026,msrp:1299,est:true,category:"imac",image:"https://upload.wikimedia.org/wikipedia/commons/thumb/4/41/IMac_M4_2024.jpg/500px-IMac_M4_2024.jpg",url:"https://en.wikipedia.org/wiki/IMac_(Apple_silicon)",cpu:"Apple M5"},
 
 // MacBook Family
 {id:"macbook-06",name:"MacBook (2006)",year:2006,msrp:1099,est:false,category:"macbook",image:"https://upload.wikimedia.org/wikipedia/commons/thumb/1/11/Macbook_white_redjar_20060603.jpg/500px-Macbook_white_redjar_20060603.jpg",url:"https://en.wikipedia.org/wiki/MacBook_%282006%29",cpu:"Intel Core Duo"},
@@ -568,6 +577,7 @@ const PRODUCTS=[
 {id:"mbp-m3p",name:"MacBook Pro (M3 Pro/Max, 2023)",year:2023,msrp:1999,est:false,category:"macbook",image:"https://upload.wikimedia.org/wikipedia/commons/thumb/5/58/M3_Macbook_Pro_14_inch_Space_Grey_model_%28cropped%29.jpg/500px-M3_Macbook_Pro_14_inch_Space_Grey_model_%28cropped%29.jpg",url:"https://en.wikipedia.org/wiki/MacBook_Pro_%28M3_Pro/Max%2C_2023%29",cpu:"Apple M3 Pro/Max"},
 {id:"mbp-m4",name:"MacBook Pro (M4, 2024)",year:2024,msrp:1599,est:false,category:"macbook",image:"https://upload.wikimedia.org/wikipedia/commons/thumb/d/d7/MacBook_Pro_%2814-inch%2C_M5%2C_Space_Black%29.jpg/500px-MacBook_Pro_%2814-inch%2C_M5%2C_Space_Black%29.jpg",url:"https://en.wikipedia.org/wiki/MacBook_Pro_%28M4%2C_2024%29",cpu:"Apple M4"},
 {id:"mbp-m4p",name:"MacBook Pro (M4 Pro/Max, 2024)",year:2024,msrp:1999,est:false,category:"macbook",image:"https://upload.wikimedia.org/wikipedia/commons/thumb/4/43/MacBook_Pro_%2816-inch%2C_M4_Pro%2C_Silver%29.jpg/500px-MacBook_Pro_%2816-inch%2C_M4_Pro%2C_Silver%29.jpg",url:"https://en.wikipedia.org/wiki/MacBook_Pro_%28M4_Pro/Max%2C_2024%29",cpu:"Apple M4 Pro/Max"},
+{id:"mbp-m5p",name:"MacBook Pro (M5 Pro/Max, 2026)",year:2026,msrp:1999,est:true,category:"macbook",image:"https://upload.wikimedia.org/wikipedia/commons/thumb/4/43/MacBook_Pro_%2816-inch%2C_M4_Pro%2C_Silver%29.jpg/500px-MacBook_Pro_%2816-inch%2C_M4_Pro%2C_Silver%29.jpg",url:"https://en.wikipedia.org/wiki/MacBook_Pro_(Apple_silicon)",cpu:"Apple M5 Pro/Max"},
 {id:"mba-08",name:"MacBook Air (2008)",year:2008,msrp:1799,est:false,category:"macbook",image:"https://upload.wikimedia.org/wikipedia/commons/thumb/6/6a/MacBook_Air.jpg/500px-MacBook_Air.jpg",url:"https://en.wikipedia.org/wiki/MacBook_Air_%282008%29",cpu:"Intel Core 2 Duo"},
 {id:"mba-11",name:'MacBook Air (11", 2010)',year:2010,msrp:999,est:false,category:"macbook",image:"https://upload.wikimedia.org/wikipedia/commons/thumb/4/46/Macbook_Air_15_inch_-_2_%28blurred%29.jpg/500px-Macbook_Air_15_inch_-_2_%28blurred%29.jpg",url:"https://en.wikipedia.org/wiki/MacBook_Air",cpu:"Intel Core 2 Duo"},
 {id:"mba-13",name:"MacBook Air (2013)",year:2013,msrp:999,est:false,category:"macbook",image:"https://upload.wikimedia.org/wikipedia/commons/thumb/f/f2/11%22_MacBook_Air_compared_to_13%22_MacBook.jpg/500px-11%22_MacBook_Air_compared_to_13%22_MacBook.jpg",url:"https://en.wikipedia.org/wiki/MacBook_Air_%282013%29",cpu:"Intel Core 2 Duo"},
@@ -575,6 +585,7 @@ const PRODUCTS=[
 {id:"mba-m1",name:"MacBook Air (M1, 2020)",year:2020,msrp:999,est:false,category:"macbook",image:"https://upload.wikimedia.org/wikipedia/commons/thumb/2/20/MacBook_Air_M1.png/500px-MacBook_Air_M1.png",url:"https://en.wikipedia.org/wiki/MacBook_Air_%28M1%2C_2020%29",cpu:"Apple M1"},
 {id:"mba-m2",name:"MacBook Air (M2, 2022)",year:2022,msrp:1199,est:false,category:"macbook",image:"https://upload.wikimedia.org/wikipedia/commons/thumb/2/2f/M2_Macbook_Air_Midnight_model_-_2.jpg/500px-M2_Macbook_Air_Midnight_model_-_2.jpg",url:"https://en.wikipedia.org/wiki/MacBook_Air_%28M2%2C_2022%29",cpu:"Apple M2"},
 {id:"mba-m3",name:"MacBook Air (M3, 2024)",year:2024,msrp:1099,est:false,category:"macbook",image:"https://upload.wikimedia.org/wikipedia/commons/thumb/7/72/Macbook_Air_15_inch_-_1.jpg/500px-Macbook_Air_15_inch_-_1.jpg",url:"https://en.wikipedia.org/wiki/MacBook_Air_%28M3%2C_2024%29",cpu:"Apple M3"},
+{id:"mba-m5",name:"MacBook Air (M5, 2026)",year:2026,msrp:1099,est:true,category:"macbook",image:"https://upload.wikimedia.org/wikipedia/commons/thumb/7/72/Macbook_Air_15_inch_-_1.jpg/500px-Macbook_Air_15_inch_-_1.jpg",url:"https://en.wikipedia.org/wiki/MacBook_Air_(Apple_silicon)",cpu:"Apple M5"},
 
 // Mac mini
 {id:"mini-g4",name:"Mac mini (G4, 2005)",year:2005,msrp:499,est:false,category:"mac-mini",image:"https://upload.wikimedia.org/wikipedia/commons/thumb/a/aa/Mac_mini_G4-2005-04-05.jpg/500px-Mac_mini_G4-2005-04-05.jpg",url:"https://en.wikipedia.org/wiki/Mac_mini_%28G4%2C_2005%29",cpu:"PowerPC 7447A (G4)"},
@@ -732,12 +743,16 @@ const PRODUCTS=[
 {id:"airport-extreme-ac",name:"AirPort Extreme (802.11ac)",year:2013,msrp:199,est:false,category:"airport",image:"https://upload.wikimedia.org/wikipedia/commons/thumb/c/c4/Apple_AirPort_Extreme_Base_Station_%28A1408%29-93731.jpg/500px-Apple_AirPort_Extreme_Base_Station_%28A1408%29-93731.jpg",url:"https://en.wikipedia.org/wiki/AirPort_Extreme",cpu:"Marvell 88F6282"},
 {id:"airport-tc-ac",name:"AirPort Time Capsule (802.11ac)",year:2013,msrp:299,est:false,category:"airport",image:"https://upload.wikimedia.org/wikipedia/commons/thumb/1/15/Appletimecapsule.jpg/500px-Appletimecapsule.jpg",url:"https://en.wikipedia.org/wiki/AirPort_Time_Capsule",cpu:"Marvell 88F6282"},
 
+// AirTag
+{id:"airtag-1",name:"AirTag",year:2021,msrp:29,est:false,category:"airtag",image:"https://upload.wikimedia.org/wikipedia/commons/thumb/2/2d/Apple_AirTag.svg/500px-Apple_AirTag.svg.png",url:"https://en.wikipedia.org/wiki/AirTag",cpu:"Apple U1"},
+{id:"airtag-2",name:"AirTag 2",year:2025,msrp:29,est:false,category:"airtag",image:"https://upload.wikimedia.org/wikipedia/commons/thumb/2/2d/Apple_AirTag.svg/500px-Apple_AirTag.svg.png",url:"https://en.wikipedia.org/wiki/AirTag_2",cpu:"Apple U2"},
+
 // Vision Pro
 {id:"vision-pro",name:"Apple Vision Pro",year:2024,msrp:3499,est:false,category:"vision-pro",image:"https://upload.wikimedia.org/wikipedia/commons/thumb/5/51/Apple_Vision_Pro_with_Solo_Knit_Band.jpg/500px-Apple_Vision_Pro_with_Solo_Knit_Band.jpg",url:"https://en.wikipedia.org/wiki/Apple_Vision_Pro",cpu:"Apple M2 + R1"},
 ];
 
 // ── CATEGORIES ──
-const CATEGORIES={"pre-mac":{label:"Pre-Mac Era",order:0},"compact-mac":{label:"Compact Macs",order:1},"mac-ii":{label:"Mac II Family",order:2},"quadra-centris":{label:"Quadra & Centris",order:3},"performa":{label:"Performa",order:4},"powerbook":{label:"PowerBook & Duo",order:5},"ibook":{label:"iBook",order:6},"power-mac":{label:"Power Mac",order:7},"imac":{label:"iMac",order:8},"macbook":{label:"MacBook Family",order:9},"mac-mini":{label:"Mac mini",order:10},"mac-pro":{label:"Mac Pro",order:11},"mac-studio":{label:"Mac Studio",order:12},"quicktake":{label:"QuickTake",order:14},"newton":{label:"Newton",order:15},"ipod":{label:"iPod",order:16},"iphone":{label:"iPhone",order:17},"ipad":{label:"iPad",order:18},"apple-watch":{label:"Apple Watch",order:19},"airpods":{label:"AirPods",order:20},"homepod":{label:"HomePod",order:21},"apple-tv":{label:"Apple TV",order:22},"airport":{label:"AirPort & Time Capsule",order:23},"vision-pro":{label:"Vision Pro",order:24}};
+const CATEGORIES={"pre-mac":{label:"Pre-Mac Era",order:0},"compact-mac":{label:"Compact Macs",order:1},"mac-ii":{label:"Mac II Family",order:2},"quadra-centris":{label:"Quadra & Centris",order:3},"performa":{label:"Performa",order:4},"powerbook":{label:"PowerBook & Duo",order:5},"ibook":{label:"iBook",order:6},"power-mac":{label:"Power Mac",order:7},"imac":{label:"iMac",order:8},"macbook":{label:"MacBook Family",order:9},"mac-mini":{label:"Mac mini",order:10},"mac-pro":{label:"Mac Pro",order:11},"mac-studio":{label:"Mac Studio",order:12},"quicktake":{label:"QuickTake",order:14},"newton":{label:"Newton",order:15},"ipod":{label:"iPod",order:16},"iphone":{label:"iPhone",order:17},"ipad":{label:"iPad",order:18},"apple-watch":{label:"Apple Watch",order:19},"airpods":{label:"AirPods",order:20},"homepod":{label:"HomePod",order:21},"apple-tv":{label:"Apple TV",order:22},"airport":{label:"AirPort & Time Capsule",order:23},"airtag":{label:"AirTag",order:24},"vision-pro":{label:"Vision Pro",order:25}};
 
 // ── CPI FALLBACK (BLS CPI-U Annual Averages) ──
 const CPI_FALLBACK={1976:56.9,1977:60.6,1978:65.2,1979:72.6,1980:82.4,1981:90.9,1982:96.5,1983:99.6,1984:103.9,1985:107.6,1986:109.6,1987:113.6,1988:118.3,1989:124.0,1990:130.7,1991:136.2,1992:140.3,1993:144.5,1994:148.2,1995:152.4,1996:156.9,1997:160.5,1998:163.0,1999:166.6,2000:172.2,2001:177.1,2002:179.9,2003:184.0,2004:188.9,2005:195.3,2006:201.6,2007:207.3,2008:215.3,2009:214.5,2010:218.1,2011:224.9,2012:229.6,2013:233.0,2014:236.7,2015:237.0,2016:240.0,2017:245.1,2018:251.1,2019:255.7,2020:258.8,2021:271.0,2022:292.7,2023:304.7,2024:315.6,2025:323.0,2026:330.0};
@@ -745,7 +760,10 @@ const CPI_FALLBACK={1976:56.9,1977:60.6,1978:65.2,1979:72.6,1980:82.4,1981:90.9,
 // ── STATE ──
 const PRODUCT_MAP=new Map(PRODUCTS.map(p=>[p.id,p]));
 const STAGING=new URLSearchParams(window.location.search).has('staging');
-const state={checkedIds:new Set(),viewMode:"category",searchQuery:"",theme:"light",cpiData:Object.assign({},CPI_FALLBACK),eurRate:0.92,apiStatus:{cpi:"fallback",eur:"fallback"},triageFlags:{},triageFilter:"all",imageOverrides:{},mismatchScores:{}};
+const state={quantities:{},viewMode:"category",searchQuery:"",theme:"light",cpiData:Object.assign({},CPI_FALLBACK),eurRate:0.92,apiStatus:{cpi:"fallback",eur:"fallback"},triageFlags:{},triageFilter:"all",imageOverrides:{},mismatchScores:{}};
+function isChecked(id){return (state.quantities[id]||0)>0;}
+function getQty(id){return state.quantities[id]||0;}
+function checkedCount(){return Object.values(state.quantities).filter(q=>q>0).length;}
 
 // ── IMAGE MISMATCH DETECTION ──
 const NOISE_WORDS=new Set(['apple','computer','inc','jpg','jpeg','png','webp','thumb','px','500px','440px','file','wikipedia','commons','upload','wikimedia','org','the','and','of','in','at','with','from','a','an','for','by','on','museum','cropped','front','back','side','rear','view','display','photo','image','img','photography','color','black','white','gray','grey','silver','gold','space','product','red','blue','green']);
@@ -843,11 +861,11 @@ function getFiltered(){
 }
 function badge(items){
   const total=items.length;
-  const owned=items.filter(p=>state.checkedIds.has(p.id)).length;
+  const owned=items.filter(p=>isChecked(p.id)).length;
   return '<span class="section-badge">'+total+' product'+(total!==1?'s':'')+(owned>0?', '+owned+' owned':'')+'</span>';
 }
 function cardHTML(p){
-  const checked=state.checkedIds.has(p.id);
+  const checked=isChecked(p.id);
   const adj=adjustForInflation(p.msrp,p.year);
   const eur=toEUR(adj);
   const eName=p.name.replace(/'/g,"\\'").replace(/"/g,'&quot;');
@@ -876,7 +894,7 @@ function cardHTML(p){
     '<button class="triage-btn'+(tf==='wrong-price'?' active-wrong-price':'')+'" title="Wrong price" onclick="event.stopPropagation();setTriage(\''+p.id+'\',\'wrong-price\')">&#36;</button>'+
     '<button class="triage-btn'+(tf==='validated'?' active-validated':'')+'" title="Validated" onclick="event.stopPropagation();setTriage(\''+p.id+'\',\'validated\')">&#10003;</button>'+
     '</div>';
-  return '<article class="product-card'+(checked?' checked':'')+'"'+triageAttr+' data-id="'+p.id+'"><div class="card-check">'+(checked?'&#10003;':'')+'</div><div class="card-img-wrap"><img src="'+imgSrc+'" alt="'+p.name+'" loading="lazy" onerror="imgError(this,\''+eName+'\')"></div>'+imgMeta+imgActions+'<div class="card-body"><div class="card-name">'+p.name+'</div><div class="card-year">'+p.year+'</div>'+(p.cpu?'<div class="card-cpu">'+p.cpu+'</div>':'')+'<div class="card-prices"><div class="price-row"><span class="price-label">MSRP</span><span class="price-value price-original'+(p.est?' est':'')+'">'+fmtUSD.format(p.msrp)+'</span></div><div class="price-row"><span class="price-label">Today USD</span><span class="price-value price-adjusted">'+fmtUSD.format(adj)+'</span></div><div class="price-row"><span class="price-label">Today EUR</span><span class="price-value price-eur">'+fmtEUR.format(eur)+'</span></div></div>'+refLink+'</div>'+tBar+'</article>';
+  return '<article class="product-card'+(checked?' checked':'')+'"'+triageAttr+' data-id="'+p.id+'"><div class="card-check">'+(checked?'&#10003;':'')+'</div><div class="card-img-wrap"><img src="'+imgSrc+'" alt="'+p.name+'" loading="lazy" onerror="imgError(this,\''+eName+'\')"></div>'+imgMeta+imgActions+'<div class="card-body"><div class="card-name">'+p.name+'</div><div class="card-year">'+p.year+'</div>'+(p.cpu?'<div class="card-cpu">'+p.cpu+'</div>':'')+'<div class="card-qty"><span>Qty:</span><select onchange="event.stopPropagation();setQty(\''+p.id+'\',+this.value)">'+[1,2,4,8,16].map(n=>'<option value="'+n+'"'+(getQty(p.id)===n?' selected':'')+'>'+n+(n===16?'+':'')+'</option>').join('')+'</select></div><div class="card-prices"><div class="price-row"><span class="price-label">MSRP</span><span class="price-value price-original'+(p.est?' est':'')+'">'+fmtUSD.format(p.msrp)+'</span></div><div class="price-row"><span class="price-label">Today USD</span><span class="price-value price-adjusted">'+fmtUSD.format(adj)+'</span></div><div class="price-row"><span class="price-label">Today EUR</span><span class="price-value price-eur">'+fmtEUR.format(eur)+'</span></div></div>'+refLink+'</div>'+tBar+'</article>';
 }
 function render(){
   const items=getFiltered();
@@ -903,41 +921,46 @@ function render(){
 // ── FOOTER ──
 function updateFooter(){
   let totalOrig=0,totalAdj=0;
-  state.checkedIds.forEach(id=>{const p=PRODUCT_MAP.get(id);if(p){totalOrig+=p.msrp;totalAdj+=adjustForInflation(p.msrp,p.year);}});
-  document.getElementById('footCount').textContent=state.checkedIds.size+' / '+PRODUCTS.length;
+  Object.entries(state.quantities).forEach(([id,qty])=>{if(qty<1)return;const p=PRODUCT_MAP.get(id);if(p){totalOrig+=p.msrp*qty;totalAdj+=adjustForInflation(p.msrp,p.year)*qty;}});
+  document.getElementById('footCount').textContent=checkedCount()+' / '+PRODUCTS.length;
   document.getElementById('footOriginal').textContent=fmtUSD.format(totalOrig);
   document.getElementById('footAdjusted').textContent=fmtUSD.format(totalAdj);
   document.getElementById('footEur').textContent=fmtEUR.format(toEUR(totalAdj));
-  document.body.classList.toggle('has-checked',state.checkedIds.size>0);
+  document.body.classList.toggle('has-checked',checkedCount()>0);
 }
 
 // ── SELECTION ENCODING ──
-function encodeSelection(ids){
+function encodeSelection(quantities){
   const bytes=new Uint8Array(Math.ceil(PRODUCTS.length/8));
-  PRODUCTS.forEach((p,i)=>{if(ids.has(p.id)) bytes[i>>3]|=(1<<(i&7));});
-  return btoa(String.fromCharCode(...bytes)).replace(/\+/g,'-').replace(/\//g,'_').replace(/=+$/,'');
+  PRODUCTS.forEach((p,i)=>{if((quantities[p.id]||0)>0) bytes[i>>3]|=(1<<(i&7));});
+  let enc=btoa(String.fromCharCode(...bytes)).replace(/\+/g,'-').replace(/\//g,'_').replace(/=+$/,'');
+  const qp=[];for(const [id,qty] of Object.entries(quantities)){if(qty>1) qp.push(id+':'+qty);}
+  if(qp.length>0) enc+='.q='+qp.join(',');
+  return enc;
 }
 function decodeSelection(enc){
   try{
-    const pad=enc.replace(/-/g,'+').replace(/_/g,'/');
+    const parts=enc.split('.q=');
+    const pad=parts[0].replace(/-/g,'+').replace(/_/g,'/');
     const bin=atob(pad);
-    const ids=new Set();
-    PRODUCTS.forEach((p,i)=>{if(bin.charCodeAt(i>>3)&(1<<(i&7))) ids.add(p.id);});
-    return ids;
-  }catch(e){return new Set();}
+    const q={};
+    PRODUCTS.forEach((p,i)=>{if(bin.charCodeAt(i>>3)&(1<<(i&7))) q[p.id]=1;});
+    if(parts[1]){parts[1].split(',').forEach(s=>{const [id,n]=s.split(':');if(q[id]) q[id]=parseInt(n)||1;});}
+    return q;
+  }catch(e){return {};}
 }
 
 // ── MY JOURNEY MODAL ──
 function showJourney(){
-  if(state.checkedIds.size===0) return;
-  const checked=PRODUCTS.filter(p=>state.checkedIds.has(p.id)).sort((a,b)=>a.year-b.year);
+  if(checkedCount()===0) return;
+  const checked=PRODUCTS.filter(p=>isChecked(p.id)).sort((a,b)=>a.year-b.year);
   const years=checked.map(p=>p.year);
   const minY=Math.min(...years), maxY=Math.max(...years);
   let totalAdj=0;
-  checked.forEach(p=>{totalAdj+=adjustForInflation(p.msrp,p.year);});
+  checked.forEach(p=>{totalAdj+=adjustForInflation(p.msrp,p.year)*getQty(p.id);});
 
   // Update URL hash
-  const encoded=encodeSelection(state.checkedIds);
+  const encoded=encodeSelection(state.quantities);
   history.replaceState(null,'','#s='+encoded);
   const shareUrl=window.location.origin+window.location.pathname+'#s='+encoded;
 
@@ -1007,27 +1030,30 @@ function shareJourney(){
   }else{copyJourney();}
 }
 
+function setQty(id,qty){state.quantities[id]=qty;updateFooter();}
+
 // ── EVENT HANDLERS ──
 document.getElementById('app').addEventListener('click',e=>{
+  if(e.target.closest('select')) return; // don't toggle when clicking qty selector
   const card=e.target.closest('[data-id]');
   if(!card) return;
   const id=card.dataset.id;
-  if(state.checkedIds.has(id)) state.checkedIds.delete(id); else state.checkedIds.add(id);
+  if(isChecked(id)) delete state.quantities[id]; else state.quantities[id]=1;
   render();
 });
 let searchTimer;
 function onSearchInput(){clearTimeout(searchTimer);searchTimer=setTimeout(()=>{state.searchQuery=document.getElementById('searchBox').value;render();},150);}
 function setViewMode(mode){state.viewMode=mode;document.getElementById('btnCategory').classList.toggle('active',mode==='category');document.getElementById('btnYear').classList.toggle('active',mode==='year');render();}
 function toggleTheme(){state.theme=state.theme==='light'?'dark':'light';document.documentElement.dataset.theme=state.theme;document.getElementById('btnTheme').innerHTML=state.theme==='dark'?'&#9788;':'&#9789;';}
-function clearAll(){state.checkedIds.clear();render();}
+function clearAll(){state.quantities={};render();}
 function exportChecked(){
-  const checked=PRODUCTS.filter(p=>state.checkedIds.has(p.id)).sort((a,b)=>a.year-b.year);
+  const checked=PRODUCTS.filter(p=>isChecked(p.id)).sort((a,b)=>a.year-b.year);
   if(checked.length===0){alert('No products checked.');return;}
   const years=checked.map(p=>p.year);
   const minY=Math.min(...years),maxY=Math.max(...years);
   let totalAdj=0;
-  checked.forEach(p=>{totalAdj+=adjustForInflation(p.msrp,p.year);});
-  const encoded=encodeSelection(state.checkedIds);
+  checked.forEach(p=>{totalAdj+=adjustForInflation(p.msrp,p.year)*getQty(p.id);});
+  const encoded=encodeSelection(state.quantities);
   const appUrl='https://pdewost.github.io/apple-50-years/#s='+encoded;
   const maxTh=30;const vis=checked.slice(0,maxTh);const extra=checked.length-maxTh;
   const thumbTags=vis.map(p=>'      <img src="'+(state.imageOverrides[p.id]||p.image)+'" alt="'+p.name.replace(/"/g,'&quot;')+'" title="'+p.name.replace(/"/g,'&quot;')+' ('+p.year+')">').join('\n')+(extra>0?'\n      <span style="display:inline-flex;align-items:center;justify-content:center;width:48px;height:36px;border-radius:4px;background:rgba(41,151,255,0.12);color:#2997FF;font-size:0.7rem;font-weight:600">+'+extra+'</span>':'');
@@ -1185,7 +1211,7 @@ function importTriage(){
 // ── INIT ──
 // Restore selection from URL hash
 const hashMatch=window.location.hash.match(/^#s=(.+)$/);
-if(hashMatch){state.checkedIds=decodeSelection(hashMatch[1]);}
+if(hashMatch){state.quantities=decodeSelection(hashMatch[1]);}
 if(STAGING) document.body.classList.add('staging');
 render();updateApiStatus();updateStagingProgress();
 Promise.allSettled([fetchCPI(),fetchEUR()]).then(()=>{render();updateApiStatus();});
