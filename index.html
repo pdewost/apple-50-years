@@ -329,13 +329,12 @@ body.has-checked .btn-journey { display: inline-flex; }
 
 .cat-nav {
   display: none; max-width: 1400px; margin: 0 auto;
-  padding: 8px 24px; overflow-x: auto; white-space: nowrap;
-  -webkit-overflow-scrolling: touch; scrollbar-width: none;
+  padding: 8px 24px; gap: 6px;
+  flex-wrap: wrap; justify-content: center;
 }
-.cat-nav::-webkit-scrollbar { display: none; }
-body.show-catnav .cat-nav { display: block; }
+body.show-catnav .cat-nav { display: flex; }
 .cat-nav-pill {
-  display: inline-block; padding: 4px 12px; margin-right: 6px;
+  display: inline-block; padding: 4px 12px;
   border-radius: 20px; font-size: 0.75rem; font-weight: 500;
   background: var(--bg-card); border: 1px solid var(--border-light);
   color: var(--text-secondary); cursor: pointer; transition: all var(--transition-fast);
@@ -813,50 +812,50 @@ const CATEGORIES={"pre-mac":{label:"Pre-Mac Era",order:0},"compact-mac":{label:"
 const STRINGS={
 en:{
   title:' 50 Years (1976\u20132026)',
-  byProduct:'By Product',byYear:'By Year',myShelf:'My Apple Shelf',
+  byProduct:'By Product',byYear:'By Year',myReceipt:'My  Receipt',
   export:'Export',clear:'Clear',search:'Search products...',
   checked:'Checked',origLabel:'Original $',todayLabel:"Today's $",
   msrp:'MSRP',todayCardLabel:'Today $',qty:'Qty:',specs:'Specs',
   products:'product',productsPlural:'products',owned:'owned',
   noResults:'No products match your search.',
   noChecked:'No products checked.',
-  introTitle:'How much of an Apple superfan are you?',
-  introP1:'Mark every Apple product you\u2019ve ever owned \u2014 from the original Apple\u00a0I in a garage (1976) to the Vision\u00a0Pro (2024). That\u2019s over 250 products across Mac, iPhone, iPad, iPod, Apple\u00a0Watch, and accessories.',
-  introP2:'The app adds up your <strong>#LifetimeCustomerValue</strong> in today\u2019s inflation-adjusted dollars. Your total spending tells the story of your relationship with Apple over time.',
-  introP3:'When you\u2019re done, hit <strong>\u201cMy Apple Shelf\u201d</strong> to see your personal collection tile \u2014 and share it.',
+  introTitle:"What\'s your Apple number?",
+  introP1:'Since 1976, Apple has shipped over 250 products \u2014 from the Apple\u00a0I to the Vision\u00a0Pro. Check every one you\u2019ve ever owned.',
+  introP2:'We\u2019ll add it all up in today\u2019s dollars, adjusted for inflation. <strong>Your total might surprise you.</strong>',
+  introP3:'When you\u2019re done, hit <strong>\u201cMy  Receipt\u201d</strong> to see your total and share it. #MyAppleReceipt',
   introCta:'\u2193 Start checking \u2193',
-  journeyTitle:' My Apple Shelf',
+  journeyTitle:' My Apple Receipt',
   journeyFrom:'From',journeyTo:'to',journeyOwned:', I have owned',
   journeyDevices:'Apple devices',
   journeyHash:'for a total #LifetimeCustomerValue of',
   journeyDollars:"(today's value)",
-  journeyCta:'What about you?',
-  journeyCtaLink:'Build your own Apple Shelf \u2192',
-  copy:'Copy',share:'Share',exportHtml:'Export HTML',saveImage:'Save Image',
+  journeyCta:"What\'s your number?",
+  journeyCtaLink:'Find out yours \u2192',
+  copy:'Copy',share:'Share',exportHtml:'Export HTML',
   copied:'Copied!',
 },
 fr:{
   title:' 50 ans (1976\u20132026)',
-  byProduct:'Par Produit',byYear:'Par Ann\u00e9e',myShelf:'Mon \u00c9tag\u00e8re Apple',
+  byProduct:'Par Produit',byYear:'Par Ann\u00e9e',myReceipt:'Ma Facture ',
   export:'Exporter',clear:'Effacer',search:'Rechercher...',
   checked:'S\u00e9lection',origLabel:'\u20ac d\u2019origine',todayLabel:'\u20ac actualis\u00e9s',
   msrp:'Prix',todayCardLabel:'\u20ac actuel',qty:'Qt\u00e9\u00a0:',specs:'Fiche',
   products:'produit',productsPlural:'produits',owned:'poss\u00e9d\u00e9',
   noResults:'Aucun produit ne correspond \u00e0 votre recherche.',
   noChecked:'Aucun produit s\u00e9lectionn\u00e9.',
-  introTitle:'\u00cates-vous un vrai superfan Apple\u00a0?',
-  introP1:'Cochez chaque produit Apple que vous avez poss\u00e9d\u00e9 \u2014 de l\u2019Apple\u00a0I dans un garage (1976) au Vision\u00a0Pro (2024). Plus de 250\u00a0produits\u00a0: Mac, iPhone, iPad, iPod, Apple\u00a0Watch et accessoires.',
-  introP2:'L\u2019appli calcule votre <strong>#LifetimeCustomerValue</strong> en monnaie ajust\u00e9e de l\u2019inflation. Votre total raconte l\u2019histoire de votre relation avec Apple.',
-  introP3:'Quand c\u2019est fait, cliquez sur <strong>\u00ab\u00a0Mon \u00c9tag\u00e8re Apple\u00a0\u00bb</strong> pour voir et partager votre collection.',
+  introTitle:'Quel est votre total Apple\u00a0?',
+  introP1:'Depuis 1976, Apple a lanc\u00e9 plus de 250\u00a0produits \u2014 de l\u2019Apple\u00a0I au Vision\u00a0Pro. Cochez tout ce que vous avez poss\u00e9d\u00e9.',
+  introP2:'On calcule le total en monnaie d\u2019aujourd\u2019hui, ajust\u00e9e de l\u2019inflation. <strong>Le r\u00e9sultat pourrait vous surprendre.</strong>',
+  introP3:'Cliquez ensuite sur <strong>\u00ab\u00a0Ma Facture \u00a0\u00bb</strong> pour voir et partager votre total. #MyAppleReceipt',
   introCta:'\u2193 Commencez \u00e0 cocher \u2193',
-  journeyTitle:' Mon \u00c9tag\u00e8re Apple',
+  journeyTitle:' Ma Facture Totale Apple',
   journeyFrom:'De',journeyTo:'\u00e0',journeyOwned:', j\u2019ai poss\u00e9d\u00e9',
   journeyDevices:'appareils Apple',
   journeyHash:'pour une #LifetimeCustomerValue totale de',
   journeyDollars:'(valeur actualis\u00e9e)',
-  journeyCta:'Et vous\u00a0?',
-  journeyCtaLink:'Composez votre \u00c9tag\u00e8re Apple \u2192',
-  copy:'Copier',share:'Partager',exportHtml:'Exporter HTML',saveImage:'Sauver Image',
+  journeyCta:'Et vous, combien\u00a0?',
+  journeyCtaLink:'D\u00e9couvrez votre total \u2192',
+  copy:'Copier',share:'Partager',exportHtml:'Exporter HTML',
   copied:'Copi\u00e9\u00a0!',
 }
 };
@@ -1025,7 +1024,7 @@ function render(){
     });
     // Category nav
     const navEl=document.getElementById('catNav');
-    navEl.innerHTML=sorted.map(([cat])=>'<a class="cat-nav-pill" href="#cat-'+cat+'" onclick="event.preventDefault();document.getElementById(\'cat-'+cat+'\').scrollIntoView({behavior:\'smooth\',block:\'start\'})">'+CATEGORIES[cat]?.label+'</a>').join('');
+    navEl.innerHTML=sorted.map(([cat,prods])=>'<a class="cat-nav-pill" href="#cat-'+cat+'" onclick="event.preventDefault();document.getElementById(\'cat-'+cat+'\').scrollIntoView({behavior:\'smooth\',block:\'start\'})">'+CATEGORIES[cat]?.label+' <small style="opacity:0.5">('+prods.length+')</small></a>').join('');
     document.body.classList.add('show-catnav');
   } else {
     document.body.classList.remove('show-catnav');
@@ -1095,7 +1094,7 @@ function showJourney(){
     return '<img class="journey-thumb" src="'+(state.imageOverrides[p.id]||p.image)+'" alt="'+p.name+'" title="'+p.name+' ('+p.year+')" onerror="imgError(this,\''+eName+'\')">';
   }).join('')+(extra>0?'<span class="journey-more">+'+extra+'</span>':'');
 
-  const summaryText=t('journeyFrom')+' '+minY+' '+t('journeyTo')+' '+maxY+t('journeyOwned')+'\n'+checked.length+' '+t('journeyDevices')+'\n'+t('journeyHash')+'\n'+fmtLocal(totalAdj)+' '+t('journeyDollars');
+  const summaryText=t('journeyFrom')+' '+minY+' '+t('journeyTo')+' '+maxY+t('journeyOwned')+' '+checked.length+' '+t('journeyDevices')+'\n'+t('journeyHash')+' '+fmtLocal(totalAdj)+'\n'+t('journeyDollars');
 
   const html='<div class="journey-overlay" onclick="if(event.target===this)closeJourney()">'+
     '<div class="journey-card">'+
@@ -1114,7 +1113,6 @@ function showJourney(){
     '<button class="btn btn-primary" onclick="copyJourney()" id="btnCopyJ">'+t('copy')+'</button>'+
     (navigator.share?'<button class="btn" onclick="shareJourney()">'+t('share')+'</button>':'')+
     '<button class="btn" onclick="exportChecked()">'+t('exportHtml')+'</button>'+
-    '<button class="btn" onclick="saveJourneyImage()">'+t('saveImage')+'</button>'+
     '</div>'+
     '<div class="journey-cta">What about you?<br><a href="https://pdewost.github.io/apple-50-years/" target="_blank" rel="noopener">'+t('journeyCtaLink')+'</a></div>'+
     '</div></div>';
@@ -1153,43 +1151,7 @@ function shareJourney(){
   }else{copyJourney();}
 }
 
-function saveJourneyImage(){
-  // Load html2canvas on demand, then capture the journey card
-  if(window.html2canvas){
-    captureCard();
-  }else{
-    const s=document.createElement('script');
-    s.src='https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js';
-    s.onload=captureCard;
-    s.onerror=()=>alert('Could not load image library. Try Export HTML instead.');
-    document.head.appendChild(s);
-  }
-}
-function captureCard(){
-  const card=document.querySelector('.journey-card');
-  if(!card) return;
-  // Hide close button and URL input for clean capture
-  const closeBt=card.querySelector('.journey-close');
-  const urlIn=card.querySelector('.journey-url');
-  const actions=card.querySelector('.journey-actions');
-  if(closeBt) closeBt.style.display='none';
-  if(urlIn) urlIn.style.display='none';
-  if(actions) actions.style.display='none';
-  html2canvas(card,{backgroundColor:'#1C1C1E',scale:2,allowTaint:true,useCORS:true,logging:false}).then(canvas=>{
-    if(closeBt) closeBt.style.display='';
-    if(urlIn) urlIn.style.display='';
-    if(actions) actions.style.display='';
-    const a=document.createElement('a');
-    a.download='my-apple-shelf.png';
-    a.href=canvas.toDataURL('image/png');
-    a.click();
-  }).catch(e=>{
-    if(closeBt) closeBt.style.display='';
-    if(urlIn) urlIn.style.display='';
-    if(actions) actions.style.display='';
-    alert('Image capture failed ('+e.message+'). Try Export HTML instead.');
-  });
-}
+
 
 function setQty(id,qty){state.quantities[id]=qty;updateFooter();}
 
@@ -1214,7 +1176,7 @@ function updateLangUI(){
   document.getElementById('btnCategory').textContent=t('byProduct');
   document.getElementById('btnYear').textContent=t('byYear');
   document.getElementById('searchBox').placeholder=t('search');
-  document.querySelector('.btn-journey').textContent=t('myShelf');
+  document.querySelector('.btn-journey').textContent=t('myReceipt');
   document.querySelector('[onclick="exportChecked()"]').textContent=t('export');
   document.querySelector('[onclick="clearAll()"]').textContent=t('clear');
   document.getElementById('footCount').previousElementSibling.textContent=t('checked');
@@ -1238,7 +1200,7 @@ function exportChecked(){
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>My Apple Journey \u2014 50 Years</title>
+<title>My Apple Receipt \u2014 50 Years</title>
 <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@500;600;700&display=swap" rel="stylesheet">
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
@@ -1260,7 +1222,7 @@ body{min-height:100vh;display:flex;align-items:center;justify-content:center;bac
 </head>
 <body>
 <div class="card">
-  <div class="title">\u{F8FF} My Apple Journey</div>
+  <div class="title">\u{F8FF} My Apple Receipt</div>
   <div class="thumbs">
 ${thumbTags}
   </div>
@@ -1273,7 +1235,7 @@ ${thumbTags}
   </div>
   <div class="cta">
     What about you?<br>
-    <a href="${appUrl}" target="_blank" rel="noopener">Build your Apple journey \u2192</a>
+    <a href="${appUrl}" target="_blank" rel="noopener">What\'s your number? \u2192</a>
   </div>
   <div class="source">
     <a href="https://pdewost.github.io/apple-50-years/">Apple 50 Years \u2014 Interactive Checklist</a>
@@ -1283,7 +1245,7 @@ ${thumbTags}
 </html>`;
   const blob=new Blob([htmlDoc],{type:'text/html'});
   const url=URL.createObjectURL(blob);
-  const a=document.createElement('a');a.href=url;a.download='my-apple-journey.html';
+  const a=document.createElement('a');a.href=url;a.download='my-apple-receipt.html';
   document.body.appendChild(a);a.click();document.body.removeChild(a);URL.revokeObjectURL(url);
 }
 
