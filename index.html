@@ -314,6 +314,37 @@ main { max-width: 1400px; margin: 0 auto; padding: 24px; }
 }
 body.has-checked .btn-journey { display: inline-flex; }
 
+.lang-toggle {
+  display: inline-flex; gap: 2px; align-items: center;
+  border: 1px solid var(--border); border-radius: var(--radius-md);
+  overflow: hidden; font-size: 0.85rem; cursor: pointer;
+}
+.lang-toggle span {
+  padding: 5px 8px; transition: all var(--transition-fast); line-height: 1;
+}
+.lang-toggle span.active { background: var(--accent-light); }
+.lang-toggle span:hover { background: var(--bg-card-hover); }
+
+.intro-section {
+  max-width: 700px; margin: 0 auto 32px; text-align: center;
+  padding: 24px; line-height: 1.7; color: var(--text-secondary);
+  font-size: 0.95rem;
+}
+.intro-section h2 {
+  font-family: var(--font-display); font-weight: 700; font-size: 1.6rem;
+  color: var(--text-primary); margin-bottom: 12px;
+  background: linear-gradient(135deg, var(--accent), #30D158);
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+.intro-section p { margin-bottom: 10px; }
+.intro-section .intro-cta {
+  display: inline-block; margin-top: 8px; padding: 8px 20px;
+  background: var(--accent); color: #fff; border-radius: var(--radius-md);
+  text-decoration: none; font-weight: 600; font-size: 0.9rem;
+  cursor: default;
+}
+
 /* STAGING MODE */
 .staging-banner {
   background: linear-gradient(135deg, #1C1C1E, #2C2C2E);
@@ -415,8 +446,9 @@ body.staging .product-card[data-triage="wrong-image"] .card-img-actions { displa
         <button class="btn" id="btnYear" onclick="setViewMode('year')">By Year</button>
       </div>
       <input type="text" class="search-box" id="searchBox" placeholder="Search products..." oninput="onSearchInput()">
+      <div class="lang-toggle" onclick="toggleLang()"><span id="flagEn">EN</span><span id="flagFr">FR</span></div>
       <button class="btn" id="btnTheme" onclick="toggleTheme()" title="Toggle dark mode">&#9789;</button>
-      <button class="btn btn-journey" onclick="showJourney()" title="My Apple Journey">My Journey</button>
+      <button class="btn btn-journey" onclick="showJourney()" title="'+t('journeyTitle')+'">My Journey</button>
       <button class="btn" onclick="exportChecked()" title="Export as HTML tile">Export</button>
       <button class="btn" onclick="clearAll()" title="Clear all selections">Clear</button>
       <span class="staging-controls">
@@ -754,13 +786,66 @@ const PRODUCTS=[
 // ── CATEGORIES ──
 const CATEGORIES={"pre-mac":{label:"Pre-Mac Era",order:0},"compact-mac":{label:"Compact Macs",order:1},"mac-ii":{label:"Mac II Family",order:2},"quadra-centris":{label:"Quadra & Centris",order:3},"performa":{label:"Performa",order:4},"powerbook":{label:"PowerBook & Duo",order:5},"ibook":{label:"iBook",order:6},"power-mac":{label:"Power Mac",order:7},"imac":{label:"iMac",order:8},"macbook":{label:"MacBook Family",order:9},"mac-mini":{label:"Mac mini",order:10},"mac-pro":{label:"Mac Pro",order:11},"mac-studio":{label:"Mac Studio",order:12},"quicktake":{label:"QuickTake",order:14},"newton":{label:"Newton",order:15},"ipod":{label:"iPod",order:16},"iphone":{label:"iPhone",order:17},"ipad":{label:"iPad",order:18},"apple-watch":{label:"Apple Watch",order:19},"airpods":{label:"AirPods",order:20},"homepod":{label:"HomePod",order:21},"apple-tv":{label:"Apple TV",order:22},"airport":{label:"AirPort & Time Capsule",order:23},"airtag":{label:"AirTag",order:24},"vision-pro":{label:"Vision Pro",order:25}};
 
+// ── I18N ──
+const STRINGS={
+en:{
+  title:' 50 Years (1976\u20132026)',
+  byProduct:'By Product',byYear:'By Year',myJourney:'My Journey',
+  export:'Export',clear:'Clear',search:'Search products...',
+  checked:'Checked',origUsd:'Original USD',todayUsd:"Today's USD",todayEur:"Today's EUR",
+  msrp:'MSRP',todayUsdLabel:'Today USD',todayEurLabel:'Today EUR',qty:'Qty:',specs:'Specs',
+  products:'product',productsPlural:'products',owned:'owned',
+  noResults:'No products match your search.',
+  noChecked:'No products checked.',
+  introTitle:'50 years of Apple, one checklist',
+  introP1:'From the Apple\u00a0I in a garage (1976) to the Vision\u00a0Pro on your face (2024), Apple has shipped over 200 landmark hardware products.',
+  introP2:'Check every Mac, iPhone, iPad, iPod, Watch, and accessory you\u2019ve ever owned. The app computes your <strong>#LifetimeCustomerValue</strong> in today\u2019s inflation-adjusted dollars \u2014 and lets you share the result.',
+  introP3:'Prices are original US MSRPs adjusted with BLS CPI\u2011U data. EUR conversion is live.',
+  introCta:'\u2193 Start checking \u2193',
+  journeyTitle:' My Apple Journey',
+  journeyFrom:'From',journeyTo:'to',journeyOwned:', I have owned',
+  journeyDevices:'Apple devices',
+  journeyHash:'for a total #LifetimeCustomerValue of',
+  journeyDollars:"(today's dollars)",
+  journeyCta:'What about you?',
+  journeyCtaLink:'Build your Apple journey \u2192',
+  copy:'Copy',share:'Share',exportHtml:'Export HTML',
+  copied:'Copied!',
+},
+fr:{
+  title:' 50 ans (1976\u20132026)',
+  byProduct:'Par Produit',byYear:'Par Ann\u00e9e',myJourney:'Mon Parcours',
+  export:'Exporter',clear:'Effacer',search:'Rechercher...',
+  checked:'S\u00e9lection',origUsd:'USD d\u2019origine',todayUsd:'USD actualis\u00e9s',todayEur:'EUR actualis\u00e9s',
+  msrp:'Prix',todayUsdLabel:'USD actuel',todayEurLabel:'EUR actuel',qty:'Qt\u00e9\u00a0:',specs:'Fiche',
+  products:'produit',productsPlural:'produits',owned:'poss\u00e9d\u00e9',
+  noResults:'Aucun produit ne correspond \u00e0 votre recherche.',
+  noChecked:'Aucun produit s\u00e9lectionn\u00e9.',
+  introTitle:'50 ans d\u2019Apple, une checklist',
+  introP1:'De l\u2019Apple\u00a0I dans un garage (1976) au Vision\u00a0Pro sur votre visage (2024), Apple a lanc\u00e9 plus de 200\u00a0produits mat\u00e9riels marquants.',
+  introP2:'Cochez chaque Mac, iPhone, iPad, iPod, Watch et accessoire que vous avez poss\u00e9d\u00e9. L\u2019appli calcule votre <strong>#LifetimeCustomerValue</strong> en dollars ajust\u00e9s de l\u2019inflation \u2014 et vous permet de partager le r\u00e9sultat.',
+  introP3:'Les prix sont les MSRP US d\u2019origine, ajust\u00e9s avec les donn\u00e9es IPC du BLS. La conversion EUR est en temps r\u00e9el.',
+  introCta:'\u2193 Commencez \u00e0 cocher \u2193',
+  journeyTitle:' Mon Parcours Apple',
+  journeyFrom:'De',journeyTo:'\u00e0',journeyOwned:', j\u2019ai poss\u00e9d\u00e9',
+  journeyDevices:'appareils Apple',
+  journeyHash:'pour une #LifetimeCustomerValue totale de',
+  journeyDollars:'(dollars actualis\u00e9s)',
+  journeyCta:'Et vous\u00a0?',
+  journeyCtaLink:'Composez votre parcours Apple \u2192',
+  copy:'Copier',share:'Partager',exportHtml:'Exporter HTML',
+  copied:'Copi\u00e9\u00a0!',
+}
+};
+function t(k){return STRINGS[state.lang]?.[k]||STRINGS.en[k]||k;}
+
 // ── CPI FALLBACK (BLS CPI-U Annual Averages) ──
 const CPI_FALLBACK={1976:56.9,1977:60.6,1978:65.2,1979:72.6,1980:82.4,1981:90.9,1982:96.5,1983:99.6,1984:103.9,1985:107.6,1986:109.6,1987:113.6,1988:118.3,1989:124.0,1990:130.7,1991:136.2,1992:140.3,1993:144.5,1994:148.2,1995:152.4,1996:156.9,1997:160.5,1998:163.0,1999:166.6,2000:172.2,2001:177.1,2002:179.9,2003:184.0,2004:188.9,2005:195.3,2006:201.6,2007:207.3,2008:215.3,2009:214.5,2010:218.1,2011:224.9,2012:229.6,2013:233.0,2014:236.7,2015:237.0,2016:240.0,2017:245.1,2018:251.1,2019:255.7,2020:258.8,2021:271.0,2022:292.7,2023:304.7,2024:315.6,2025:323.0,2026:330.0};
 
 // ── STATE ──
 const PRODUCT_MAP=new Map(PRODUCTS.map(p=>[p.id,p]));
 const STAGING=new URLSearchParams(window.location.search).has('staging');
-const state={quantities:{},viewMode:"category",searchQuery:"",theme:"light",cpiData:Object.assign({},CPI_FALLBACK),eurRate:0.92,apiStatus:{cpi:"fallback",eur:"fallback"},triageFlags:{},triageFilter:"all",imageOverrides:{},mismatchScores:{}};
+const state={quantities:{},viewMode:"category",searchQuery:"",lang:(navigator.language||'en').startsWith('fr')?'fr':'en',theme:"light",cpiData:Object.assign({},CPI_FALLBACK),eurRate:0.92,apiStatus:{cpi:"fallback",eur:"fallback"},triageFlags:{},triageFilter:"all",imageOverrides:{},mismatchScores:{}};
 function isChecked(id){return (state.quantities[id]||0)>0;}
 function getQty(id){return state.quantities[id]||0;}
 function checkedCount(){return Object.values(state.quantities).filter(q=>q>0).length;}
@@ -862,7 +947,7 @@ function getFiltered(){
 function badge(items){
   const total=items.length;
   const owned=items.filter(p=>isChecked(p.id)).length;
-  return '<span class="section-badge">'+total+' product'+(total!==1?'s':'')+(owned>0?', '+owned+' owned':'')+'</span>';
+  return '<span class="section-badge">'+total+' '+t(total!==1?'productsPlural':'products')+(owned>0?', '+owned+' '+t('owned'):'')+'</span>';
 }
 function cardHTML(p){
   const checked=isChecked(p.id);
@@ -871,7 +956,7 @@ function cardHTML(p){
   const eName=p.name.replace(/'/g,"\\'").replace(/"/g,'&quot;');
   const tf=state.triageFlags[p.id]||'';
   const triageAttr=tf?' data-triage="'+tf+'"':'';
-  const refLink=p.url?'<div class="card-ref"><a href="'+p.url+'" target="_blank" rel="noopener" onclick="event.stopPropagation()">Specs &rarr;</a></div>':'';
+  const refLink=p.url?'<div class="card-ref"><a href="'+p.url+'" target="_blank" rel="noopener" onclick="event.stopPropagation()">'+t('specs')+' &rarr;</a></div>':'';
   // Resolved image (override or original)
   const imgSrc=state.imageOverrides[p.id]||p.image;
   // Mismatch score display
@@ -894,13 +979,17 @@ function cardHTML(p){
     '<button class="triage-btn'+(tf==='wrong-price'?' active-wrong-price':'')+'" title="Wrong price" onclick="event.stopPropagation();setTriage(\''+p.id+'\',\'wrong-price\')">&#36;</button>'+
     '<button class="triage-btn'+(tf==='validated'?' active-validated':'')+'" title="Validated" onclick="event.stopPropagation();setTriage(\''+p.id+'\',\'validated\')">&#10003;</button>'+
     '</div>';
-  return '<article class="product-card'+(checked?' checked':'')+'"'+triageAttr+' data-id="'+p.id+'"><div class="card-check">'+(checked?'&#10003;':'')+'</div><div class="card-img-wrap"><img src="'+imgSrc+'" alt="'+p.name+'" loading="lazy" onerror="imgError(this,\''+eName+'\')"></div>'+imgMeta+imgActions+'<div class="card-body"><div class="card-name">'+p.name+'</div><div class="card-year">'+p.year+'</div>'+(p.cpu?'<div class="card-cpu">'+p.cpu+'</div>':'')+'<div class="card-qty"><span>Qty:</span><select onchange="event.stopPropagation();setQty(\''+p.id+'\',+this.value)">'+[1,2,4,8,16].map(n=>'<option value="'+n+'"'+(getQty(p.id)===n?' selected':'')+'>'+n+(n===16?'+':'')+'</option>').join('')+'</select></div><div class="card-prices"><div class="price-row"><span class="price-label">MSRP</span><span class="price-value price-original'+(p.est?' est':'')+'">'+fmtUSD.format(p.msrp)+'</span></div><div class="price-row"><span class="price-label">Today USD</span><span class="price-value price-adjusted">'+fmtUSD.format(adj)+'</span></div><div class="price-row"><span class="price-label">Today EUR</span><span class="price-value price-eur">'+fmtEUR.format(eur)+'</span></div></div>'+refLink+'</div>'+tBar+'</article>';
+  return '<article class="product-card'+(checked?' checked':'')+'"'+triageAttr+' data-id="'+p.id+'"><div class="card-check">'+(checked?'&#10003;':'')+'</div><div class="card-img-wrap"><img src="'+imgSrc+'" alt="'+p.name+'" loading="lazy" onerror="imgError(this,\''+eName+'\')"></div>'+imgMeta+imgActions+'<div class="card-body"><div class="card-name">'+p.name+'</div><div class="card-year">'+p.year+'</div>'+(p.cpu?'<div class="card-cpu">'+p.cpu+'</div>':'')+'<div class="card-qty"><span>'+t('qty')+'</span><select onchange="event.stopPropagation();setQty(\''+p.id+'\',+this.value)">'+[1,2,4,8,16].map(n=>'<option value="'+n+'"'+(getQty(p.id)===n?' selected':'')+'>'+n+(n===16?'+':'')+'</option>').join('')+'</select></div><div class="card-prices"><div class="price-row"><span class="price-label">'+t('msrp')+'</span><span class="price-value price-original'+(p.est?' est':'')+'">'+fmtUSD.format(p.msrp)+'</span></div><div class="price-row"><span class="price-label">'+t('todayUsdLabel')+'</span><span class="price-value price-adjusted">'+fmtUSD.format(adj)+'</span></div><div class="price-row"><span class="price-label">'+t('todayEurLabel')+'</span><span class="price-value price-eur">'+fmtEUR.format(eur)+'</span></div></div>'+refLink+'</div>'+tBar+'</article>';
 }
 function render(){
   const items=getFiltered();
   const app=document.getElementById('app');
   let html='';
-  if(items.length===0){html='<div class="empty-state">No products match your search.</div>';}
+  // Intro section (only when no search active and no items checked)
+  if(!state.searchQuery && checkedCount()===0){
+    html+='<div class="intro-section"><h2>'+t('introTitle')+'</h2><p>'+t('introP1')+'</p><p>'+t('introP2')+'</p><p>'+t('introP3')+'</p><span class="intro-cta">'+t('introCta')+'</span></div>';
+  }
+  if(items.length===0){html='<div class="empty-state">'+t('noResults')+'</div>';}
   else if(state.viewMode==='category'){
     const groups={};items.forEach(p=>{(groups[p.category]||=[]).push(p);});
     Object.entries(groups).sort(([a],[b])=>(CATEGORIES[a]?.order||99)-(CATEGORIES[b]?.order||99)).forEach(([cat,prods])=>{
@@ -973,7 +1062,7 @@ function showJourney(){
     return '<img class="journey-thumb" src="'+(state.imageOverrides[p.id]||p.image)+'" alt="'+p.name+'" title="'+p.name+' ('+p.year+')" onerror="imgError(this,\''+eName+'\')">';
   }).join('')+(extra>0?'<span class="journey-more">+'+extra+'</span>':'');
 
-  const summaryText='From '+minY+' to '+maxY+', I have owned\n'+checked.length+' Apple devices\nfor a total #LifetimeCustomerValue\nof '+fmtUSD.format(totalAdj)+' (today\'s dollars)';
+  const summaryText=t('journeyFrom')+' '+minY+' '+t('journeyTo')+' '+maxY+t('journeyOwned')+'\n'+checked.length+' '+t('journeyDevices')+'\n'+t('journeyHash')+'\n'+fmtUSD.format(totalAdj)+' '+t('journeyDollars');
 
   const html='<div class="journey-overlay" onclick="if(event.target===this)closeJourney()">'+
     '<div class="journey-card">'+
@@ -981,19 +1070,19 @@ function showJourney(){
     '<div class="journey-title"><span>&#63743;</span> My Apple Journey</div>'+
     '<div class="journey-thumbs">'+thumbsHTML+'</div>'+
     '<div class="journey-text">'+
-    'From <strong>'+minY+'</strong> to <strong>'+maxY+'</strong>, I have owned'+
-    '<span class="j-count">'+checked.length+' Apple devices</span>'+
+    t('journeyFrom')+' <strong>'+minY+'</strong> '+t('journeyTo')+' <strong>'+maxY+'</strong>'+t('journeyOwned')+
+    '<span class="j-count">'+checked.length+' '+t('journeyDevices')+'</span>'+
     '<span class="j-hash">for a total #LifetimeCustomerValue of</span><br>'+
     '<span class="j-value">'+fmtUSD.format(totalAdj)+'</span>'+
     '<br><span class="j-hash">(today\'s dollars)</span>'+
     '</div>'+
     '<input class="journey-url" type="text" value="'+shareUrl+'" readonly onclick="this.select()">'+
     '<div class="journey-actions">'+
-    '<button class="btn btn-primary" onclick="copyJourney()" id="btnCopyJ">Copy</button>'+
-    (navigator.share?'<button class="btn" onclick="shareJourney()">Share</button>':'')+
-    '<button class="btn" onclick="exportChecked()">Export HTML</button>'+
+    '<button class="btn btn-primary" onclick="copyJourney()" id="btnCopyJ">'+t('copy')+'</button>'+
+    (navigator.share?'<button class="btn" onclick="shareJourney()">'+t('share')+'</button>':'')+
+    '<button class="btn" onclick="exportChecked()">'+t('exportHtml')+'</button>'+
     '</div>'+
-    '<div class="journey-cta">What about you?<br><a href="https://pdewost.github.io/apple-50-years/" target="_blank" rel="noopener">Build your Apple journey &rarr;</a></div>'+
+    '<div class="journey-cta">What about you?<br><a href="https://pdewost.github.io/apple-50-years/" target="_blank" rel="noopener">'+t('journeyCtaLink')+'</a></div>'+
     '</div></div>';
 
   // Store text for copy/share
@@ -1012,7 +1101,7 @@ function copyJourney(){
   const text=window._journeyText+'\n\n\u{F8FF} '+window._journeyUrl;
   navigator.clipboard.writeText(text).then(()=>{
     const btn=document.getElementById('btnCopyJ');
-    if(btn){btn.textContent='Copied!';setTimeout(()=>{btn.textContent='Copy';},2000);}
+    if(btn){btn.textContent=t('copied');setTimeout(()=>{btn.textContent=t('copy');},2000);}
   }).catch(()=>{
     // Fallback: select the URL input
     const inp=document.querySelector('.journey-url');
@@ -1045,10 +1134,26 @@ let searchTimer;
 function onSearchInput(){clearTimeout(searchTimer);searchTimer=setTimeout(()=>{state.searchQuery=document.getElementById('searchBox').value;render();},150);}
 function setViewMode(mode){state.viewMode=mode;document.getElementById('btnCategory').classList.toggle('active',mode==='category');document.getElementById('btnYear').classList.toggle('active',mode==='year');render();}
 function toggleTheme(){state.theme=state.theme==='light'?'dark':'light';document.documentElement.dataset.theme=state.theme;document.getElementById('btnTheme').innerHTML=state.theme==='dark'?'&#9788;':'&#9789;';}
+function toggleLang(){state.lang=state.lang==='en'?'fr':'en';updateLangUI();render();}
+function updateLangUI(){
+  document.getElementById('flagEn').classList.toggle('active',state.lang==='en');
+  document.getElementById('flagFr').classList.toggle('active',state.lang==='fr');
+  document.querySelector('.site-title').innerHTML='<span>&#63743;</span> '+t('title');
+  document.getElementById('btnCategory').textContent=t('byProduct');
+  document.getElementById('btnYear').textContent=t('byYear');
+  document.getElementById('searchBox').placeholder=t('search');
+  document.querySelector('.btn-journey').textContent=t('myJourney');
+  document.querySelector('[onclick="exportChecked()"]').textContent=t('export');
+  document.querySelector('[onclick="clearAll()"]').textContent=t('clear');
+  document.getElementById('footCount').previousElementSibling.textContent=t('checked');
+  document.getElementById('footOriginal').previousElementSibling.textContent=t('origUsd');
+  document.getElementById('footAdjusted').previousElementSibling.textContent=t('todayUsd');
+  document.getElementById('footEur').previousElementSibling.textContent=t('todayEur');
+}
 function clearAll(){state.quantities={};render();}
 function exportChecked(){
   const checked=PRODUCTS.filter(p=>isChecked(p.id)).sort((a,b)=>a.year-b.year);
-  if(checked.length===0){alert('No products checked.');return;}
+  if(checked.length===0){alert(t('noChecked'));return;}
   const years=checked.map(p=>p.year);
   const minY=Math.min(...years),maxY=Math.max(...years);
   let totalAdj=0;
@@ -1213,7 +1318,7 @@ function importTriage(){
 const hashMatch=window.location.hash.match(/^#s=(.+)$/);
 if(hashMatch){state.quantities=decodeSelection(hashMatch[1]);}
 if(STAGING) document.body.classList.add('staging');
-render();updateApiStatus();updateStagingProgress();
+updateLangUI();render();updateApiStatus();updateStagingProgress();
 Promise.allSettled([fetchCPI(),fetchEUR()]).then(()=>{render();updateApiStatus();});
 </script>
 </body>
