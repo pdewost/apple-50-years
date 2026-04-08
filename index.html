@@ -190,12 +190,12 @@ main { max-width: 1400px; margin: 0 auto; padding: 24px; }
 .price-eur { color: var(--accent); }
 
 .card-check {
-  position: absolute; top: 10px; right: 10px;
+  position: absolute; top: 10px; right: 10px; z-index: 10;
   width: 28px; height: 28px; border-radius: 50%;
-  background: var(--bg-secondary); border: 2px solid var(--border);
+  background: rgba(255,255,255,0.9); border: 2px solid var(--border);
   display: flex; align-items: center; justify-content: center;
   font-size: 14px; color: transparent; transition: all var(--transition-fast);
-  box-shadow: var(--shadow-sm);
+  box-shadow: 0 1px 4px rgba(0,0,0,0.15);
 }
 .product-card.checked .card-check { background: var(--green); border-color: var(--green); color: #fff; }
 
@@ -244,7 +244,7 @@ main { max-width: 1400px; margin: 0 auto; padding: 24px; }
 }
 .journey-card {
   background: var(--bg-secondary); border-radius: var(--radius-xl);
-  box-shadow: var(--shadow-lg); max-width: 520px; width: 100%;
+  box-shadow: var(--shadow-lg); max-width: 720px; width: 100%;
   padding: 28px; position: relative; max-height: 90vh; overflow-y: auto;
 }
 .journey-close {
@@ -663,6 +663,9 @@ const PRODUCTS=[
 {id:"studio-m2",name:"Mac Studio (M2 Ultra, 2023)",year:2023,msrp:3999,est:false,category:"mac-studio",image:"https://upload.wikimedia.org/wikipedia/commons/thumb/5/53/Back_of_a_Mac_Studio.jpg/500px-Back_of_a_Mac_Studio.jpg",url:"https://en.wikipedia.org/wiki/Mac_Studio_%28M2_Ultra%2C_2023%29",cpu:"Apple M2 Ultra"},
 {id:"studio-m4",name:"Mac Studio (M4 Ultra, 2025)",year:2025,msrp:3999,est:true,category:"mac-studio",image:"https://upload.wikimedia.org/wikipedia/commons/thumb/3/32/Mac_Studio_%282022%29_front.jpg/500px-Mac_Studio_%282022%29_front.jpg",url:"https://en.wikipedia.org/wiki/Mac_Studio_%28M4_Ultra%2C_2025%29",cpu:"Apple M4 Ultra"},
 
+// Pippin
+{id:"pippin",name:"Apple Pippin (Bandai Atmark)",year:1996,msrp:599,est:false,category:"pippin",image:"https://upload.wikimedia.org/wikipedia/commons/thumb/0/0a/Pippin-Atmark-Console-Set.jpg/500px-Pippin-Atmark-Console-Set.jpg",url:"https://en.wikipedia.org/wiki/Apple_Pippin",cpu:"PowerPC 603e"},
+
 // QuickTake
 {id:"qt-100",name:"QuickTake 100",year:1994,msrp:749,est:false,category:"quicktake",image:"https://upload.wikimedia.org/wikipedia/commons/thumb/4/45/Apple_QuickTake_100_camera.jpg/500px-Apple_QuickTake_100_camera.jpg",url:"https://en.wikipedia.org/wiki/QuickTake_100",cpu:"Motorola DSP56001"},
 {id:"qt-150",name:"QuickTake 150",year:1995,msrp:699,est:true,category:"quicktake",image:"https://upload.wikimedia.org/wikipedia/commons/thumb/b/b3/Apple_Quicktake_100_%28329044100%29.jpg/500px-Apple_Quicktake_100_%28329044100%29.jpg",url:"https://en.wikipedia.org/wiki/QuickTake_150",cpu:"Motorola DSP56001"},
@@ -804,7 +807,7 @@ const PRODUCTS=[
 ];
 
 // ── CATEGORIES ──
-const CATEGORIES={"pre-mac":{label:"Pre-Mac Era",order:0},"compact-mac":{label:"Compact Macs",order:1},"mac-ii":{label:"Mac II Family",order:2},"quadra-centris":{label:"Quadra & Centris",order:3},"performa":{label:"Performa",order:4},"powerbook":{label:"PowerBook & Duo",order:5},"ibook":{label:"iBook",order:6},"power-mac":{label:"Power Mac",order:7},"imac":{label:"iMac",order:8},"macbook":{label:"MacBook Family",order:9},"mac-mini":{label:"Mac mini",order:10},"mac-pro":{label:"Mac Pro",order:11},"mac-studio":{label:"Mac Studio",order:12},"quicktake":{label:"QuickTake",order:14},"newton":{label:"Newton",order:15},"ipod":{label:"iPod",order:16},"iphone":{label:"iPhone",order:17},"ipad":{label:"iPad",order:18},"apple-watch":{label:"Apple Watch",order:19},"airpods":{label:"AirPods",order:20},"homepod":{label:"HomePod",order:21},"apple-tv":{label:"Apple TV",order:22},"airport":{label:"AirPort & Time Capsule",order:23},"airtag":{label:"AirTag",order:24},"vision-pro":{label:"Vision Pro",order:25}};
+const CATEGORIES={"pre-mac":{label:"Pre-Mac Era",order:0},"compact-mac":{label:"Compact Macs",order:1},"mac-ii":{label:"Mac II Family",order:2},"quadra-centris":{label:"Quadra & Centris",order:3},"performa":{label:"Performa",order:4},"powerbook":{label:"PowerBook & Duo",order:5},"ibook":{label:"iBook",order:6},"power-mac":{label:"Power Mac",order:7},"imac":{label:"iMac",order:8},"macbook":{label:"MacBook Family",order:9},"mac-mini":{label:"Mac mini",order:10},"mac-pro":{label:"Mac Pro",order:11},"mac-studio":{label:"Mac Studio",order:12},"pippin":{label:"Pippin",order:13},"quicktake":{label:"QuickTake",order:14},"newton":{label:"Newton",order:15},"ipod":{label:"iPod",order:16},"iphone":{label:"iPhone",order:17},"ipad":{label:"iPad",order:18},"apple-watch":{label:"Apple Watch",order:19},"airpods":{label:"AirPods",order:20},"homepod":{label:"HomePod",order:21},"apple-tv":{label:"Apple TV",order:22},"airport":{label:"AirPort & Time Capsule",order:23},"airtag":{label:"AirTag",order:24},"vision-pro":{label:"Vision Pro",order:25}};
 
 // ── I18N ──
 const STRINGS={
@@ -1165,12 +1168,27 @@ function saveJourneyImage(){
 function captureCard(){
   const card=document.querySelector('.journey-card');
   if(!card) return;
-  html2canvas(card,{backgroundColor:'#1C1C1E',scale:2,useCORS:true,logging:false}).then(canvas=>{
+  // Hide close button and URL input for clean capture
+  const closeBt=card.querySelector('.journey-close');
+  const urlIn=card.querySelector('.journey-url');
+  const actions=card.querySelector('.journey-actions');
+  if(closeBt) closeBt.style.display='none';
+  if(urlIn) urlIn.style.display='none';
+  if(actions) actions.style.display='none';
+  html2canvas(card,{backgroundColor:'#1C1C1E',scale:2,allowTaint:true,useCORS:true,logging:false}).then(canvas=>{
+    if(closeBt) closeBt.style.display='';
+    if(urlIn) urlIn.style.display='';
+    if(actions) actions.style.display='';
     const a=document.createElement('a');
     a.download='my-apple-shelf.png';
     a.href=canvas.toDataURL('image/png');
     a.click();
-  }).catch(()=>alert('Image capture failed. Try Export HTML instead.'));
+  }).catch(e=>{
+    if(closeBt) closeBt.style.display='';
+    if(urlIn) urlIn.style.display='';
+    if(actions) actions.style.display='';
+    alert('Image capture failed ('+e.message+'). Try Export HTML instead.');
+  });
 }
 
 function setQty(id,qty){state.quantities[id]=qty;updateFooter();}
