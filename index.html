@@ -1098,7 +1098,7 @@ function updateFooter(){
   // API indicator in footer
   const cOk=state.apiStatus.cpi==='loaded',eOk=state.apiStatus.eur==='loaded';
   const ai=document.getElementById('apiIndicator');
-  if(ai) ai.innerHTML='<span class="dot '+(cOk?'dot-ok':'dot-warn')+'"></span>CPI '+(eOk?state.eurRate.toFixed(2):'~'+state.eurRate);
+  if(ai) ai.innerHTML='<span class="dot '+(cOk?'dot-ok':'dot-warn')+'"></span>CPI (inflation) '+(cOk?'live':'est.')+' &middot; EUR/USD '+(eOk?state.eurRate.toFixed(4):'~'+state.eurRate);
 }
 
 // ── SELECTION ENCODING ──
