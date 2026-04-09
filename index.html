@@ -320,6 +320,22 @@ main { max-width: 1400px; margin: 0 auto; padding: 24px; }
 .journey-cta a { color: var(--accent); text-decoration: none; font-weight: 600; }
 .journey-cta a:hover { text-decoration: underline; }
 
+.social-links {
+  text-align: center; padding: 8px 0; font-size: 0.72rem; color: var(--text-tertiary);
+  line-height: 1.6;
+}
+.social-links a { color: var(--text-tertiary); text-decoration: none; margin: 0 6px; }
+.social-links a:hover { color: var(--accent); }
+.social-links .social-label { display: block; margin-bottom: 2px; }
+
+.page-footer {
+  max-width: 1400px; margin: 40px auto 0; padding: 24px;
+  border-top: 1px solid var(--border-light); text-align: center;
+  font-size: 0.72rem; color: var(--text-tertiary); line-height: 1.6;
+}
+.page-footer a { color: var(--text-tertiary); text-decoration: none; margin: 0 6px; }
+.page-footer a:hover { color: var(--accent); }
+
 .btn-journey {
   display: none; background: linear-gradient(135deg, var(--accent), #30D158) !important;
   color: #fff !important; border: none !important;
@@ -500,6 +516,8 @@ body.staging .product-card[data-triage="wrong-image"] .card-img-actions { displa
 <div class="cat-nav" id="catNav"></div>
 
 <main id="app"></main>
+
+<div class="page-footer" id="pageFooter"></div>
 
 <footer class="site-footer">
   <div class="footer-inner">
@@ -699,6 +717,7 @@ const PRODUCTS=[
 {id:"ipod-shuffle",name:"iPod shuffle (1st gen)",year:2005,msrp:99,est:false,category:"ipod",image:"https://upload.wikimedia.org/wikipedia/commons/thumb/c/c7/IPod_shuffle_1G.png/500px-IPod_shuffle_1G.png",url:"https://en.wikipedia.org/wiki/iPod_shuffle_%281st_gen%29",cpu:"SigmaTel STMP3550"},
 {id:"ipod-nano-1",name:"iPod nano (1st gen)",year:2005,msrp:199,est:false,category:"ipod",image:"https://upload.wikimedia.org/wikipedia/commons/thumb/5/52/IPod_Nano_First-gen_%282017-06-11%29.jpg/500px-IPod_Nano_First-gen_%282017-06-11%29.jpg",url:"https://en.wikipedia.org/wiki/iPod_nano_%281st_gen%29",cpu:"ARM (PP5021)"},
 {id:"ipod-video",name:"iPod (Video/5th gen)",year:2005,msrp:299,est:false,category:"ipod",image:"https://upload.wikimedia.org/wikipedia/commons/thumb/a/a6/Ipod_5th_Generation_white_rotated.png/500px-Ipod_5th_Generation_white_rotated.png",url:"https://en.wikipedia.org/wiki/iPod_%28Video/5th_gen%29",cpu:"ARM (PP5021)"},
+{id:"ipod-hifi",name:"iPod Hi-Fi",year:2006,msrp:349,est:false,category:"ipod",image:"https://upload.wikimedia.org/wikipedia/commons/thumb/b/b0/IPod_Hi-Fi.jpg/500px-IPod_Hi-Fi.jpg",url:"https://en.wikipedia.org/wiki/IPod_Hi-Fi",cpu:"N/A (speaker dock)"},
 {id:"ipod-nano-3",name:"iPod nano (3rd gen)",year:2007,msrp:149,est:false,category:"ipod",image:"https://upload.wikimedia.org/wikipedia/commons/thumb/d/d7/Ipod_nano_3g.jpg/500px-Ipod_nano_3g.jpg",url:"https://en.wikipedia.org/wiki/iPod_nano_%283rd_gen%29",cpu:"Samsung S5L8702"},
 {id:"ipod-touch-1",name:"iPod touch (1st gen)",year:2007,msrp:299,est:false,category:"ipod",image:"https://upload.wikimedia.org/wikipedia/commons/d/d5/IPod_touch_1st_generation.png",url:"https://en.wikipedia.org/wiki/iPod_touch_%281st_gen%29",cpu:"Samsung S5L8900 (ARM)"},
 {id:"ipod-classic",name:"iPod classic (6th gen)",year:2007,msrp:249,est:false,category:"ipod",image:"https://upload.wikimedia.org/wikipedia/commons/thumb/e/e8/IPod_classic_6G_80GB_packaging-2007-09-22.jpg/500px-IPod_classic_6G_80GB_packaging-2007-09-22.jpg",url:"https://en.wikipedia.org/wiki/iPod_classic_%286th_gen%29",cpu:"ARM (PP5022)"},
@@ -845,6 +864,7 @@ en:{
   journeyCtaLink:'Find out yours \u2192',
   copy:'Copy',share:'Share',exportHtml:'Export HTML',
   copied:'Copied!',
+  followMe:'Follow me for other tech musings',
 },
 fr:{
   title:' 50 ans (1976\u20132026)',
@@ -869,6 +889,7 @@ fr:{
   journeyCtaLink:'D\u00e9couvrez votre total \u2192',
   copy:'Copier',share:'Partager',exportHtml:'Exporter HTML',
   copied:'Copi\u00e9\u00a0!',
+  followMe:'Suivez-moi pour d\u2019autres r\u00e9flexions tech',
 }
 };
 function t(k){return STRINGS[state.lang]?.[k]||STRINGS.en[k]||k;}
@@ -1048,6 +1069,7 @@ function render(){
   }
   app.innerHTML=html;
   updateFooter();
+  document.getElementById('pageFooter').innerHTML='<span>'+t('followMe')+'</span><br><a href="https://linkedin.com/in/pdewost" target="_blank" rel="noopener">LinkedIn</a> \u00b7 <a href="https://instagram.com/pdewost" target="_blank" rel="noopener">Instagram</a> \u00b7 <a href="https://x.com/pdewost" target="_blank" rel="noopener">X</a>';
 }
 
 // ── FOOTER ──
@@ -1127,7 +1149,8 @@ function showJourney(){
     (navigator.share?'<button class="btn" onclick="shareJourney()">'+t('share')+'</button>':'')+
     '<button class="btn" onclick="exportChecked()">'+t('exportHtml')+'</button>'+
     '</div>'+
-    '<div class="journey-cta">What about you?<br><a href="https://pdewost.github.io/apple-50-years/" target="_blank" rel="noopener">'+t('journeyCtaLink')+'</a></div>'+
+    '<div class="journey-cta">'+t('journeyCta')+'<br><a href="https://pdewost.github.io/apple-50-years/" target="_blank" rel="noopener">'+t('journeyCtaLink')+'</a></div>'+
+    '<div class="social-links"><span class="social-label">'+t('followMe')+'</span><a href="https://linkedin.com/in/pdewost" target="_blank" rel="noopener">LinkedIn</a> \u00b7 <a href="https://instagram.com/pdewost" target="_blank" rel="noopener">Instagram</a> \u00b7 <a href="https://x.com/pdewost" target="_blank" rel="noopener">X</a></div>'+
     '</div></div>';
 
   // Store text for copy/share
@@ -1258,10 +1281,16 @@ ${thumbTags}
     <span class="hash">(today\u2019s dollars)</span>
   </div>
   <div class="cta">
-    What about you?<br>
-    <a href="${appUrl}" target="_blank" rel="noopener">What\'s your number? \u2192</a>
+    ${t('journeyCta')}<br>
+    <a href="${appUrl}" target="_blank" rel="noopener">${t('journeyCtaLink')}</a>
   </div>
-  <div class="source">
+  <div class="source" style="margin-top:16px;padding-top:12px;border-top:1px solid #38383A">
+    <span>${t('followMe')}</span><br>
+    <a href="https://linkedin.com/in/pdewost" style="color:#48484A;margin:0 6px">LinkedIn</a> \u00b7
+    <a href="https://instagram.com/pdewost" style="color:#48484A;margin:0 6px">Instagram</a> \u00b7
+    <a href="https://x.com/pdewost" style="color:#48484A;margin:0 6px">X</a>
+  </div>
+  <div class="source" style="margin-top:8px">
     <a href="https://pdewost.github.io/apple-50-years/">Apple 50 Years \u2014 Interactive Checklist</a>
   </div>
 </div>
