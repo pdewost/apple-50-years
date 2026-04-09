@@ -287,7 +287,7 @@ main { max-width: 1400px; margin: 0 auto; padding: 24px; }
 }
 .journey-items {
   font-size: 0.72rem; color: var(--text-tertiary); text-align: center;
-  margin-bottom: 20px; line-height: 1.7; max-height: 80px; overflow-y: auto;
+  margin-bottom: 20px; line-height: 1.7; max-height: none;
 }
 .journey-text {
   text-align: center; font-family: var(--font-display); font-size: 1.15rem;
@@ -660,7 +660,7 @@ const PRODUCTS=[
 
 // MacBook Family
 {id:"macbook-06",name:"MacBook (2006)",year:2006,msrp:1099,est:false,category:"macbook",image:"https://upload.wikimedia.org/wikipedia/commons/thumb/1/11/Macbook_white_redjar_20060603.jpg/500px-Macbook_white_redjar_20060603.jpg",url:"https://en.wikipedia.org/wiki/MacBook_%282006%29",cpu:"Intel Core Duo"},
-{id:"macbook-12",name:'MacBook (12" Retina)',year:2015,msrp:1299,est:false,category:"macbook",image:"https://upload.wikimedia.org/wikipedia/commons/thumb/1/1e/MacBook_with_Retina_Display.png/500px-MacBook_with_Retina_Display.png",url:"https://en.wikipedia.org/wiki/MacBook_(2015%E2%80%932019)",cpu:"Intel Core M"},
+{id:"macbook-12",name:'MacBook (12" Retina)',year:2015,msrp:1299,est:false,category:"macbook",image:"https://upload.wikimedia.org/wikipedia/commons/thumb/1/1e/MacBook_with_Retina_Display.png/500px-MacBook_with_Retina_Display.png",url:"https://en.wikipedia.org/wiki/MacBook_(2015%E2%80%932019)",cpu:"Intel Core m3/i5/i7"},
 {id:"mbp-06",name:"MacBook Pro (2006)",year:2006,msrp:1999,est:false,category:"macbook",image:"https://upload.wikimedia.org/wikipedia/commons/thumb/6/63/2010-01-21_Late_2006_17_inch_MacBook_Pro_closed.jpg/500px-2010-01-21_Late_2006_17_inch_MacBook_Pro_closed.jpg",url:"https://en.wikipedia.org/wiki/MacBook_Pro_%282006%29",cpu:"Intel Core Duo"},
 {id:"mbp-uni",name:"MacBook Pro (Unibody, 2008)",year:2008,msrp:1999,est:false,category:"macbook",image:"https://upload.wikimedia.org/wikipedia/commons/thumb/e/e8/Apple_Macbook_A1286.jpg/500px-Apple_Macbook_A1286.jpg",url:"https://en.wikipedia.org/wiki/MacBook_Pro_%28Unibody%2C_2008%29",cpu:"Intel Core 2 Duo"},
 {id:"mbp-ret",name:"MacBook Pro (Retina, 2012)",year:2012,msrp:2199,est:false,category:"macbook",image:"https://upload.wikimedia.org/wikipedia/commons/thumb/6/65/2012_MacBook_Pro_Retina_15%22_Twin_ThunderBolt_Ports.jpg/500px-2012_MacBook_Pro_Retina_15%22_Twin_ThunderBolt_Ports.jpg",url:"https://en.wikipedia.org/wiki/MacBook_Pro_%28Retina%2C_2012%29",cpu:"Intel Core i7"},
@@ -710,6 +710,21 @@ const PRODUCTS=[
 // Pippin
 {id:"pippin",name:"Apple Pippin (Bandai Atmark)",year:1996,msrp:599,est:false,category:"pippin",image:"https://upload.wikimedia.org/wikipedia/commons/thumb/0/0a/Pippin-Atmark-Console-Set.jpg/500px-Pippin-Atmark-Console-Set.jpg",url:"https://en.wikipedia.org/wiki/Apple_Pippin",cpu:"PowerPC 603e"},
 
+// Printers
+{id:"imagewriter",name:"ImageWriter",year:1984,msrp:595,est:false,category:"printer",image:"https://upload.wikimedia.org/wikipedia/commons/thumb/d/d6/Apple_ImageWriter_II.jpg/500px-Apple_ImageWriter_II.jpg",url:"https://en.wikipedia.org/wiki/ImageWriter",cpu:"N/A"},
+{id:"imagewriter-ii",name:"ImageWriter II",year:1985,msrp:595,est:false,category:"printer",image:"https://upload.wikimedia.org/wikipedia/commons/thumb/d/d6/Apple_ImageWriter_II.jpg/500px-Apple_ImageWriter_II.jpg",url:"https://en.wikipedia.org/wiki/ImageWriter",cpu:"N/A"},
+{id:"laserwriter",name:"LaserWriter",year:1985,msrp:6995,est:false,category:"printer",image:"https://upload.wikimedia.org/wikipedia/commons/thumb/4/4e/Laserwriter.jpg/500px-Laserwriter.jpg",url:"https://en.wikipedia.org/wiki/LaserWriter",cpu:"Motorola 68000"},
+{id:"laserwriter-ii",name:"LaserWriter II",year:1988,msrp:4599,est:true,category:"printer",image:"https://upload.wikimedia.org/wikipedia/commons/thumb/4/4e/Laserwriter.jpg/500px-Laserwriter.jpg",url:"https://en.wikipedia.org/wiki/LaserWriter",cpu:"Motorola 68030"},
+{id:"stylewriter",name:"StyleWriter",year:1991,msrp:599,est:true,category:"printer",image:"https://upload.wikimedia.org/wikipedia/commons/thumb/d/d6/Apple_ImageWriter_II.jpg/500px-Apple_ImageWriter_II.jpg",url:"https://en.wikipedia.org/wiki/StyleWriter",cpu:"N/A"},
+
+// Displays
+{id:"cinema-display",name:"Apple Cinema Display (23\")",year:2002,msrp:1999,est:false,category:"display",image:"https://upload.wikimedia.org/wikipedia/commons/thumb/7/73/Apple_Cinema_Display.png/500px-Apple_Cinema_Display.png",url:"https://en.wikipedia.org/wiki/Apple_Cinema_Display",cpu:"N/A"},
+{id:"cinema-30",name:"Apple Cinema Display (30\")",year:2004,msrp:3299,est:false,category:"display",image:"https://upload.wikimedia.org/wikipedia/commons/thumb/7/73/Apple_Cinema_Display.png/500px-Apple_Cinema_Display.png",url:"https://en.wikipedia.org/wiki/Apple_Cinema_Display",cpu:"N/A"},
+{id:"led-cinema",name:"Apple LED Cinema Display",year:2008,msrp:899,est:false,category:"display",image:"https://upload.wikimedia.org/wikipedia/commons/thumb/7/73/Apple_Cinema_Display.png/500px-Apple_Cinema_Display.png",url:"https://en.wikipedia.org/wiki/Apple_LED_Cinema_Display",cpu:"N/A"},
+{id:"thunderbolt-display",name:"Apple Thunderbolt Display",year:2011,msrp:999,est:false,category:"display",image:"https://upload.wikimedia.org/wikipedia/commons/e/e6/Apple_Thunderbolt_Display.png",url:"https://en.wikipedia.org/wiki/Apple_Thunderbolt_Display",cpu:"N/A"},
+{id:"pro-display-xdr",name:"Pro Display XDR",year:2019,msrp:4999,est:false,category:"display",image:"https://upload.wikimedia.org/wikipedia/commons/thumb/c/c7/Apple_Pro_Display_XDR_and_Mac_Pro_(2019)_-_WWDC_2019.png/500px-Apple_Pro_Display_XDR_and_Mac_Pro_(2019)_-_WWDC_2019.png",url:"https://en.wikipedia.org/wiki/Pro_Display_XDR",cpu:"N/A"},
+{id:"studio-display",name:"Apple Studio Display",year:2022,msrp:1599,est:false,category:"display",image:"https://upload.wikimedia.org/wikipedia/commons/thumb/e/ec/Apple_Studio_Display_and_Mac_Studio_with_Peripherals.jpg/500px-Apple_Studio_Display_and_Mac_Studio_with_Peripherals.jpg",url:"https://en.wikipedia.org/wiki/Apple_Studio_Display",cpu:"Apple A13 Bionic"},
+
 // QuickTake
 {id:"qt-100",name:"QuickTake 100",year:1994,msrp:749,est:false,category:"quicktake",image:"https://upload.wikimedia.org/wikipedia/commons/thumb/4/45/Apple_QuickTake_100_camera.jpg/500px-Apple_QuickTake_100_camera.jpg",url:"https://en.wikipedia.org/wiki/QuickTake_100",cpu:"Motorola DSP56001"},
 {id:"qt-150",name:"QuickTake 150",year:1995,msrp:699,est:true,category:"quicktake",image:"https://upload.wikimedia.org/wikipedia/commons/thumb/b/b3/Apple_Quicktake_100_%28329044100%29.jpg/500px-Apple_Quicktake_100_%28329044100%29.jpg",url:"https://en.wikipedia.org/wiki/QuickTake_150",cpu:"Motorola DSP56001"},
@@ -737,6 +752,7 @@ const PRODUCTS=[
 {id:"ipod-touch-1",name:"iPod touch (1st gen)",year:2007,msrp:299,est:false,category:"ipod",image:"https://upload.wikimedia.org/wikipedia/commons/d/d5/IPod_touch_1st_generation.png",url:"https://en.wikipedia.org/wiki/iPod_touch_%281st_gen%29",cpu:"Samsung S5L8900 (ARM)"},
 {id:"ipod-classic",name:"iPod classic (6th gen)",year:2007,msrp:249,est:false,category:"ipod",image:"https://upload.wikimedia.org/wikipedia/commons/thumb/e/e8/IPod_classic_6G_80GB_packaging-2007-09-22.jpg/500px-IPod_classic_6G_80GB_packaging-2007-09-22.jpg",url:"https://en.wikipedia.org/wiki/iPod_classic_%286th_gen%29",cpu:"ARM (PP5022)"},
 {id:"ipod-nano-6",name:"iPod nano (6th gen)",year:2010,msrp:149,est:false,category:"ipod",image:"https://upload.wikimedia.org/wikipedia/commons/thumb/e/ee/IPod_Nano_6G.png/500px-IPod_Nano_6G.png",url:"https://en.wikipedia.org/wiki/iPod_nano_%286th_gen%29",cpu:"Apple S5L8922X"},
+{id:"ipod-nano-7",name:"iPod nano (7th gen)",year:2012,msrp:149,est:false,category:"ipod",image:"https://upload.wikimedia.org/wikipedia/commons/thumb/e/ee/IPod_Nano_6G.png/500px-IPod_Nano_6G.png",url:"https://en.wikipedia.org/wiki/IPod_Nano_(7th_generation)",cpu:"Apple S5L8942X"},
 {id:"ipod-touch-7",name:"iPod touch (7th gen)",year:2019,msrp:199,est:false,category:"ipod",image:"https://upload.wikimedia.org/wikipedia/commons/thumb/b/b5/IPod_Touch_7.png/500px-IPod_Touch_7.png",url:"https://en.wikipedia.org/wiki/iPod_touch_%287th_gen%29",cpu:"Apple A10 Fusion"},
 
 // iPhone
@@ -750,6 +766,7 @@ const PRODUCTS=[
 {id:"iphone-5s",name:"iPhone 5s",year:2013,msrp:649,est:false,category:"iphone",image:"https://upload.wikimedia.org/wikipedia/commons/thumb/0/0e/IPhone_5s_Black.png/500px-IPhone_5s_Black.png",url:"https://en.wikipedia.org/wiki/iPhone_5s",cpu:"Apple A7"},
 {id:"iphone-6",name:"iPhone 6",year:2014,msrp:649,est:false,category:"iphone",image:"https://upload.wikimedia.org/wikipedia/commons/thumb/0/0f/IPhone_6_Space_Gray.svg/500px-IPhone_6_Space_Gray.svg.png",url:"https://en.wikipedia.org/wiki/iPhone_6",cpu:"Apple A8"},
 {id:"iphone-6p",name:"iPhone 6 Plus",year:2014,msrp:749,est:false,category:"iphone",image:"https://upload.wikimedia.org/wikipedia/commons/thumb/4/4a/IPhone_6_%26_6_Plus.png/500px-IPhone_6_%26_6_Plus.png",url:"https://en.wikipedia.org/wiki/iPhone_6_Plus",cpu:"Apple A8"},
+{id:"iphone-6s",name:"iPhone 6s",year:2015,msrp:649,est:false,category:"iphone",image:"https://upload.wikimedia.org/wikipedia/commons/thumb/9/9b/IPhone_6s_vector.svg/500px-IPhone_6s_vector.svg.png",url:"https://en.wikipedia.org/wiki/IPhone_6S",cpu:"Apple A9"},
 {id:"iphone-se1",name:"iPhone SE (1st gen)",year:2016,msrp:399,est:false,category:"iphone",image:"https://upload.wikimedia.org/wikipedia/commons/thumb/c/c9/IPhone_SE_in_silver.png/500px-IPhone_SE_in_silver.png",url:"https://en.wikipedia.org/wiki/iPhone_SE_%281st_gen%29",cpu:"Apple A9"},
 {id:"iphone-7",name:"iPhone 7",year:2016,msrp:649,est:false,category:"iphone",image:"https://upload.wikimedia.org/wikipedia/commons/thumb/c/cd/Apple_iPhone_7_in_Apple_leather_case.jpg/500px-Apple_iPhone_7_in_Apple_leather_case.jpg",url:"https://en.wikipedia.org/wiki/iPhone_7",cpu:"Apple A10 Fusion"},
 {id:"iphone-8",name:"iPhone 8",year:2017,msrp:699,est:false,category:"iphone",image:"https://upload.wikimedia.org/wikipedia/commons/thumb/c/c4/IPhones_6%2C_7%2C_8%2C_SE2_black_-_bottom_view.jpg/500px-IPhones_6%2C_7%2C_8%2C_SE2_black_-_bottom_view.jpg",url:"https://en.wikipedia.org/wiki/iPhone_8",cpu:"Apple A11 Bionic"},
@@ -852,7 +869,7 @@ const PRODUCTS=[
 ];
 
 // ── CATEGORIES ──
-const CATEGORIES={"pre-mac":{label:"Pre-Mac Era",order:0},"compact-mac":{label:"Compact Macs",order:1},"mac-ii":{label:"Mac II Family",order:2},"quadra-centris":{label:"Quadra & Centris",order:3},"performa":{label:"Performa",order:4},"powerbook":{label:"PowerBook & Duo",order:5},"ibook":{label:"iBook",order:6},"power-mac":{label:"Power Mac",order:7},"imac":{label:"iMac",order:8},"macbook":{label:"MacBook Family",order:9},"mac-mini":{label:"Mac mini",order:10},"mac-pro":{label:"Mac Pro",order:11},"mac-studio":{label:"Mac Studio",order:12},"pippin":{label:"Pippin",order:13},"quicktake":{label:"QuickTake",order:14},"newton":{label:"Newton",order:15},"ipod":{label:"iPod",order:16},"iphone":{label:"iPhone",order:17},"ipad":{label:"iPad",order:18},"apple-watch":{label:"Apple Watch",order:19},"airpods":{label:"AirPods",order:20},"homepod":{label:"HomePod",order:21},"apple-tv":{label:"Apple TV",order:22},"airport":{label:"AirPort & Time Capsule",order:23},"airtag":{label:"AirTag",order:24},"vision-pro":{label:"Vision Pro",order:25}};
+const CATEGORIES={"pre-mac":{label:"Pre-Mac Era",order:0},"compact-mac":{label:"Compact Macs",order:1},"mac-ii":{label:"Mac II Family",order:2},"quadra-centris":{label:"Quadra & Centris",order:3},"performa":{label:"Performa",order:4},"powerbook":{label:"PowerBook & Duo",order:5},"ibook":{label:"iBook",order:6},"power-mac":{label:"Power Mac",order:7},"imac":{label:"iMac",order:8},"macbook":{label:"MacBook Family",order:9},"mac-mini":{label:"Mac mini",order:10},"mac-pro":{label:"Mac Pro",order:11},"mac-studio":{label:"Mac Studio",order:12},"printer":{label:"Printers",order:12.5},"display":{label:"Displays",order:12.6},"pippin":{label:"Pippin",order:13},"quicktake":{label:"QuickTake",order:14},"newton":{label:"Newton",order:15},"ipod":{label:"iPod",order:16},"iphone":{label:"iPhone",order:17},"ipad":{label:"iPad",order:18},"apple-watch":{label:"Apple Watch",order:19},"airpods":{label:"AirPods",order:20},"homepod":{label:"HomePod",order:21},"apple-tv":{label:"Apple TV",order:22},"airport":{label:"AirPort & Time Capsule",order:23},"airtag":{label:"AirTag",order:24},"vision-pro":{label:"Vision Pro",order:25}};
 
 // ── I18N ──
 const STRINGS={
@@ -1140,7 +1157,7 @@ function showJourney(){
   const shareUrl=window.location.origin+window.location.pathname+'#s='+encoded;
 
   // Thumbnails (max 30, then "+N more")
-  const maxThumbs=30;
+  const maxThumbs=40;
   const visible=checked.slice(0,maxThumbs);
   const extra=checked.length-maxThumbs;
   const thumbsHTML=visible.map(p=>{
@@ -1159,7 +1176,7 @@ function showJourney(){
     '<div class="journey-text">'+
     t('journeyFrom')+' <strong>'+minY+'</strong> '+t('journeyTo')+' <strong>'+maxY+'</strong>'+t('journeyOwned')+
     '<span class="j-count">'+checked.length+' '+t('journeyDevices')+'</span>'+
-    '<span class="j-hash">for a total #LifetimeCustomerValue of</span><br>'+
+    '<span class="j-hash">'+t('journeyHash')+'</span><br>'+
     '<span class="j-value">'+fmtLocal(totalAdj)+'</span>'+
     '<br><span class="j-hash">'+t('journeyDollars')+'</span>'+
     '</div>'+
@@ -1314,7 +1331,7 @@ ${thumbTags}
   <div class="text">
     From <strong>${minY}</strong> to <strong>${maxY}</strong>, I have owned
     <span class="count">${checked.length} Apple devices</span>
-    <span class="hash">for a total #LifetimeCustomerValue of</span><br>
+    <span class="hash">${t('journeyHash')}</span><br>
     <span class="value">${fmtLocal(totalAdj)}</span><br>
     <span class="hash">(today\u2019s dollars)</span>
   </div>
