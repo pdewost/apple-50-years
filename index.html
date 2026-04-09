@@ -132,6 +132,7 @@ body {
 
 .api-indicator {
   font-size: 0.6rem; color: var(--text-tertiary); opacity: 0.6;
+  text-align: right; line-height: 1.5;
 }
 .dot { display: inline-block; width: 5px; height: 5px; border-radius: 50%; margin-right: 2px; vertical-align: middle; }
 .dot-ok { background: var(--green); }
@@ -859,10 +860,11 @@ en:{
   byProduct:'By Product',byYear:'By Year',myReceipt:'My  Receipt',
   export:'Export',clear:'Clear',search:'Search products...',
   checked:'Checked',origLabel:'Original $',todayLabel:"Today's $",
-  msrp:'MSRP',todayCardLabel:'Today $',qty:'Qty:',specs:'Specs',
+  msrp:'MSRP',todayCardLabel:'(2026 eq.)',qty:'Qty:',specs:'Specs',
   products:'product',productsPlural:'products',owned:'owned',
   noResults:'No products match your search.',
   noChecked:'No products checked.',
+  jumpTo:'Category',
   introTitle:"What\'s your Apple number?",
   introP1:'Since 1976, Apple has shipped over 250 products \u2014 from the Apple\u00a0I to the Vision\u00a0Pro. Check every one you\u2019ve ever owned.',
   introP2:'We\u2019ll add it all up in today\u2019s dollars, adjusted for inflation. <strong>Your total might surprise you.</strong>',
@@ -884,10 +886,11 @@ fr:{
   byProduct:'Par Produit',byYear:'Par Ann\u00e9e',myReceipt:'Ma Facture ',
   export:'Exporter',clear:'Effacer',search:'Rechercher...',
   checked:'S\u00e9lection',origLabel:'\u20ac d\u2019origine',todayLabel:'\u20ac actualis\u00e9s',
-  msrp:'Prix',todayCardLabel:'\u20ac actuel',qty:'Qt\u00e9\u00a0:',specs:'Fiche',
+  msrp:'Prix',todayCardLabel:'(2026 \u00e9q.)',qty:'Qt\u00e9\u00a0:',specs:'Fiche',
   products:'produit',productsPlural:'produits',owned:'poss\u00e9d\u00e9',
   noResults:'Aucun produit ne correspond \u00e0 votre recherche.',
   noChecked:'Aucun produit s\u00e9lectionn\u00e9.',
+  jumpTo:'Cat\u00e9gorie',
   introTitle:'Quel est votre total Apple\u00a0?',
   introP1:'Depuis 1976, Apple a lanc\u00e9 plus de 250\u00a0produits \u2014 de l\u2019Apple\u00a0I au Vision\u00a0Pro. Cochez tout ce que vous avez poss\u00e9d\u00e9.',
   introP2:'On calcule le total en monnaie d\u2019aujourd\u2019hui, ajust\u00e9e de l\u2019inflation. <strong>Le r\u00e9sultat pourrait vous surprendre.</strong>',
@@ -1072,7 +1075,7 @@ function render(){
     // Category nav
     const sel=document.getElementById('catSelect');
     const catSel=document.getElementById('catSelect');
-    if(catSel) catSel.innerHTML='<option value="">Jump to\u2026</option>'+sorted.map(([cat,prods])=>'<option value="cat-'+cat+'">'+CATEGORIES[cat]?.label+' ('+prods.length+')</option>').join('');
+    if(catSel) catSel.innerHTML='<option value="">'+t('jumpTo')+'</option>'+sorted.map(([cat,prods])=>'<option value="cat-'+cat+'">'+CATEGORIES[cat]?.label+' ('+prods.length+')</option>').join('');
   } else {
     const groups={};items.forEach(p=>{(groups[p.year]||=[]).push(p);});
     Object.keys(groups).sort((a,b)=>a-b).forEach(yr=>{
@@ -1098,7 +1101,7 @@ function updateFooter(){
   // API indicator in footer
   const cOk=state.apiStatus.cpi==='loaded',eOk=state.apiStatus.eur==='loaded';
   const ai=document.getElementById('apiIndicator');
-  if(ai) ai.innerHTML='<span class="dot '+(cOk?'dot-ok':'dot-warn')+'"></span>CPI (inflation) '+(cOk?'live':'est.')+' &middot; EUR/USD '+(eOk?state.eurRate.toFixed(4):'~'+state.eurRate);
+  if(ai) ai.innerHTML='<span class="dot '+(cOk?'dot-ok':'dot-warn')+'"></span>CPI (inflation) '+(cOk?'live':'est.')+'<br>EUR/USD '+(eOk?state.eurRate.toFixed(4):'~'+state.eurRate);
 }
 
 // ── SELECTION ENCODING ──
