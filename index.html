@@ -362,41 +362,46 @@ body.has-checked .btn-journey { display: inline-flex; }
 
 .cat-nav {
   display: none; max-width: 1400px; margin: 0 auto;
-  padding: 8px 24px; gap: 6px;
-  flex-wrap: wrap; justify-content: center;
+  padding: 6px 24px; justify-content: center;
 }
 body.show-catnav .cat-nav { display: flex; }
-.cat-nav-pill {
-  display: inline-block; padding: 4px 12px;
-  border-radius: 20px; font-size: 0.75rem; font-weight: 500;
-  background: var(--bg-card); border: 1px solid var(--border-light);
-  color: var(--text-secondary); cursor: pointer; transition: all var(--transition-fast);
-  text-decoration: none; font-family: var(--font-body);
+.cat-nav select {
+  padding: 6px 32px 6px 14px; border-radius: var(--radius-md);
+  border: 1px solid var(--border); background: var(--bg-secondary);
+  color: var(--text-primary); font-size: 0.85rem; font-family: var(--font-body);
+  font-weight: 500; cursor: pointer; appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8'%3E%3Cpath d='M1 1l5 5 5-5' fill='none' stroke='%236E6E73' stroke-width='1.5'/%3E%3C/svg%3E");
+  background-repeat: no-repeat; background-position: right 10px center;
 }
-.cat-nav-pill:hover { border-color: var(--accent); color: var(--accent); }
-.cat-nav-pill.active { background: var(--accent); color: #fff; border-color: var(--accent); }
+.cat-nav select:focus { outline: none; border-color: var(--accent); }
 
-.intro-section {
-  max-width: 720px; margin: 0 auto 32px; text-align: center;
-  padding: 32px 28px; line-height: 1.7; color: var(--text-secondary);
-  font-size: 1rem;
-  background: var(--bg-secondary); border: 1px solid var(--border-light);
-  border-radius: var(--radius-xl); box-shadow: var(--shadow-md);
+.intro-overlay {
+  position: fixed; inset: 0; z-index: 250;
+  background: rgba(0,0,0,0.4); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
+  display: flex; align-items: center; justify-content: center; padding: 24px;
 }
-.intro-section h2 {
+.intro-card {
+  max-width: 560px; width: 100%; padding: 36px 32px;
+  background: var(--bg-secondary); border-radius: var(--radius-xl);
+  box-shadow: var(--shadow-lg); text-align: center;
+  line-height: 1.7; color: var(--text-secondary); font-size: 1rem;
+}
+.intro-card h2 {
   font-family: var(--font-display); font-weight: 700; font-size: 2rem;
   color: var(--text-primary); margin-bottom: 16px;
   background: linear-gradient(135deg, var(--accent), #30D158);
   -webkit-background-clip: text; -webkit-text-fill-color: transparent;
   background-clip: text;
 }
-.intro-section p { margin-bottom: 12px; font-size: 1.02rem; }
-.intro-section .intro-cta {
-  display: inline-block; margin-top: 12px; padding: 12px 28px;
+.intro-card p { margin-bottom: 12px; font-size: 1.02rem; }
+.intro-card .intro-cta {
+  display: inline-block; margin-top: 16px; padding: 14px 32px;
   background: var(--accent); color: #fff; border-radius: var(--radius-md);
-  text-decoration: none; font-weight: 700; font-size: 1.05rem;
-  cursor: default; box-shadow: var(--shadow-sm);
+  text-decoration: none; font-weight: 700; font-size: 1.1rem;
+  cursor: pointer; border: none; box-shadow: var(--shadow-sm);
+  font-family: var(--font-body); transition: background var(--transition-fast);
 }
+.intro-card .intro-cta:hover { background: var(--accent-hover); }
 
 /* STAGING MODE */
 .staging-banner {
@@ -520,7 +525,7 @@ body.staging .product-card[data-triage="wrong-image"] .card-img-actions { displa
     <button class="btn" onclick="setTriageFilter('validated')"><span class="sp-dot green"></span> Validated</button>
   </div>
 </header>
-<div class="cat-nav" id="catNav"></div>
+<div class="cat-nav" id="catNav"><select id="catSelect" onchange="jumpToCategory(this.value)"></select></div>
 
 <main id="app"></main>
 
@@ -828,7 +833,7 @@ const PRODUCTS=[
 // AirPort & Time Capsule
 {id:"airport-graphite",name:"AirPort Base Station (Graphite)",year:1999,msrp:299,est:false,category:"airport",image:"https://upload.wikimedia.org/wikipedia/commons/thumb/b/bb/Early_AirPort_%282364225930%29.jpg/500px-Early_AirPort_%282364225930%29.jpg",url:"https://en.wikipedia.org/wiki/AirPort",cpu:"Motorola MPC860"},
 {id:"airport-snow",name:"AirPort Base Station (Snow)",year:2001,msrp:299,est:false,category:"airport",image:"https://upload.wikimedia.org/wikipedia/commons/thumb/b/bb/Early_AirPort_%282364225930%29.jpg/500px-Early_AirPort_%282364225930%29.jpg",url:"https://en.wikipedia.org/wiki/AirPort",cpu:"Motorola MPC860"},
-{id:"airport-express",name:"AirPort Express",year:2004,msrp:129,est:false,category:"airport",image:"https://upload.wikimedia.org/wikipedia/commons/thumb/d/d7/Airport_Express_%282012%29.jpg/500px-Airport_Express_%282012%29.jpg",url:"https://en.wikipedia.org/wiki/AirPort_Express",cpu:"Marvell 88W8010"},
+{id:"airport-express",name:"AirPort Express",year:2004,msrp:129,est:false,category:"airport",image:"https://upload.wikimedia.org/wikipedia/commons/thumb/d/d5/Apple_Airport_Express.jpg/500px-Apple_Airport_Express.jpg",url:"https://en.wikipedia.org/wiki/AirPort_Express",cpu:"Marvell 88W8010"},
 {id:"airport-express-2",name:"AirPort Express (2nd gen)",year:2012,msrp:99,est:false,category:"airport",image:"https://upload.wikimedia.org/wikipedia/commons/thumb/d/d7/Airport_Express_%282012%29.jpg/500px-Airport_Express_%282012%29.jpg",url:"https://en.wikipedia.org/wiki/AirPort_Express",cpu:"Marvell 88W8764"},
 {id:"airport-extreme",name:"AirPort Extreme (802.11n)",year:2007,msrp:179,est:false,category:"airport",image:"https://upload.wikimedia.org/wikipedia/commons/thumb/c/c4/Apple_AirPort_Extreme_Base_Station_%28A1408%29-93731.jpg/500px-Apple_AirPort_Extreme_Base_Station_%28A1408%29-93731.jpg",url:"https://en.wikipedia.org/wiki/AirPort_Extreme",cpu:"Marvell 88F5181"},
 {id:"time-capsule",name:"Time Capsule (1TB)",year:2008,msrp:299,est:false,category:"airport",image:"https://upload.wikimedia.org/wikipedia/commons/thumb/1/15/Appletimecapsule.jpg/500px-Appletimecapsule.jpg",url:"https://en.wikipedia.org/wiki/AirPort_Time_Capsule",cpu:"Marvell 88F5182"},
@@ -1050,10 +1055,6 @@ function render(){
   const items=getFiltered();
   const app=document.getElementById('app');
   let html='';
-  // Intro section (only when no search active and no items checked)
-  if(!state.searchQuery && checkedCount()===0){
-    html+='<div class="intro-section"><h2>'+t('introTitle')+'</h2><p>'+t('introP1')+'</p><p>'+t('introP2')+'</p><p>'+t('introP3')+'</p><span class="intro-cta">'+t('introCta')+'</span></div>';
-  }
   if(items.length===0){html='<div class="empty-state">'+t('noResults')+'</div>';}
   else if(state.viewMode==='category'){
     const groups={};items.forEach(p=>{(groups[p.category]||=[]).push(p);});
@@ -1064,7 +1065,8 @@ function render(){
     });
     // Category nav
     const navEl=document.getElementById('catNav');
-    navEl.innerHTML=sorted.map(([cat,prods])=>'<a class="cat-nav-pill" href="#cat-'+cat+'" onclick="event.preventDefault();document.getElementById(\'cat-'+cat+'\').scrollIntoView({behavior:\'smooth\',block:\'start\'})">'+CATEGORIES[cat]?.label+' <small style="opacity:0.5">('+prods.length+')</small></a>').join('');
+    const sel=document.getElementById('catSelect');
+    sel.innerHTML='<option value="">Jump to\u2026</option>'+sorted.map(([cat,prods])=>'<option value="cat-'+cat+'">'+CATEGORIES[cat]?.label+' ('+prods.length+')</option>').join('');
     document.body.classList.add('show-catnav');
   } else {
     document.body.classList.remove('show-catnav');
@@ -1221,6 +1223,24 @@ function clearSearch(){
   render();box.focus();
 }
 function setViewMode(mode){state.viewMode=mode;document.getElementById('btnCategory').classList.toggle('active',mode==='category');document.getElementById('btnYear').classList.toggle('active',mode==='year');render();}
+function jumpToCategory(id){if(!id)return;const el=document.getElementById(id);if(el){el.scrollIntoView({behavior:'smooth',block:'start'});document.getElementById('catSelect').value='';}}
+function showIntro(){
+  if(document.querySelector('.intro-overlay'))return;
+  document.body.insertAdjacentHTML('beforeend',
+    '<div class="intro-overlay" id="introOverlay">'+
+    '<div class="intro-card">'+
+    '<h2>'+t('introTitle')+'</h2>'+
+    '<p>'+t('introP1')+'</p>'+
+    '<p>'+t('introP2')+'</p>'+
+    '<p>'+t('introP3')+'</p>'+
+    '<button class="intro-cta" onclick="dismissIntro()">'+t('introCta')+'</button>'+
+    '</div></div>');
+}
+function dismissIntro(){
+  const ov=document.getElementById('introOverlay');
+  if(ov)ov.remove();
+  state.introDismissed=true;
+}
 function toggleTheme(){state.theme=state.theme==='light'?'dark':'light';document.documentElement.dataset.theme=state.theme;document.getElementById('btnTheme').innerHTML=state.theme==='dark'?'&#9788;':'&#9789;';}
 function toggleLang(){state.lang=state.lang==='en'?'fr':'en';updateLangUI();render();}
 function updateLangUI(){
@@ -1411,6 +1431,8 @@ const hashMatch=window.location.hash.match(/^#s=(.+)$/);
 if(hashMatch){state.quantities=decodeSelection(hashMatch[1]);}
 if(STAGING) document.body.classList.add('staging');
 updateLangUI();render();updateApiStatus();updateStagingProgress();
+// Show intro overlay on first visit (no hash = no shared link)
+if(!hashMatch && !STAGING) showIntro();
 Promise.allSettled([fetchCPI(),fetchEUR()]).then(()=>{render();updateApiStatus();});
 </script>
 </body>
