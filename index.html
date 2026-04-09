@@ -261,11 +261,11 @@ main { max-width: 1400px; margin: 0 auto; padding: 24px; }
 }
 .journey-close:hover { color: var(--text-primary); }
 .journey-title {
-  font-family: var(--font-display); font-weight: 700; font-size: 1.2rem;
-  margin-bottom: 16px; display: flex; align-items: center; gap: 8px;
+  font-family: var(--font-display); font-weight: 700; font-size: 1.4rem;
+  margin-bottom: 20px; display: flex; align-items: center; gap: 8px;
 }
 .journey-thumbs {
-  display: flex; flex-wrap: wrap; gap: 4px; margin-bottom: 20px;
+  display: flex; flex-wrap: wrap; gap: 5px; margin-bottom: 16px;
   justify-content: center;
 }
 .journey-thumb {
@@ -277,25 +277,25 @@ main { max-width: 1400px; margin: 0 auto; padding: 24px; }
   width: 64px; height: 48px; border-radius: 6px; background: var(--accent-light);
   color: var(--accent); font-size: 0.75rem; font-weight: 600;
 }
+.journey-items {
+  font-size: 0.72rem; color: var(--text-tertiary); text-align: center;
+  margin-bottom: 20px; line-height: 1.7; max-height: 80px; overflow-y: auto;
+}
 .journey-text {
-  text-align: center; font-family: var(--font-display); font-size: 1.05rem;
+  text-align: center; font-family: var(--font-display); font-size: 1.15rem;
   line-height: 1.6; margin-bottom: 20px; color: var(--text-primary);
 }
 .journey-text .j-count {
-  font-size: 2rem; font-weight: 700; display: block;
+  font-size: 2.4rem; font-weight: 700; display: block; margin: 4px 0;
   background: linear-gradient(135deg, var(--accent), #30D158);
   -webkit-background-clip: text; -webkit-text-fill-color: transparent;
   background-clip: text;
 }
 .journey-text .j-value {
-  font-size: 2.2rem; font-weight: 700; color: var(--accent);
-  -webkit-text-fill-color: var(--accent);
+  font-size: 2.8rem; font-weight: 700; color: var(--accent);
+  -webkit-text-fill-color: var(--accent); letter-spacing: -0.02em;
 }
-.journey-items {
-  font-size: 0.7rem; color: var(--text-tertiary); text-align: center;
-  margin-bottom: 16px; line-height: 1.6; max-height: 80px; overflow-y: auto;
-}
-.journey-text .j-hash { color: var(--text-tertiary); font-size: 0.85rem; }
+.journey-text .j-hash { color: var(--text-tertiary); font-size: 0.9rem; }
 .journey-url {
   width: 100%; padding: 8px 12px; border: 1px solid var(--border);
   border-radius: var(--radius-sm); background: var(--bg-primary);
@@ -307,34 +307,39 @@ main { max-width: 1400px; margin: 0 auto; padding: 24px; }
   display: flex; gap: 10px; justify-content: center;
 }
 .journey-actions .btn {
-  padding: 10px 24px; font-size: 0.85rem; border-radius: var(--radius-md);
+  padding: 12px 28px; font-size: 0.95rem; border-radius: var(--radius-md);
 }
 .journey-actions .btn-primary {
   background: var(--accent); color: #fff; border-color: var(--accent);
 }
 .journey-actions .btn-primary:hover { background: var(--accent-hover); }
 .journey-cta {
-  text-align: center; margin-top: 18px; padding-top: 14px;
-  border-top: 1px solid var(--border-light); font-size: 0.85rem; color: var(--text-tertiary);
+  text-align: center; margin-top: 20px; padding-top: 16px;
+  border-top: 1px solid var(--border-light); font-size: 1rem; color: var(--text-secondary);
 }
-.journey-cta a { color: var(--accent); text-decoration: none; font-weight: 600; }
+.journey-cta a { color: var(--accent); text-decoration: none; font-weight: 700; font-size: 1.05rem; }
 .journey-cta a:hover { text-decoration: underline; }
 
-.social-links {
-  text-align: center; padding: 8px 0; font-size: 0.72rem; color: var(--text-tertiary);
-  line-height: 1.6;
+.social-bar {
+  text-align: center; margin-top: 16px; padding-top: 12px;
+  border-top: 1px solid var(--border-light); font-size: 0.78rem;
+  display: flex; align-items: center; justify-content: center; gap: 8px;
 }
-.social-links a { color: var(--text-tertiary); text-decoration: none; margin: 0 6px; }
-.social-links a:hover { color: var(--accent); }
-.social-links .social-label { display: block; margin-bottom: 2px; }
+.social-bar .social-plus { color: #30D158; font-weight: 700; font-size: 0.9rem; }
+.social-bar a { color: var(--text-primary); text-decoration: none; font-weight: 500; }
+.social-bar a:hover { color: var(--accent); }
+.social-bar .sep { color: var(--text-tertiary); opacity: 0.4; }
 
 .page-footer {
-  max-width: 1400px; margin: 40px auto 0; padding: 24px;
+  max-width: 1400px; margin: 40px auto 0; padding: 20px 24px;
   border-top: 1px solid var(--border-light); text-align: center;
-  font-size: 0.72rem; color: var(--text-tertiary); line-height: 1.6;
+  font-size: 0.78rem;
+  display: flex; align-items: center; justify-content: center; gap: 8px;
 }
-.page-footer a { color: var(--text-tertiary); text-decoration: none; margin: 0 6px; }
+.page-footer .social-plus { color: #30D158; font-weight: 700; font-size: 0.9rem; }
+.page-footer a { color: var(--text-primary); text-decoration: none; font-weight: 500; }
 .page-footer a:hover { color: var(--accent); }
+.page-footer .sep { color: var(--text-tertiary); opacity: 0.4; }
 
 .btn-journey {
   display: none; background: linear-gradient(135deg, var(--accent), #30D158) !important;
@@ -372,23 +377,25 @@ body.show-catnav .cat-nav { display: flex; }
 .cat-nav-pill.active { background: var(--accent); color: #fff; border-color: var(--accent); }
 
 .intro-section {
-  max-width: 700px; margin: 0 auto 32px; text-align: center;
-  padding: 24px; line-height: 1.7; color: var(--text-secondary);
-  font-size: 0.95rem;
+  max-width: 720px; margin: 0 auto 32px; text-align: center;
+  padding: 32px 28px; line-height: 1.7; color: var(--text-secondary);
+  font-size: 1rem;
+  background: var(--bg-secondary); border: 1px solid var(--border-light);
+  border-radius: var(--radius-xl); box-shadow: var(--shadow-md);
 }
 .intro-section h2 {
-  font-family: var(--font-display); font-weight: 700; font-size: 1.6rem;
-  color: var(--text-primary); margin-bottom: 12px;
+  font-family: var(--font-display); font-weight: 700; font-size: 2rem;
+  color: var(--text-primary); margin-bottom: 16px;
   background: linear-gradient(135deg, var(--accent), #30D158);
   -webkit-background-clip: text; -webkit-text-fill-color: transparent;
   background-clip: text;
 }
-.intro-section p { margin-bottom: 10px; }
+.intro-section p { margin-bottom: 12px; font-size: 1.02rem; }
 .intro-section .intro-cta {
-  display: inline-block; margin-top: 8px; padding: 8px 20px;
+  display: inline-block; margin-top: 12px; padding: 12px 28px;
   background: var(--accent); color: #fff; border-radius: var(--radius-md);
-  text-decoration: none; font-weight: 600; font-size: 0.9rem;
-  cursor: default;
+  text-decoration: none; font-weight: 700; font-size: 1.05rem;
+  cursor: default; box-shadow: var(--shadow-sm);
 }
 
 /* STAGING MODE */
@@ -1069,7 +1076,7 @@ function render(){
   }
   app.innerHTML=html;
   updateFooter();
-  document.getElementById('pageFooter').innerHTML='<span>'+t('followMe')+'</span><br><a href="https://linkedin.com/in/pdewost" target="_blank" rel="noopener">LinkedIn</a> \u00b7 <a href="https://instagram.com/pdewost" target="_blank" rel="noopener">Instagram</a> \u00b7 <a href="https://x.com/pdewost" target="_blank" rel="noopener">X</a>';
+  document.getElementById('pageFooter').innerHTML='<span class="social-plus">+</span><a href="https://linkedin.com/in/pdewost" target="_blank" rel="noopener">LinkedIn</a><span class="sep">|</span><a href="https://instagram.com/pdewost" target="_blank" rel="noopener">Instagram</a><span class="sep">|</span><a href="https://x.com/pdewost" target="_blank" rel="noopener">X</a>';
 }
 
 // ── FOOTER ──
@@ -1150,7 +1157,7 @@ function showJourney(){
     '<button class="btn" onclick="exportChecked()">'+t('exportHtml')+'</button>'+
     '</div>'+
     '<div class="journey-cta">'+t('journeyCta')+'<br><a href="https://pdewost.github.io/apple-50-years/" target="_blank" rel="noopener">'+t('journeyCtaLink')+'</a></div>'+
-    '<div class="social-links"><span class="social-label">'+t('followMe')+'</span><a href="https://linkedin.com/in/pdewost" target="_blank" rel="noopener">LinkedIn</a> \u00b7 <a href="https://instagram.com/pdewost" target="_blank" rel="noopener">Instagram</a> \u00b7 <a href="https://x.com/pdewost" target="_blank" rel="noopener">X</a></div>'+
+    '<div class="social-bar"><span class="social-plus">+</span><a href="https://linkedin.com/in/pdewost" target="_blank" rel="noopener">LinkedIn</a><span class="sep">|</span><a href="https://instagram.com/pdewost" target="_blank" rel="noopener">Instagram</a><span class="sep">|</span><a href="https://x.com/pdewost" target="_blank" rel="noopener">X</a></div>'+
     '</div></div>';
 
   // Store text for copy/share
@@ -1284,14 +1291,13 @@ ${thumbTags}
     ${t('journeyCta')}<br>
     <a href="${appUrl}" target="_blank" rel="noopener">${t('journeyCtaLink')}</a>
   </div>
-  <div class="source" style="margin-top:16px;padding-top:12px;border-top:1px solid #38383A">
-    <span>${t('followMe')}</span><br>
-    <a href="https://linkedin.com/in/pdewost" style="color:#48484A;margin:0 6px">LinkedIn</a> \u00b7
-    <a href="https://instagram.com/pdewost" style="color:#48484A;margin:0 6px">Instagram</a> \u00b7
-    <a href="https://x.com/pdewost" style="color:#48484A;margin:0 6px">X</a>
-  </div>
-  <div class="source" style="margin-top:8px">
-    <a href="https://pdewost.github.io/apple-50-years/">Apple 50 Years \u2014 Interactive Checklist</a>
+  <div class="source" style="margin-top:16px;padding-top:12px;border-top:1px solid #38383A;display:flex;align-items:center;justify-content:center;gap:8px">
+    <span style="color:#30D158;font-weight:700;font-size:0.9rem">+</span>
+    <a href="https://linkedin.com/in/pdewost" style="color:#A1A1A6">LinkedIn</a>
+    <span style="color:#48484A;opacity:0.4">|</span>
+    <a href="https://instagram.com/pdewost" style="color:#A1A1A6">Instagram</a>
+    <span style="color:#48484A;opacity:0.4">|</span>
+    <a href="https://x.com/pdewost" style="color:#A1A1A6">X</a>
   </div>
 </div>
 </body>
