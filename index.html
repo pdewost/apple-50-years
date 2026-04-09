@@ -160,8 +160,7 @@ main { max-width: 1400px; margin: 0 auto; padding: 24px; }
 
 /* REVIEW MODE — dim unchecked cards */
 body.review-mode .product-card:not(.checked) {
-  opacity: 0.08; filter: grayscale(1); pointer-events: none;
-  transform: scale(0.97);
+  display: none;
 }
 body.review-mode .product-card.checked {
   box-shadow: 0 0 0 2px var(--green), var(--shadow-md);
@@ -735,9 +734,15 @@ const PRODUCTS=[
 {id:"imagewriter-ii",name:"ImageWriter II",year:1985,msrp:595,est:false,category:"printer",image:"https://upload.wikimedia.org/wikipedia/commons/thumb/d/d6/Apple_ImageWriter_II.jpg/500px-Apple_ImageWriter_II.jpg",url:"https://en.wikipedia.org/wiki/ImageWriter",cpu:"N/A"},
 {id:"laserwriter",name:"LaserWriter",year:1985,msrp:6995,est:false,category:"printer",image:"https://upload.wikimedia.org/wikipedia/commons/thumb/4/4e/Laserwriter.jpg/500px-Laserwriter.jpg",url:"https://en.wikipedia.org/wiki/LaserWriter",cpu:"Motorola 68000"},
 {id:"laserwriter-ii",name:"LaserWriter II",year:1988,msrp:4599,est:true,category:"printer",image:"https://upload.wikimedia.org/wikipedia/commons/thumb/4/4e/Laserwriter.jpg/500px-Laserwriter.jpg",url:"https://en.wikipedia.org/wiki/LaserWriter",cpu:"Motorola 68030"},
+{id:"color-sw-2500",name:"Color StyleWriter 2500",year:1995,msrp:370,est:true,category:"printer",image:"https://upload.wikimedia.org/wikipedia/commons/thumb/d/d6/Apple_ImageWriter_II.jpg/500px-Apple_ImageWriter_II.jpg",url:"https://en.wikipedia.org/wiki/StyleWriter",cpu:"N/A"},
 {id:"stylewriter",name:"StyleWriter",year:1991,msrp:599,est:true,category:"printer",image:"https://upload.wikimedia.org/wikipedia/commons/thumb/d/d6/Apple_ImageWriter_II.jpg/500px-Apple_ImageWriter_II.jpg",url:"https://en.wikipedia.org/wiki/StyleWriter",cpu:"N/A"},
 
 // Displays
+{id:"monitor-ii",name:"Apple Monitor II",year:1984,msrp:595,est:true,category:"display",image:"https://upload.wikimedia.org/wikipedia/commons/thumb/7/73/Apple_Cinema_Display.png/500px-Apple_Cinema_Display.png",url:"https://en.wikipedia.org/wiki/Apple_monitors",cpu:"N/A"},
+{id:"rgb-monitor",name:"AppleColor High-Res RGB Monitor",year:1987,msrp:999,est:true,category:"display",image:"https://upload.wikimedia.org/wikipedia/commons/thumb/7/73/Apple_Cinema_Display.png/500px-Apple_Cinema_Display.png",url:"https://en.wikipedia.org/wiki/Apple_monitors",cpu:"N/A"},
+{id:"multiscan-15",name:"Apple Multiple Scan 15 Display",year:1994,msrp:579,est:true,category:"display",image:"https://upload.wikimedia.org/wikipedia/commons/thumb/7/73/Apple_Cinema_Display.png/500px-Apple_Cinema_Display.png",url:"https://en.wikipedia.org/wiki/Apple_displays",cpu:"N/A"},
+{id:"studio-display-crt",name:"Apple Studio Display (CRT)",year:1998,msrp:999,est:true,category:"display",image:"https://upload.wikimedia.org/wikipedia/commons/thumb/7/73/Apple_Cinema_Display.png/500px-Apple_Cinema_Display.png",url:"https://en.wikipedia.org/wiki/Apple_Studio_Display_(CRT)",cpu:"N/A"},
+{id:"cinema-22",name:"Apple Cinema Display (22\")",year:1999,msrp:3999,est:false,category:"display",image:"https://upload.wikimedia.org/wikipedia/commons/thumb/7/73/Apple_Cinema_Display.png/500px-Apple_Cinema_Display.png",url:"https://en.wikipedia.org/wiki/Apple_Cinema_Display",cpu:"N/A"},
 {id:"cinema-display",name:"Apple Cinema Display (23\")",year:2002,msrp:1999,est:false,category:"display",image:"https://upload.wikimedia.org/wikipedia/commons/thumb/7/73/Apple_Cinema_Display.png/500px-Apple_Cinema_Display.png",url:"https://en.wikipedia.org/wiki/Apple_Cinema_Display",cpu:"N/A"},
 {id:"cinema-30",name:"Apple Cinema Display (30\")",year:2004,msrp:3299,est:false,category:"display",image:"https://upload.wikimedia.org/wikipedia/commons/thumb/7/73/Apple_Cinema_Display.png/500px-Apple_Cinema_Display.png",url:"https://en.wikipedia.org/wiki/Apple_Cinema_Display",cpu:"N/A"},
 {id:"led-cinema",name:"Apple LED Cinema Display",year:2008,msrp:899,est:false,category:"display",image:"https://upload.wikimedia.org/wikipedia/commons/thumb/7/73/Apple_Cinema_Display.png/500px-Apple_Cinema_Display.png",url:"https://en.wikipedia.org/wiki/Apple_LED_Cinema_Display",cpu:"N/A"},
@@ -1221,15 +1226,24 @@ function showReceiptTile(){
     '<span class="j-count">'+checked.length+' '+t('journeyDevices')+'</span>'+
     '<div style="font-size:0.78rem;color:var(--text-tertiary);margin:4px 0">'+(function(){
       const cats={};checked.forEach(p=>{
-        let g='Accessories';
-        if(['pre-mac','compact-mac','mac-ii','quadra-centris','performa','powerbook','ibook','power-mac','imac','macbook','mac-mini','mac-pro','mac-studio'].includes(p.category)) g='Computers';
-        else if(p.category==='iphone') g='iPhones';
-        else if(p.category==='ipad') g='iPads';
-        else if(p.category==='ipod') g='iPods';
-        else if(p.category==='apple-watch') g='Watches';
+        let g='acc';
+        if(['pre-mac','compact-mac','mac-ii','quadra-centris','performa','powerbook','ibook','power-mac','imac','macbook','mac-mini','mac-pro','mac-studio'].includes(p.category)) g='comp';
+        else if(p.category==='iphone') g='phone';
+        else if(p.category==='ipad') g='ipad';
+        else if(p.category==='ipod') g='ipod';
+        else if(p.category==='apple-watch') g='watch';
         cats[g]=(cats[g]||0)+1;
       });
-      return Object.entries(cats).map(([k,v])=>v+' '+k).join(' \u00b7 ');
+      const fr=state.lang==='fr';
+      const labels={
+        comp:[fr?'Ordinateur':'Computer',fr?'Ordinateurs':'Computers'],
+        phone:['iPhone','iPhones'],
+        ipad:['iPad','iPads'],
+        ipod:['iPod','iPods'],
+        watch:[fr?'Montre':'Watch',fr?'Montres':'Watches'],
+        acc:[fr?'Accessoire':'Accessory',fr?'Accessoires':'Accessories']
+      };
+      return Object.entries(cats).map(([k,v])=>v+' '+(v>1?labels[k][1]:labels[k][0])).join(' \u00b7 ');
     })()+'</div>'+
     '<span class="j-hash">'+t('journeyHash')+'</span><br>'+
     '<span class="j-value">'+fmtLocal(totalAdj)+'</span>'+
