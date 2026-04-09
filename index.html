@@ -130,11 +130,10 @@ body {
 .nav-toggle .btn:first-child { border-radius: var(--radius-md) 0 0 var(--radius-md); }
 .nav-toggle .btn:last-child { border-radius: 0 var(--radius-md) var(--radius-md) 0; border-right-width: 1px; }
 
-.api-status {
-  font-size: 0.7rem; color: var(--text-tertiary); padding: 4px 0;
-  text-align: center; max-width: 1400px; margin: 4px auto 0;
+.api-indicator {
+  font-size: 0.6rem; color: var(--text-tertiary); opacity: 0.6;
 }
-.dot { display: inline-block; width: 6px; height: 6px; border-radius: 50%; margin-right: 3px; vertical-align: middle; }
+.dot { display: inline-block; width: 5px; height: 5px; border-radius: 50%; margin-right: 2px; vertical-align: middle; }
 .dot-ok { background: var(--green); }
 .dot-warn { background: #FF9F0A; }
 
@@ -192,12 +191,14 @@ main { max-width: 1400px; margin: 0 auto; padding: 24px; }
   font-size: 0.75rem; font-family: var(--font-body); cursor: pointer;
 }
 .card-qty select:focus { outline: none; border-color: var(--accent); }
-.card-prices { display: flex; justify-content: space-between; align-items: baseline; gap: 8px; font-size: 0.8rem; margin-top: 4px; }
-.price-col { display: flex; flex-direction: column; align-items: flex-start; }
-.price-col:last-child { align-items: flex-end; }
+.card-prices {
+  display: flex; justify-content: space-between; align-items: baseline;
+  gap: 4px; font-size: 0.78rem; margin-top: 4px;
+}
+.price-pair { display: flex; align-items: baseline; gap: 4px; }
 .price-label { color: var(--text-tertiary); font-size: 0.65rem; }
 .price-value { font-weight: 500; font-variant-numeric: tabular-nums; }
-.price-value.est::after { content: " est."; font-weight: 400; font-size: 0.6rem; color: var(--text-tertiary); }
+.price-value.est::after { content: " est."; font-weight: 400; font-size: 0.55rem; color: var(--text-tertiary); }
 .price-original { color: var(--text-secondary); }
 .price-adjusted { color: var(--text-primary); font-weight: 600; }
 .price-eur { color: var(--accent); }
@@ -365,20 +366,15 @@ body.has-checked .btn-journey { display: inline-flex; }
 .lang-toggle span.active { opacity: 1; background: var(--accent-light); }
 .lang-toggle span:hover { opacity: 0.8; }
 
-.cat-nav {
-  display: none; max-width: 1400px; margin: 0 auto;
-  padding: 6px 24px; justify-content: center;
-}
-body.show-catnav .cat-nav { display: flex; }
-.cat-nav select {
-  padding: 6px 32px 6px 14px; border-radius: var(--radius-md);
+.cat-select {
+  padding: 6px 28px 6px 12px; border-radius: var(--radius-md);
   border: 1px solid var(--border); background: var(--bg-secondary);
-  color: var(--text-primary); font-size: 0.85rem; font-family: var(--font-body);
+  color: var(--text-primary); font-size: 0.8rem; font-family: var(--font-body);
   font-weight: 500; cursor: pointer; appearance: none;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8'%3E%3Cpath d='M1 1l5 5 5-5' fill='none' stroke='%236E6E73' stroke-width='1.5'/%3E%3C/svg%3E");
-  background-repeat: no-repeat; background-position: right 10px center;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M1 1l4 4 4-4' fill='none' stroke='%236E6E73' stroke-width='1.5'/%3E%3C/svg%3E");
+  background-repeat: no-repeat; background-position: right 8px center;
 }
-.cat-nav select:focus { outline: none; border-color: var(--accent); }
+.cat-select:focus { outline: none; border-color: var(--accent); }
 
 .intro-overlay {
   position: fixed; inset: 0; z-index: 250;
@@ -509,7 +505,8 @@ body.staging .product-card[data-triage="wrong-image"] .card-img-actions { displa
         <button class="btn" id="btnYear" onclick="setViewMode('year')">By Year</button>
       </div>
       <div class="search-wrap" id="searchWrap"><input type="text" class="search-box" id="searchBox" placeholder="Search products..." oninput="onSearchInput()"><button class="search-clear" onclick="clearSearch()" title="Clear">&times;</button></div>
-      <button class="btn" id="btnTheme" onclick="toggleTheme()" title="Toggle dark mode">&#9789;</button>
+      <select id="catSelect" class="cat-select" onchange="jumpToCategory(this.value)"></select>
+      <button class="btn" id="btnTheme" onclick="toggleTheme()" title="Toggle dark mode">&#127769;</button>
       <button class="btn btn-journey" onclick="showJourney()" title="'+t('journeyTitle')+'">My Journey</button>
       <button class="btn" onclick="exportChecked()" title="Export as HTML tile">Export</button>
       <button class="btn" onclick="clearAll()" title="Clear all selections">Clear</button>
@@ -520,7 +517,6 @@ body.staging .product-card[data-triage="wrong-image"] .card-img-actions { displa
       </span>
     </div>
   </div>
-  <div class="api-status" id="apiStatus"></div>
   <div class="staging-filter-bar">
     <button class="btn" onclick="setTriageFilter('all')">All</button>
     <button class="btn" onclick="setTriageFilter('unreviewed')"><span class="sp-dot gray"></span> Unreviewed</button>
@@ -530,7 +526,6 @@ body.staging .product-card[data-triage="wrong-image"] .card-img-actions { displa
     <button class="btn" onclick="setTriageFilter('validated')"><span class="sp-dot green"></span> Validated</button>
   </div>
 </header>
-<div class="cat-nav" id="catNav"><select id="catSelect" onchange="jumpToCategory(this.value)"></select></div>
 
 <main id="app"></main>
 
@@ -541,6 +536,7 @@ body.staging .product-card[data-triage="wrong-image"] .card-img-actions { displa
     <div class="footer-stat"><span class="footer-label">Checked</span><span class="footer-value" id="footCount">0 / 0</span></div>
     <div class="footer-stat"><span class="footer-label" id="footOrigLabel">Original $</span><span class="footer-value" id="footOriginal">$0</span></div>
     <div class="footer-stat"><span class="footer-label" id="footTodayLabel">Today's $</span><span class="footer-value" id="footAdjusted">$0</span></div>
+    <div class="footer-stat"><span class="api-indicator" id="apiIndicator"></span></div>
   </div>
 </footer>
 
@@ -1058,7 +1054,7 @@ function cardHTML(p){
     '<div class="card-row"><span class="card-name">'+p.name+'</span><span class="card-year">'+p.year+'</span></div>'+
     '<div class="card-row">'+(p.cpu?'<span class="card-cpu">'+p.cpu+'</span>':'<span></span>')+(p.url?'<span class="card-ref"><a href="'+p.url+'" target="_blank" rel="noopener" onclick="event.stopPropagation()">'+t('specs')+' \u2192</a></span>':'')+'</div>'+
     '<div class="card-qty"><span>'+t('qty')+'</span><select onchange="event.stopPropagation();setQty(\''+p.id+'\',+this.value)">'+[1,2,4,8,16].map(n=>'<option value="'+n+'"'+(getQty(p.id)===n?' selected':'')+'>'+n+(n===16?'+':'')+'</option>').join('')+'</select></div>'+
-    '<div class="card-prices"><div class="price-col"><span class="price-label">'+t('msrp')+'</span><span class="price-value price-original'+(p.est?' est':'')+'">'+fmtLocal(p.msrp)+'</span></div><div class="price-col"><span class="price-label">'+t('todayCardLabel')+'</span><span class="price-value price-adjusted">'+fmtLocal(adj)+'</span></div></div>'+
+    '<div class="card-prices"><div class="price-pair"><span class="price-label">'+t('msrp')+'</span> <span class="price-value price-original'+(p.est?' est':'')+'">'+fmtLocal(p.msrp)+'</span></div><div class="price-pair"><span class="price-label">'+t('todayCardLabel')+'</span> <span class="price-value price-adjusted">'+fmtLocal(adj)+'</span></div></div>'+
     '</div>'+tBar+'</article>';
 }
 function render(){
@@ -1074,12 +1070,10 @@ function render(){
       html+='<div class="section-group" id="cat-'+cat+'"><div class="section-header"><h2 class="section-title">'+label+'</h2>'+badge(prods)+'</div><div class="card-grid">'+prods.map(cardHTML).join('')+'</div></div>';
     });
     // Category nav
-    const navEl=document.getElementById('catNav');
     const sel=document.getElementById('catSelect');
-    sel.innerHTML='<option value="">Jump to\u2026</option>'+sorted.map(([cat,prods])=>'<option value="cat-'+cat+'">'+CATEGORIES[cat]?.label+' ('+prods.length+')</option>').join('');
-    document.body.classList.add('show-catnav');
+    const catSel=document.getElementById('catSelect');
+    if(catSel) catSel.innerHTML='<option value="">Jump to\u2026</option>'+sorted.map(([cat,prods])=>'<option value="cat-'+cat+'">'+CATEGORIES[cat]?.label+' ('+prods.length+')</option>').join('');
   } else {
-    document.body.classList.remove('show-catnav');
     const groups={};items.forEach(p=>{(groups[p.year]||=[]).push(p);});
     Object.keys(groups).sort((a,b)=>a-b).forEach(yr=>{
       const prods=groups[yr];
@@ -1101,6 +1095,10 @@ function updateFooter(){
   document.getElementById('footOrigLabel').textContent=t('origLabel');
   document.getElementById('footTodayLabel').textContent=t('todayLabel');
   document.body.classList.toggle('has-checked',checkedCount()>0);
+  // API indicator in footer
+  const cOk=state.apiStatus.cpi==='loaded',eOk=state.apiStatus.eur==='loaded';
+  const ai=document.getElementById('apiIndicator');
+  if(ai) ai.innerHTML='<span class="dot '+(cOk?'dot-ok':'dot-warn')+'"></span>CPI '+(eOk?state.eurRate.toFixed(2):'~'+state.eurRate);
 }
 
 // ── SELECTION ENCODING ──
@@ -1251,7 +1249,7 @@ function dismissIntro(){
   if(ov)ov.remove();
   state.introDismissed=true;
 }
-function toggleTheme(){state.theme=state.theme==='light'?'dark':'light';document.documentElement.dataset.theme=state.theme;document.getElementById('btnTheme').innerHTML=state.theme==='dark'?'&#9788;':'&#9789;';}
+function toggleTheme(){state.theme=state.theme==='light'?'dark':'light';document.documentElement.dataset.theme=state.theme;document.getElementById('btnTheme').textContent=state.theme==='dark'?'\u2600\uFE0F':'\uD83C\uDF19';}
 function toggleLang(){state.lang=state.lang==='en'?'fr':'en';updateLangUI();render();}
 function updateLangUI(){
   document.getElementById('flagEn').classList.toggle('active',state.lang==='en');
@@ -1370,9 +1368,7 @@ async function fetchEUR(){
   }catch(e){/* fallback stays */}
 }
 function updateApiStatus(){
-  const el=document.getElementById('apiStatus');
-  const cOk=state.apiStatus.cpi==='loaded',eOk=state.apiStatus.eur==='loaded';
-  el.innerHTML='<span class="dot '+(cOk?'dot-ok':'dot-warn')+'"></span>CPI: '+(cOk?'Live':'Fallback')+' &nbsp; <span class="dot '+(eOk?'dot-ok':'dot-warn')+'"></span>EUR/USD: '+(eOk?state.eurRate.toFixed(4):'Fallback ('+state.eurRate+')');
+  // API status now shown in footer
 }
 
 // ── STAGING / TRIAGE ──
