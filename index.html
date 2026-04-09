@@ -634,6 +634,7 @@ const PRODUCTS=[
 {id:"pb-duo-270c",name:"PowerBook Duo 270c",year:1993,msrp:3100,est:true,category:"powerbook",image:"https://upload.wikimedia.org/wikipedia/commons/thumb/b/bd/PowerBook_Duo_210_-_front.jpg/500px-PowerBook_Duo_210_-_front.jpg",url:"https://en.wikipedia.org/wiki/PowerBook_Duo_270c",cpu:"Motorola 68030"},
 {id:"pb-duo-280",name:"PowerBook Duo 280",year:1994,msrp:2270,est:true,category:"powerbook",image:"https://upload.wikimedia.org/wikipedia/commons/thumb/b/bd/PowerBook_Duo_210_-_front.jpg/500px-PowerBook_Duo_210_-_front.jpg",url:"https://en.wikipedia.org/wiki/PowerBook_Duo_280",cpu:"Motorola 68LC040"},
 {id:"pb-duo-280c",name:"PowerBook Duo 280c",year:1994,msrp:3100,est:true,category:"powerbook",image:"https://upload.wikimedia.org/wikipedia/commons/thumb/2/2d/PowerBook_Duo_280c.jpg/500px-PowerBook_Duo_280c.jpg",url:"https://en.wikipedia.org/wiki/PowerBook_Duo_280c",cpu:"Motorola 68LC040"},
+{id:"pb-duo-2300c",name:"PowerBook Duo 2300c",year:1995,msrp:3500,est:true,category:"powerbook",image:"https://upload.wikimedia.org/wikipedia/commons/d/d5/Powerbook_duo_2300c.jpg",url:"https://en.wikipedia.org/wiki/PowerBook_Duo_2300c",cpu:"PowerPC 603e"},
 {id:"pb-500",name:"PowerBook 500 series",year:1994,msrp:2270,est:true,category:"powerbook",image:"https://upload.wikimedia.org/wikipedia/commons/thumb/e/e8/540c_open.jpg/500px-540c_open.jpg",url:"https://en.wikipedia.org/wiki/PowerBook_500_series",cpu:"Motorola 68LC040"},
 {id:"pb-1400",name:"PowerBook 1400",year:1996,msrp:2499,est:true,category:"powerbook",image:"https://upload.wikimedia.org/wikipedia/commons/thumb/7/7c/PowerBook_1400cs_133.jpg/500px-PowerBook_1400cs_133.jpg",url:"https://en.wikipedia.org/wiki/PowerBook_1400",cpu:"PowerPC 603e"},
 {id:"pb-2400c",name:"PowerBook 2400c",year:1997,msrp:3500,est:true,category:"powerbook",image:"https://upload.wikimedia.org/wikipedia/commons/thumb/4/4b/PowerBook2400c_180.jpg/500px-PowerBook2400c_180.jpg",url:"https://en.wikipedia.org/wiki/PowerBook_2400c",cpu:"PowerPC 603e"},
@@ -882,6 +883,7 @@ const PRODUCTS=[
 {id:"airport-express-2",name:"AirPort Express (2nd gen)",year:2012,msrp:99,est:false,category:"airport",image:"https://upload.wikimedia.org/wikipedia/commons/thumb/d/d7/Airport_Express_%282012%29.jpg/500px-Airport_Express_%282012%29.jpg",url:"https://en.wikipedia.org/wiki/AirPort_Express",cpu:"Marvell 88W8764"},
 {id:"airport-extreme",name:"AirPort Extreme (802.11n)",year:2007,msrp:179,est:false,category:"airport",image:"https://upload.wikimedia.org/wikipedia/commons/thumb/c/c4/Apple_AirPort_Extreme_Base_Station_%28A1408%29-93731.jpg/500px-Apple_AirPort_Extreme_Base_Station_%28A1408%29-93731.jpg",url:"https://en.wikipedia.org/wiki/AirPort_Extreme",cpu:"Marvell 88F5181"},
 {id:"time-capsule",name:"Time Capsule (1TB)",year:2008,msrp:299,est:false,category:"airport",image:"https://upload.wikimedia.org/wikipedia/commons/thumb/1/15/Appletimecapsule.jpg/500px-Appletimecapsule.jpg",url:"https://en.wikipedia.org/wiki/AirPort_Time_Capsule",cpu:"Marvell 88F5182"},
+{id:"time-capsule-2tb",name:"Time Capsule (2TB, tower)",year:2009,msrp:499,est:false,category:"airport",image:"https://upload.wikimedia.org/wikipedia/commons/thumb/1/15/Appletimecapsule.jpg/500px-Appletimecapsule.jpg",url:"https://en.wikipedia.org/wiki/AirPort_Time_Capsule",cpu:"Marvell 88F6281"},
 {id:"airport-extreme-ac",name:"AirPort Extreme (802.11ac)",year:2013,msrp:199,est:false,category:"airport",image:"https://upload.wikimedia.org/wikipedia/commons/thumb/c/c4/Apple_AirPort_Extreme_Base_Station_%28A1408%29-93731.jpg/500px-Apple_AirPort_Extreme_Base_Station_%28A1408%29-93731.jpg",url:"https://en.wikipedia.org/wiki/AirPort_Extreme",cpu:"Marvell 88F6282"},
 {id:"airport-tc-ac",name:"AirPort Time Capsule (802.11ac)",year:2013,msrp:299,est:false,category:"airport",image:"https://upload.wikimedia.org/wikipedia/commons/thumb/1/15/Appletimecapsule.jpg/500px-Appletimecapsule.jpg",url:"https://en.wikipedia.org/wiki/AirPort_Time_Capsule",cpu:"Marvell 88F6282"},
 
@@ -1210,7 +1212,7 @@ function showReceiptTile(){
   const extra=checked.length-maxThumbs;
   const thumbsHTML=visible.map(p=>{
     const eName=p.name.replace(/'/g,"\\'").replace(/"/g,'&quot;');
-    return '<img class="journey-thumb" src="'+(state.imageOverrides[p.id]||p.image)+'" alt="'+p.name+'" title="'+p.name+' ('+p.year+')" onerror="imgError(this,\''+eName+'\')">';
+    return '<img class="journey-thumb" src="'+(state.imageOverrides[p.id]||p.image)+'" alt="'+p.name+'" title="'+p.name+' ('+p.year+')" onerror="this.style.display=\'none\'">';
   }).join('')+(extra>0?'<span class="journey-more">+'+extra+'</span>':'');
 
   const summaryText=t('journeyFrom')+' '+minY+' '+t('journeyTo')+' '+maxY+t('journeyOwned')+' '+checked.length+' '+t('journeyDevices')+'\n'+t('journeyHash')+' '+fmtLocal(totalAdj)+'\n'+t('journeyDollars');
