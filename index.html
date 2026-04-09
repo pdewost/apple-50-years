@@ -296,9 +296,11 @@ body.review-mode .product-card.checked {
   justify-content: center;
 }
 .journey-thumb {
-  width: 64px; height: 48px; object-fit: contain; border-radius: 6px;
+  width: 64px; height: 48px; max-width: 64px; max-height: 48px;
+  object-fit: contain; border-radius: 6px;
   border: 1px solid var(--border-light); background: var(--bg-primary); padding: 3px;
 }
+.journey-thumbs svg, .journey-thumbs .fallback-svg { width: 64px; height: 48px; }
 .journey-more {
   display: inline-flex; align-items: center; justify-content: center;
   width: 64px; height: 48px; border-radius: 6px; background: var(--accent-light);
@@ -735,13 +737,13 @@ const PRODUCTS=[
 {id:"imagewriter-ii",name:"ImageWriter II",year:1985,msrp:595,est:false,category:"printer",image:"https://upload.wikimedia.org/wikipedia/commons/thumb/d/d6/Apple_ImageWriter_II.jpg/500px-Apple_ImageWriter_II.jpg",url:"https://en.wikipedia.org/wiki/ImageWriter",cpu:"N/A"},
 {id:"laserwriter",name:"LaserWriter",year:1985,msrp:6995,est:false,category:"printer",image:"https://upload.wikimedia.org/wikipedia/commons/thumb/4/4e/Laserwriter.jpg/500px-Laserwriter.jpg",url:"https://en.wikipedia.org/wiki/LaserWriter",cpu:"Motorola 68000"},
 {id:"laserwriter-ii",name:"LaserWriter II",year:1988,msrp:4599,est:true,category:"printer",image:"https://upload.wikimedia.org/wikipedia/commons/thumb/4/4e/Laserwriter.jpg/500px-Laserwriter.jpg",url:"https://en.wikipedia.org/wiki/LaserWriter",cpu:"Motorola 68030"},
-{id:"color-sw-2500",name:"Color StyleWriter 2500",year:1995,msrp:370,est:true,category:"printer",image:"https://upload.wikimedia.org/wikipedia/commons/thumb/d/d6/Apple_ImageWriter_II.jpg/500px-Apple_ImageWriter_II.jpg",url:"https://en.wikipedia.org/wiki/StyleWriter",cpu:"N/A"},
-{id:"stylewriter",name:"StyleWriter",year:1991,msrp:599,est:true,category:"printer",image:"https://upload.wikimedia.org/wikipedia/commons/thumb/d/d6/Apple_ImageWriter_II.jpg/500px-Apple_ImageWriter_II.jpg",url:"https://en.wikipedia.org/wiki/StyleWriter",cpu:"N/A"},
+{id:"color-sw-2500",name:"Color StyleWriter 2500",year:1995,msrp:370,est:true,category:"printer",image:"https://upload.wikimedia.org/wikipedia/commons/thumb/f/f9/Apple_color_StyleWriter_2500.jpg/500px-Apple_color_StyleWriter_2500.jpg",url:"https://en.wikipedia.org/wiki/StyleWriter",cpu:"N/A"},
+{id:"stylewriter",name:"StyleWriter",year:1991,msrp:599,est:true,category:"printer",image:"https://upload.wikimedia.org/wikipedia/commons/thumb/5/51/Apple_StyleWriter_II.jpg/500px-Apple_StyleWriter_II.jpg",url:"https://en.wikipedia.org/wiki/StyleWriter",cpu:"N/A"},
 
 // Displays
-{id:"monitor-ii",name:"Apple Monitor II",year:1984,msrp:595,est:true,category:"display",image:"https://upload.wikimedia.org/wikipedia/commons/thumb/7/73/Apple_Cinema_Display.png/500px-Apple_Cinema_Display.png",url:"https://en.wikipedia.org/wiki/Apple_monitors",cpu:"N/A"},
-{id:"rgb-monitor",name:"AppleColor High-Res RGB Monitor",year:1987,msrp:999,est:true,category:"display",image:"https://upload.wikimedia.org/wikipedia/commons/thumb/7/73/Apple_Cinema_Display.png/500px-Apple_Cinema_Display.png",url:"https://en.wikipedia.org/wiki/Apple_monitors",cpu:"N/A"},
-{id:"multiscan-15",name:"Apple Multiple Scan 15 Display",year:1994,msrp:579,est:true,category:"display",image:"https://upload.wikimedia.org/wikipedia/commons/thumb/7/73/Apple_Cinema_Display.png/500px-Apple_Cinema_Display.png",url:"https://en.wikipedia.org/wiki/Apple_displays",cpu:"N/A"},
+{id:"monitor-ii",name:"Apple Monitor II",year:1984,msrp:595,est:true,category:"display",image:"https://upload.wikimedia.org/wikipedia/commons/thumb/b/b7/Apple_IIc_-_Retrosystems_2010.jpg/500px-Apple_IIc_-_Retrosystems_2010.jpg",url:"https://en.wikipedia.org/wiki/Apple_monitors",cpu:"N/A"},
+{id:"rgb-monitor",name:"AppleColor High-Res RGB Monitor",year:1987,msrp:999,est:true,category:"display",image:"https://upload.wikimedia.org/wikipedia/commons/thumb/d/dd/Manual_of_Apple_RGB-Monitor.jpg/500px-Manual_of_Apple_RGB-Monitor.jpg",url:"https://en.wikipedia.org/wiki/Apple_monitors",cpu:"N/A"},
+{id:"multiscan-15",name:"Apple Multiple Scan 15 Display",year:1994,msrp:579,est:true,category:"display",image:"https://upload.wikimedia.org/wikipedia/commons/thumb/c/c2/Apple_Multiple_Scan_15_Display_back.jpg/500px-Apple_Multiple_Scan_15_Display_back.jpg",url:"https://en.wikipedia.org/wiki/Apple_displays",cpu:"N/A"},
 {id:"studio-display-crt",name:"Apple Studio Display (CRT)",year:1998,msrp:999,est:true,category:"display",image:"https://upload.wikimedia.org/wikipedia/commons/thumb/7/73/Apple_Cinema_Display.png/500px-Apple_Cinema_Display.png",url:"https://en.wikipedia.org/wiki/Apple_Studio_Display_(CRT)",cpu:"N/A"},
 {id:"cinema-22",name:"Apple Cinema Display (22\")",year:1999,msrp:3999,est:false,category:"display",image:"https://upload.wikimedia.org/wikipedia/commons/thumb/7/73/Apple_Cinema_Display.png/500px-Apple_Cinema_Display.png",url:"https://en.wikipedia.org/wiki/Apple_Cinema_Display",cpu:"N/A"},
 {id:"cinema-display",name:"Apple Cinema Display (23\")",year:2002,msrp:1999,est:false,category:"display",image:"https://upload.wikimedia.org/wikipedia/commons/thumb/7/73/Apple_Cinema_Display.png/500px-Apple_Cinema_Display.png",url:"https://en.wikipedia.org/wiki/Apple_Cinema_Display",cpu:"N/A"},
