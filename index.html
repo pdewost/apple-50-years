@@ -1098,10 +1098,9 @@ function updateFooter(){
   document.getElementById('footOrigLabel').textContent=t('origLabel');
   document.getElementById('footTodayLabel').textContent=t('todayLabel');
   document.body.classList.toggle('has-checked',checkedCount()>0);
-  // API indicator in footer
-  const cOk=state.apiStatus.cpi==='loaded',eOk=state.apiStatus.eur==='loaded';
+  // Methodology note in footer
   const ai=document.getElementById('apiIndicator');
-  if(ai) ai.innerHTML='<span class="dot '+(cOk?'dot-ok':'dot-warn')+'"></span>CPI (inflation) '+(cOk?'live':'est.')+'<br>EUR/USD '+(eOk?state.eurRate.toFixed(4):'~'+state.eurRate);
+  if(ai) ai.innerHTML=state.lang==='fr'?'Prix ajust\u00e9s \u00e0 2026 (IPC-U)<br>EUR/USD 0.8607 (avr. 2026)':'Adjusted to 2026 (US CPI-U)<br>EUR/USD 0.8607 (Apr 2026)';
 }
 
 // ── SELECTION ENCODING ──
