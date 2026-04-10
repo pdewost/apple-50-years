@@ -162,17 +162,18 @@ main { max-width: 1400px; margin: 0 auto; padding: 24px; }
 body.review-mode .product-card:not(.checked) {
   display: none;
 }
+body.review-mode .site-footer { display: none; }
 body.review-mode .product-card.checked {
   box-shadow: 0 0 0 2px var(--green), var(--shadow-md);
 }
 .review-banner {
-  position: fixed; bottom: 80px; left: 50%; transform: translateX(-50%);
-  z-index: 150; display: flex; gap: 12px; align-items: center;
-  background: var(--bg-secondary); border: 1px solid var(--border);
-  border-radius: var(--radius-lg); padding: 12px 24px;
-  box-shadow: var(--shadow-lg); font-size: 0.85rem; white-space: nowrap;
-  max-width: 90vw;
+  position: fixed; bottom: 0; left: 0; right: 0;
+  z-index: 200; text-align: center;
+  background: var(--bg-secondary); border-top: 1px solid var(--border);
+  padding: 12px 16px; box-shadow: 0 -4px 20px rgba(0,0,0,0.1);
 }
+.review-banner > span { display: block; font-size: 0.82rem; color: var(--text-secondary); margin-bottom: 8px; }
+.review-banner .btn { padding: 8px 20px; font-size: 0.85rem; margin: 0 4px; }
 .review-banner .btn-primary {
   background: var(--accent); color: #fff; border-color: var(--accent);
 }
@@ -274,14 +275,17 @@ body.review-mode .product-card.checked {
 .journey-overlay {
   position: fixed; inset: 0; z-index: 300;
   background: rgba(0,0,0,0.5); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
-  display: flex; align-items: center; justify-content: center; padding: 24px;
+  display: flex; align-items: center; justify-content: center;
+  padding: 16px;
   animation: fadeIn 0.2s ease;
 }
+@media (min-width: 600px) { .journey-overlay { padding: 24px; } }
 .journey-card {
   background: var(--bg-secondary); border-radius: var(--radius-xl);
   box-shadow: var(--shadow-lg); max-width: 720px; width: 100%;
-  padding: 28px; position: relative; max-height: 90vh; overflow-y: auto;
+  padding: 20px 16px; position: relative; max-height: 90vh; overflow-y: auto;
 }
+@media (min-width: 600px) { .journey-card { padding: 28px 32px; } }
 .journey-close {
   position: absolute; top: 12px; right: 16px; background: none; border: none;
   font-size: 1.4rem; color: var(--text-tertiary); cursor: pointer; line-height: 1;
@@ -301,6 +305,17 @@ body.review-mode .product-card.checked {
   border: 1px solid var(--border-light); background: var(--bg-primary); padding: 3px;
 }
 .journey-thumbs svg, .journey-thumbs .fallback-svg { width: 64px; height: 48px; }
+@media (max-width: 480px) {
+  .journey-thumb { width: 48px; height: 36px; max-width: 48px; max-height: 36px; }
+  .journey-more { width: 48px; height: 36px; font-size: 0.65rem; }
+  .journey-thumbs svg, .journey-thumbs .fallback-svg { width: 48px; height: 36px; }
+  .journey-title { font-size: 1.1rem; }
+  .journey-text .j-count { font-size: 1.8rem; }
+  .journey-text .j-value { font-size: 2rem; }
+  .journey-text { font-size: 0.95rem; }
+  .journey-items { font-size: 0.65rem; }
+  .journey-url { font-size: 0.6rem; }
+}
 .journey-more {
   display: inline-flex; align-items: center; justify-content: center;
   width: 64px; height: 48px; border-radius: 6px; background: var(--accent-light);
@@ -336,8 +351,9 @@ body.review-mode .product-card.checked {
   display: flex; gap: 10px; justify-content: center;
 }
 .journey-actions .btn {
-  padding: 12px 28px; font-size: 0.95rem; border-radius: var(--radius-md);
+  padding: 10px 20px; font-size: 0.85rem; border-radius: var(--radius-md);
 }
+@media (min-width: 600px) { .journey-actions .btn { padding: 12px 28px; font-size: 0.95rem; } }
 .journey-actions .btn-primary {
   background: var(--accent); color: #fff; border-color: var(--accent);
 }
@@ -426,6 +442,13 @@ body.has-checked .btn-journey { display: inline-flex; }
   font-family: var(--font-body); transition: background var(--transition-fast);
 }
 .intro-card .intro-cta:hover { background: var(--accent-hover); }
+@media (max-width: 480px) {
+  .intro-overlay { padding: 12px; }
+  .intro-card { padding: 24px 16px; }
+  .intro-card h2 { font-size: 1.5rem; }
+  .intro-card p { font-size: 0.9rem; }
+  .intro-card .intro-cta { padding: 12px 24px; font-size: 0.95rem; }
+}
 
 /* STAGING MODE */
 .staging-banner {
