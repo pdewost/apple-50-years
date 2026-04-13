@@ -55,4 +55,4 @@ Zero dependencies. No npm. No bundler. Open `index.html` directly in a browser.
 
 ## Author
 
-Built by [Philippe de Wost](https://linkedin.com/in/pdewost) · [Instagram](https://instagram.com/pdewost) · [X](https://x.com/pdewost)
+Built by [Philippe Dewost](https://linkedin.com/in/pdewost) · [Instagram](https://instagram.com/pdewost) · [X](https://x.com/pdewost)
