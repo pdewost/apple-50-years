@@ -182,9 +182,77 @@ body.review-mode .product-card.checked {
   background: var(--bg-card); border: 1px solid var(--border-light);
   border-radius: var(--radius-lg); overflow: hidden;
   transition: all var(--transition-fast); cursor: pointer; position: relative;
+  border-left: 3px solid transparent;
 }
-.product-card:hover { transform: translateY(-2px); box-shadow: var(--shadow-md); border-color: var(--border); }
+.product-card[data-era="jobs1"] { border-left: 3px solid; border-image: linear-gradient(180deg,#61BB46,#FDB827,#F5821F,#E03A3E,#963D97,#009DDC) 1; }
+.product-card[data-era="interregnum"] { border-left-color: #86868B; }
+.product-card[data-era="jobs2"] { border-left-color: #0071E3; }
+.product-card[data-era="cook"] { border-left-color: #1D1D1F; }
+[data-theme="dark"] .product-card[data-era="cook"] { border-left-color: #A1A1A6; }
+.product-card:hover { transform: translateY(-2px); box-shadow: var(--shadow-md); border-color: var(--border); border-left: 3px solid; }
+.product-card[data-era="jobs1"]:hover { border-image: linear-gradient(180deg,#61BB46,#FDB827,#F5821F,#E03A3E,#963D97,#009DDC) 1; }
+.product-card[data-era="interregnum"]:hover { border-left-color: #86868B; }
+.product-card[data-era="jobs2"]:hover { border-left-color: #0071E3; }
+.product-card[data-era="cook"]:hover { border-left-color: #1D1D1F; }
+[data-theme="dark"] .product-card[data-era="cook"]:hover { border-left-color: #A1A1A6; }
 .product-card.checked { background: var(--checked-bg); border-color: var(--checked-border); }
+.product-card.checked[data-era="jobs1"] { border-left: 3px solid; border-image: linear-gradient(180deg,#61BB46,#FDB827,#F5821F,#E03A3E,#963D97,#009DDC) 1; }
+.product-card.checked[data-era="interregnum"] { border-left-color: #86868B; }
+.product-card.checked[data-era="jobs2"] { border-left-color: #0071E3; }
+.product-card.checked[data-era="cook"] { border-left-color: #1D1D1F; }
+[data-theme="dark"] .product-card.checked[data-era="cook"] { border-left-color: #A1A1A6; }
+
+/* ERA DIVIDERS (year view) */
+.era-divider {
+  display: flex; align-items: center; gap: 16px;
+  padding: 20px 0 12px; margin: 24px 0 8px;
+  border-top: 1px solid var(--border-light);
+}
+.era-divider:first-child { margin-top: 0; border-top: none; }
+.era-dot {
+  width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0;
+}
+.era-dot.jobs1 { background: linear-gradient(135deg,#E03A3E,#FDB827,#61BB46,#009DDC); }
+.era-dot.interregnum { background: #86868B; }
+.era-dot.jobs2 { background: #0071E3; }
+.era-dot.cook { background: #1D1D1F; }
+[data-theme="dark"] .era-dot.cook { background: #A1A1A6; }
+.era-label {
+  font-family: var(--font-display); font-weight: 600; font-size: 1rem;
+  color: var(--text-primary);
+}
+.era-tagline {
+  font-size: 0.78rem; color: var(--text-tertiary); font-style: italic;
+}
+.era-meta {
+  font-size: 0.72rem; color: var(--text-secondary); margin-left: auto;
+  text-align: right; white-space: nowrap; line-height: 1.4;
+}
+.era-meta strong { font-weight: 600; }
+@media (max-width: 768px) {
+  .era-divider { flex-wrap: wrap; gap: 6px 12px; }
+  .era-meta { margin-left: 22px; text-align: left; font-size: 0.68rem; }
+}
+
+/* ERA LEGEND */
+.era-legend {
+  display: flex; align-items: center; gap: 14px; flex-wrap: wrap;
+  padding: 8px 0 4px; max-width: 1400px; margin: 0 auto;
+  font-size: 0.72rem; color: var(--text-secondary);
+}
+.era-legend-item {
+  display: inline-flex; align-items: center; gap: 5px; cursor: pointer;
+  padding: 2px 8px; border-radius: 12px; transition: background var(--transition-fast);
+  user-select: none;
+}
+.era-legend-item:hover { background: var(--accent-light); }
+.era-legend-item.active { background: var(--accent-light); font-weight: 600; color: var(--text-primary); }
+.era-legend-dot { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; }
+.era-legend-dot.jobs1 { background: linear-gradient(135deg,#E03A3E,#FDB827,#61BB46,#009DDC); }
+.era-legend-dot.interregnum { background: #86868B; }
+.era-legend-dot.jobs2 { background: #0071E3; }
+.era-legend-dot.cook { background: #1D1D1F; }
+[data-theme="dark"] .era-legend-dot.cook { background: #A1A1A6; }
 
 .card-img-wrap {
   width: 100%; aspect-ratio: 4/3; overflow: hidden;
@@ -573,6 +641,9 @@ body.staging .product-card[data-triage="wrong-image"] .card-img-actions { displa
   </div>
 </header>
 
+<div style="max-width:1400px;margin:0 auto;padding:4px 24px 0">
+<div class="era-legend" id="eraLegend"></div>
+</div>
 <main id="app"></main>
 
 <div class="page-footer" id="pageFooter"></div>
@@ -931,6 +1002,24 @@ const PRODUCTS=[
 {id:"vision-pro",name:"Apple Vision Pro",year:2024,msrp:3499,est:false,category:"vision-pro",image:"https://upload.wikimedia.org/wikipedia/commons/thumb/5/51/Apple_Vision_Pro_with_Solo_Knit_Band.jpg/500px-Apple_Vision_Pro_with_Solo_Knit_Band.jpg",url:"https://en.wikipedia.org/wiki/Apple_Vision_Pro",cpu:"Apple M2 + R1"},
 ];
 
+// ── CEO ERAS ──
+const ERAS={
+  jobs1:{key:'jobs1',ceo:'Steve Jobs',years:'1976–1985',tagline:{en:'"The Mac is born"',fr:'«\u00a0Le Mac est n\u00e9\u00a0»'},
+    revenue:{en:'Cum. revenue ≈ $5.5B',fr:'CA cumulé ≈ 5,5 Md$'},
+    mcap:{en:'Mkt cap: $1.8B → $0.9B',fr:'Cap. boursière : 1,8 Md$ → 0,9 Md$'},start:1976,end:1985},
+  interregnum:{key:'interregnum',ceo:{en:'Sculley · Spindler · Amelio',fr:'Sculley · Spindler · Amelio'},years:'1986–1997',tagline:{en:'"The wilderness years"',fr:'«\u00a0Les années d\'errance\u00a0»'},
+    revenue:{en:'Cum. revenue ≈ $78B',fr:'CA cumulé ≈ 78 Md$'},
+    mcap:{en:'Mkt cap: $2.2B → $2.8B',fr:'Cap. boursière : 2,2 Md$ → 2,8 Md$'},start:1986,end:1997},
+  jobs2:{key:'jobs2',ceo:'Steve Jobs',years:'1998–2011',tagline:{en:'"Think Different"',fr:'«\u00a0Think Different\u00a0»'},
+    revenue:{en:'Cum. revenue ≈ $357B',fr:'CA cumulé ≈ 357 Md$'},
+    mcap:{en:'Mkt cap: $4.5B → $350B',fr:'Cap. boursière : 4,5 Md$ → 350 Md$'},start:1998,end:2011},
+  cook:{key:'cook',ceo:'Tim Cook',years:'2012–2026',tagline:{en:'"Apple Silicon & services"',fr:'«\u00a0Apple Silicon & services\u00a0»'},
+    revenue:{en:'Cum. revenue ≈ $3,940B',fr:'CA cumulé ≈ 3 940 Md$'},
+    mcap:{en:'Mkt cap: $624B → $3.9T',fr:'Cap. boursière : 624 Md$ → 3 900 Md$'},start:2012,end:2026},
+};
+function getEra(year){if(year<=1985)return'jobs1';if(year<=1997)return'interregnum';if(year<=2011)return'jobs2';return'cook';}
+function eraStr(era,field){const v=ERAS[era][field];return typeof v==='object'?v[state.lang]||v.en:v;}
+
 // ── CATEGORIES ──
 const CATEGORIES={"pre-mac":{label:"Pre-Mac Era",order:0},"compact-mac":{label:"Compact Macs",order:1},"mac-ii":{label:"Mac II Family",order:2},"mac-lc":{label:"Macintosh LC",order:2.5},"quadra-centris":{label:"Quadra & Centris",order:3},"performa":{label:"Performa",order:4},"powerbook":{label:"PowerBook & Duo",order:5},"ibook":{label:"iBook",order:6},"power-mac":{label:"Power Mac",order:7},"imac":{label:"iMac",order:8},"macbook":{label:"MacBook Family",order:9},"mac-mini":{label:"Mac mini",order:10},"mac-pro":{label:"Mac Pro",order:11},"mac-studio":{label:"Mac Studio",order:12},"printer":{label:"Printers",order:12.5},"display":{label:"Displays",order:12.6},"pippin":{label:"Pippin",order:13},"quicktake":{label:"QuickTake",order:14},"newton":{label:"Newton",order:15},"ipod":{label:"iPod",order:16},"iphone":{label:"iPhone",order:17},"ipad":{label:"iPad",order:18},"apple-watch":{label:"Apple Watch",order:19},"airpods":{label:"AirPods",order:20},"homepod":{label:"HomePod",order:21},"apple-tv":{label:"Apple TV",order:22},"airport":{label:"AirPort & Time Capsule",order:23},"airtag":{label:"AirTag",order:24},"vision-pro":{label:"Vision Pro",order:25}};
 
@@ -1003,7 +1092,7 @@ const CPI_FALLBACK={1976:56.9,1977:60.6,1978:65.2,1979:72.6,1980:82.4,1981:90.9,
 // ── STATE ──
 const PRODUCT_MAP=new Map(PRODUCTS.map(p=>[p.id,p]));
 const STAGING=new URLSearchParams(window.location.search).has('staging');
-const state={quantities:{},viewMode:"category",searchQuery:"",lang:(navigator.language||'en').startsWith('fr')?'fr':'en',theme:"light",cpiData:Object.assign({},CPI_FALLBACK),eurRate:0.92,apiStatus:{cpi:"fallback",eur:"fallback"},triageFlags:{},triageFilter:"all",imageOverrides:{},mismatchScores:{}};
+const state={quantities:{},viewMode:"category",searchQuery:"",lang:(navigator.language||'en').startsWith('fr')?'fr':'en',theme:"light",cpiData:Object.assign({},CPI_FALLBACK),eurRate:0.92,apiStatus:{cpi:"fallback",eur:"fallback"},triageFlags:{},triageFilter:"all",imageOverrides:{},mismatchScores:{},eraFilter:null};
 function isChecked(id){return (state.quantities[id]||0)>0;}
 function getQty(id){return state.quantities[id]||0;}
 function checkedCount(){return Object.values(state.quantities).filter(q=>q>0).length;}
@@ -1101,6 +1190,8 @@ function getFiltered(){
     if(state.triageFilter==='unreviewed') list=list.filter(p=>!state.triageFlags[p.id]);
     else list=list.filter(p=>state.triageFlags[p.id]===state.triageFilter);
   }
+  // Era filter
+  if(state.eraFilter) list=list.filter(p=>getEra(p.year)===state.eraFilter);
   const q=state.searchQuery.toLowerCase().trim();
   if(!q) return list;
   return list.filter(p=>p.name.toLowerCase().includes(q)||(CATEGORIES[p.category]?.label||'').toLowerCase().includes(q)||String(p.year).includes(q));
@@ -1140,7 +1231,8 @@ function cardHTML(p){
     '<button class="triage-btn'+(tf==='wrong-price'?' active-wrong-price':'')+'" title="Wrong price" onclick="event.stopPropagation();setTriage(\''+p.id+'\',\'wrong-price\')">&#36;</button>'+
     '<button class="triage-btn'+(tf==='validated'?' active-validated':'')+'" title="Validated" onclick="event.stopPropagation();setTriage(\''+p.id+'\',\'validated\')">&#10003;</button>'+
     '</div>';
-  return '<article class="product-card'+(checked?' checked':'')+'"'+triageAttr+' data-id="'+p.id+'"><div class="card-check">'+(checked?'&#10003;':'')+'</div><div class="card-img-wrap"><img src="'+imgSrc+'" alt="'+p.name+'" loading="lazy" onerror="imgError(this,\''+eName+'\')"></div>'+imgMeta+imgActions+'<div class="card-body">'+
+  const era=getEra(p.year);
+  return '<article class="product-card'+(checked?' checked':'')+'"'+triageAttr+' data-id="'+p.id+'" data-era="'+era+'"><div class="card-check">'+(checked?'&#10003;':'')+'</div><div class="card-img-wrap"><img src="'+imgSrc+'" alt="'+p.name+'" loading="lazy" onerror="imgError(this,\''+eName+'\')"></div>'+imgMeta+imgActions+'<div class="card-body">'+
     '<div class="card-row"><span class="card-name">'+p.name+'</span><span class="card-year">'+p.year+'</span></div>'+
     '<div class="card-row">'+(p.cpu?'<span class="card-cpu">'+(p.cpu.startsWith('Apple ')?'<a href="https://pdewost.github.io/apple-silicon/" target="_blank" rel="noopener" onclick="event.stopPropagation()" style="color:inherit;text-decoration:none;border-bottom:1px dotted var(--text-tertiary)">'+p.cpu+'</a>':p.cpu)+'</span>':'<span></span>')+(p.url?'<span class="card-ref"><a href="'+p.url+'" target="_blank" rel="noopener" onclick="event.stopPropagation()">'+t('specs')+' \u2192</a></span>':'')+'</div>'+
     '<div class="card-qty"><span>'+t('qty')+'</span><select onchange="event.stopPropagation();setQty(\''+p.id+'\',+this.value)">'+[1,2,4,8,16].map(n=>'<option value="'+n+'"'+(getQty(p.id)===n?' selected':'')+'>'+n+(n===16?'+':'')+'</option>').join('')+'</select></div>'+
@@ -1165,14 +1257,39 @@ function render(){
     if(catSel) catSel.innerHTML='<option value="">'+t('jumpTo')+'</option>'+sorted.map(([cat,prods])=>'<option value="cat-'+cat+'">'+CATEGORIES[cat]?.label+' ('+prods.length+')</option>').join('');
   } else {
     const groups={};items.forEach(p=>{(groups[p.year]||=[]).push(p);});
+    let lastEra=null;
     Object.keys(groups).sort((a,b)=>a-b).forEach(yr=>{
       const prods=groups[yr];
+      const era=getEra(+yr);
+      if(era!==lastEra){
+        const e=ERAS[era];
+        html+='<div class="era-divider"><span class="era-dot '+era+'"></span>'+
+          '<span class="era-label">'+(typeof e.ceo==='object'?e.ceo[state.lang]||e.ceo.en:e.ceo)+' <span style="font-weight:400;color:var(--text-tertiary)">('+e.years+')</span></span>'+
+          '<span class="era-tagline">'+eraStr(era,'tagline')+'</span>'+
+          '<span class="era-meta">'+eraStr(era,'revenue')+'<br>'+eraStr(era,'mcap')+'</span>'+
+          '</div>';
+        lastEra=era;
+      }
       html+='<div class="section-group"><div class="section-header"><h2 class="section-title" style="font-size:1.8rem;color:var(--text-tertiary);opacity:0.6">'+yr+'</h2>'+badge(prods)+'</div><div class="card-grid">'+prods.map(cardHTML).join('')+'</div></div>';
     });
   }
   app.innerHTML=html;
+  renderEraLegend();
   updateFooter();
   document.getElementById('pageFooter').innerHTML='<span class="social-plus">+</span><a href="https://linkedin.com/in/pdewost" target="_blank" rel="noopener">LinkedIn</a><span class="sep">|</span><a href="https://instagram.com/pdewost" target="_blank" rel="noopener">Instagram</a><span class="sep">|</span><a href="https://x.com/pdewost" target="_blank" rel="noopener">X</a>';
+}
+function renderEraLegend(){
+  const el=document.getElementById('eraLegend');if(!el)return;
+  const counts={};PRODUCTS.forEach(p=>{const e=getEra(p.year);counts[e]=(counts[e]||0)+1;});
+  el.innerHTML=Object.entries(ERAS).map(([key,e])=>{
+    const active=state.eraFilter===key?' active':'';
+    const ceo=typeof e.ceo==='object'?e.ceo[state.lang]||e.ceo.en:e.ceo;
+    return '<span class="era-legend-item'+active+'" onclick="toggleEraFilter(\''+key+'\')" title="'+(counts[key]||0)+' '+t('productsPlural')+'  ·  '+eraStr(key,'revenue')+'  ·  '+eraStr(key,'mcap')+'"><span class="era-legend-dot '+key+'"></span>'+ceo+' ('+e.years+')</span>';
+  }).join('');
+}
+function toggleEraFilter(era){
+  state.eraFilter=state.eraFilter===era?null:era;
+  render();
 }
 
 // ── FOOTER ──
@@ -1282,6 +1399,14 @@ function showReceiptTile(){
         acc:[fr?'Accessoire':'Accessory',fr?'Accessoires':'Accessories']
       };
       return Object.entries(cats).map(([k,v])=>v+' '+(v>1?labels[k][1]:labels[k][0])).join(' \u00b7 ');
+    })()+'</div>'+
+    '<div style="font-size:0.72rem;color:var(--text-tertiary);margin:6px 0 8px;line-height:1.6">'+(function(){
+      const eraCounts={};checked.forEach(p=>{const e=getEra(p.year);eraCounts[e]=(eraCounts[e]||0)+1;});
+      const eraNames={jobs1:'Jobs I (76–85)',interregnum:{en:'Sculley era (86–97)',fr:'Ère Sculley (86–97)'},jobs2:'Jobs II (98–11)',cook:'Cook (12–26)'};
+      return Object.entries(eraCounts).map(([k,v])=>{
+        const n=typeof eraNames[k]==='object'?eraNames[k][state.lang]||eraNames[k].en:eraNames[k];
+        return '<span style="display:inline-flex;align-items:center;gap:3px"><span class="era-legend-dot '+k+'" style="width:6px;height:6px"></span>'+v+' '+n+'</span>';
+      }).join(' &nbsp;·&nbsp; ');
     })()+'</div>'+
     '<span class="j-hash">'+t('journeyHash')+'</span><br>'+
     '<span class="j-value">'+fmtLocal(totalAdj)+'</span>'+
@@ -1402,6 +1527,11 @@ function exportChecked(){
   checked.forEach(p=>{totalAdj+=adjustForInflation(p.msrp,p.year)*getQty(p.id);});
   const encoded=encodeSelection(state.quantities);
   const appUrl='https://pdewost.github.io/apple-50-years/#s='+encoded;
+  // Era breakdown for export
+  const eraColors={jobs1:'#E03A3E',interregnum:'#86868B',jobs2:'#0071E3',cook:'#A1A1A6'};
+  const eraShortNames={jobs1:'Jobs I',interregnum:'Sculley era',jobs2:'Jobs II',cook:'Cook'};
+  const exportEraCounts={};checked.forEach(p=>{const e=getEra(p.year);exportEraCounts[e]=(exportEraCounts[e]||0)+1;});
+  const eraLine=Object.entries(exportEraCounts).map(([k,v])=>'<span style="display:inline-flex;align-items:center;gap:3px"><span style="width:6px;height:6px;border-radius:50%;background:'+eraColors[k]+'"></span>'+v+' '+eraShortNames[k]+'</span>').join(' &nbsp;·&nbsp; ');
   const maxTh=30;const vis=checked.slice(0,maxTh);const extra=checked.length-maxTh;
   const thumbTags=vis.map(p=>'      <img src="'+(state.imageOverrides[p.id]||p.image)+'" alt="'+p.name.replace(/"/g,'&quot;')+'" title="'+p.name.replace(/"/g,'&quot;')+' ('+p.year+')">').join('\n')+(extra>0?'\n      <span style="display:inline-flex;align-items:center;justify-content:center;width:48px;height:36px;border-radius:4px;background:rgba(41,151,255,0.12);color:#2997FF;font-size:0.7rem;font-weight:600">+'+extra+'</span>':'');
   const htmlDoc=`<!DOCTYPE html>
@@ -1438,6 +1568,7 @@ ${thumbTags}
   <div class="text">
     From <strong>${minY}</strong> to <strong>${maxY}</strong>, I have owned
     <span class="count">${checked.length} Apple devices</span>
+    <div style="font-size:0.7rem;color:#6E6E73;margin:4px 0 6px;line-height:1.5">${eraLine}</div>
     <span class="hash">${t('journeyHash')}</span><br>
     <span class="value">${fmtLocal(totalAdj)}</span><br>
     <span class="hash">(today\u2019s dollars)</span>
