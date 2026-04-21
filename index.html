@@ -234,20 +234,68 @@ body.review-mode .product-card.checked {
   .era-meta { margin-left: 22px; text-align: left; font-size: 0.68rem; }
 }
 
-/* ERA LEGEND */
+/* ERA STATS BAR */
 .era-legend {
-  display: flex; align-items: center; gap: 14px; flex-wrap: wrap;
-  padding: 8px 0 4px; max-width: 1400px; margin: 0 auto;
-  font-size: 0.72rem; color: var(--text-secondary);
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 8px;
+  padding: 10px 0 6px;
 }
 .era-legend-item {
-  display: inline-flex; align-items: center; gap: 5px; cursor: pointer;
-  padding: 2px 8px; border-radius: 12px; transition: background var(--transition-fast);
-  user-select: none;
+  display: flex; flex-direction: column; gap: 3px;
+  padding: 9px 12px 9px 14px;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border-light);
+  border-left: 3px solid transparent;
+  background: var(--bg-card);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  user-select: none; position: relative; overflow: hidden;
 }
-.era-legend-item:hover { background: var(--accent-light); }
-.era-legend-item.active { background: var(--accent-light); font-weight: 600; color: var(--text-primary); }
-.era-legend-dot { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; }
+.era-legend-item:hover { box-shadow: var(--shadow-sm); border-color: var(--border); }
+.era-legend-item.active { background: var(--accent-light); border-color: var(--accent); }
+.era-legend-item[data-era="jobs1"] { border-left: 3px solid; border-image: linear-gradient(180deg,#61BB46,#FDB827,#F5821F,#E03A3E,#963D97,#009DDC) 1; }
+.era-legend-item[data-era="interregnum"] { border-left-color: #86868B; }
+.era-legend-item[data-era="jobs2"] { border-left-color: #0071E3; }
+.era-legend-item[data-era="cook"] { border-left-color: #1D1D1F; }
+[data-theme="dark"] .era-legend-item[data-era="cook"] { border-left-color: #A1A1A6; }
+.era-legend-item.active[data-era="jobs1"] { border-left: 3px solid; border-image: linear-gradient(180deg,#61BB46,#FDB827,#F5821F,#E03A3E,#963D97,#009DDC) 1; }
+.era-legend-item.active[data-era="interregnum"] { border-left-color: #86868B; }
+.era-legend-item.active[data-era="jobs2"] { border-left-color: #0071E3; }
+.era-legend-item.active[data-era="cook"] { border-left-color: #1D1D1F; }
+[data-theme="dark"] .era-legend-item.active[data-era="cook"] { border-left-color: #A1A1A6; }
+.era-legend-ceo {
+  font-family: var(--font-display); font-weight: 600; font-size: 0.82rem;
+  color: var(--text-primary); display: flex; align-items: center; gap: 6px;
+}
+.era-legend-years {
+  font-size: 0.7rem; font-weight: 400; color: var(--text-tertiary);
+}
+.era-legend-tagline {
+  font-size: 0.68rem; color: var(--text-tertiary); font-style: italic; margin-bottom: 2px;
+}
+.era-legend-stats {
+  display: flex; flex-direction: column; gap: 1px;
+  font-size: 0.68rem; color: var(--text-secondary); line-height: 1.4;
+  border-top: 1px solid var(--border-light); padding-top: 5px; margin-top: 3px;
+}
+.era-legend-stat { display: flex; justify-content: space-between; gap: 6px; }
+.era-legend-stat-label { color: var(--text-tertiary); }
+.era-legend-stat-value { font-weight: 600; color: var(--text-primary); font-variant-numeric: tabular-nums; }
+.era-legend-count {
+  position: absolute; top: 8px; right: 10px;
+  font-size: 0.62rem; color: var(--text-tertiary);
+  background: var(--bg-primary); border-radius: 8px;
+  padding: 1px 5px;
+}
+@media (max-width: 900px) {
+  .era-legend { grid-template-columns: repeat(2, 1fr); }
+}
+@media (max-width: 480px) {
+  .era-legend { grid-template-columns: 1fr 1fr; gap: 6px; }
+  .era-legend-stats { display: none; }
+}
+.era-legend-dot { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; display: inline-block; }
 .era-legend-dot.jobs1 { background: linear-gradient(135deg,#E03A3E,#FDB827,#61BB46,#009DDC); }
 .era-legend-dot.interregnum { background: #86868B; }
 .era-legend-dot.jobs2 { background: #0071E3; }
@@ -1281,10 +1329,25 @@ function render(){
 function renderEraLegend(){
   const el=document.getElementById('eraLegend');if(!el)return;
   const counts={};PRODUCTS.forEach(p=>{const e=getEra(p.year);counts[e]=(counts[e]||0)+1;});
+  const fr=state.lang==='fr';
+  const revenueLabel=fr?'CA cumulé':'Cumul. revenue';
+  const mcapLabel=fr?'Cap. boursière':'Market cap';
   el.innerHTML=Object.entries(ERAS).map(([key,e])=>{
     const active=state.eraFilter===key?' active':'';
     const ceo=typeof e.ceo==='object'?e.ceo[state.lang]||e.ceo.en:e.ceo;
-    return '<span class="era-legend-item'+active+'" onclick="toggleEraFilter(\''+key+'\')" title="'+(counts[key]||0)+' '+t('productsPlural')+'  ·  '+eraStr(key,'revenue')+'  ·  '+eraStr(key,'mcap')+'"><span class="era-legend-dot '+key+'"></span>'+ceo+' ('+e.years+')</span>';
+    const tagline=eraStr(key,'tagline');
+    const revenue=eraStr(key,'revenue').replace(/Cum\. revenue ≈ |CA cumulé ≈ /,'');
+    const mcap=eraStr(key,'mcap').replace(/Mkt cap: |Cap\. boursière : /,'');
+    const n=counts[key]||0;
+    return '<div class="era-legend-item'+active+'" data-era="'+key+'" onclick="toggleEraFilter(\''+key+'\')">'
+      +'<span class="era-legend-count">'+n+' '+t(n>1?'productsPlural':'products')+'</span>'
+      +'<span class="era-legend-ceo"><span class="era-legend-dot '+key+'"></span>'+ceo+' <span class="era-legend-years">'+e.years+'</span></span>'
+      +'<span class="era-legend-tagline">'+tagline+'</span>'
+      +'<div class="era-legend-stats">'
+      +'<span class="era-legend-stat"><span class="era-legend-stat-label">'+revenueLabel+'</span><span class="era-legend-stat-value">'+revenue+'</span></span>'
+      +'<span class="era-legend-stat"><span class="era-legend-stat-label">'+mcapLabel+'</span><span class="era-legend-stat-value">'+mcap+'</span></span>'
+      +'</div>'
+      +'</div>';
   }).join('');
 }
 function toggleEraFilter(era){
