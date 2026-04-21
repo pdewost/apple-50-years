@@ -16,7 +16,7 @@ The result is your **#LifetimeCustomerValue**: a shareable receipt of your Apple
 
 ## Features
 
-- **279 products** spanning 26 categories — Pre-Mac Era through Apple Vision Pro
+- **282 products** spanning 29 categories — Pre-Mac Era through Apple Vision Pro
 - **Inflation adjustment** via BLS CPI-U data (1976–2026), fetched live with a hardcoded fallback
 - **Dual view modes** — browse by product category or chronologically by year
 - **Live EUR conversion** fetched from an exchange rate API, with a fixed fallback
@@ -24,7 +24,7 @@ The result is your **#LifetimeCustomerValue**: a shareable receipt of your Apple
 - **"My Receipt" modal** — shareable summary with product thumbnails, total count, and inflation-adjusted grand total
 - **Shareable URL** — your selection is encoded in the URL hash so you can copy or share a direct link
 - **HTML export** — download a self-contained receipt as an HTML file
-- **Real-time search** — filter across all 279 products by name
+- **Real-time search** — filter across all 282 products by name
 - **Dark mode** — respects system preference; togglable manually
 - **English / French** — auto-detects browser locale, manually switchable
 - **Fully responsive** — works on mobile down to 320 px wide
