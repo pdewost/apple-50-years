@@ -623,6 +623,11 @@ const PRODUCTS=[
 {id:"mac-iivi",name:"Macintosh IIvi",year:1992,msrp:2949,est:true,category:"mac-ii",image:"https://upload.wikimedia.org/wikipedia/commons/thumb/f/ff/Macintosh_IIvi.jpg/500px-Macintosh_IIvi.jpg",url:"https://en.wikipedia.org/wiki/Macintosh_IIvi",cpu:"Motorola 68030"},
 {id:"mac-iivx",name:"Macintosh IIvx",year:1992,msrp:2949,est:true,category:"mac-ii",image:"https://upload.wikimedia.org/wikipedia/commons/thumb/3/3e/Macintosh_IIvx.jpg/500px-Macintosh_IIvx.jpg",url:"https://en.wikipedia.org/wiki/Macintosh_IIvx",cpu:"Motorola 68030"},
 
+// Macintosh LC
+{id:"mac-lc",name:"Macintosh LC",year:1990,msrp:2499,est:false,category:"mac-lc",image:"https://upload.wikimedia.org/wikipedia/commons/thumb/4/47/Macintosh-LC_hg.jpg/500px-Macintosh-LC_hg.jpg",url:"https://en.wikipedia.org/wiki/Macintosh_LC",cpu:"Motorola 68020"},
+{id:"mac-lc-ii",name:"Macintosh LC II",year:1992,msrp:1699,est:false,category:"mac-lc",image:"https://upload.wikimedia.org/wikipedia/commons/thumb/d/d6/Macintosh_LC_II.jpg/500px-Macintosh_LC_II.jpg",url:"https://en.wikipedia.org/wiki/Macintosh_LC_II",cpu:"Motorola 68030"},
+{id:"mac-lc-iii",name:"Macintosh LC III",year:1993,msrp:1349,est:false,category:"mac-lc",image:"https://upload.wikimedia.org/wikipedia/commons/thumb/8/87/Apple-macintosh-lc-iii.jpg/500px-Apple-macintosh-lc-iii.jpg",url:"https://en.wikipedia.org/wiki/Macintosh_LC_III",cpu:"Motorola 68030"},
+
 // Quadra & Centris
 {id:"quadra-700",name:"Macintosh Quadra 700",year:1991,msrp:5700,est:false,category:"quadra-centris",image:"https://upload.wikimedia.org/wikipedia/commons/thumb/3/39/Macintosh_Quadra_700.png/500px-Macintosh_Quadra_700.png",url:"https://en.wikipedia.org/wiki/Macintosh_Quadra_700",cpu:"Motorola 68040"},
 {id:"quadra-900",name:"Macintosh Quadra 900",year:1991,msrp:7200,est:false,category:"quadra-centris",image:"https://upload.wikimedia.org/wikipedia/commons/thumb/e/e5/Macintosh_Quadra_900.jpg/500px-Macintosh_Quadra_900.jpg",url:"https://en.wikipedia.org/wiki/Macintosh_Quadra_900",cpu:"Motorola 68040"},
@@ -927,7 +932,7 @@ const PRODUCTS=[
 ];
 
 // ── CATEGORIES ──
-const CATEGORIES={"pre-mac":{label:"Pre-Mac Era",order:0},"compact-mac":{label:"Compact Macs",order:1},"mac-ii":{label:"Mac II Family",order:2},"quadra-centris":{label:"Quadra & Centris",order:3},"performa":{label:"Performa",order:4},"powerbook":{label:"PowerBook & Duo",order:5},"ibook":{label:"iBook",order:6},"power-mac":{label:"Power Mac",order:7},"imac":{label:"iMac",order:8},"macbook":{label:"MacBook Family",order:9},"mac-mini":{label:"Mac mini",order:10},"mac-pro":{label:"Mac Pro",order:11},"mac-studio":{label:"Mac Studio",order:12},"printer":{label:"Printers",order:12.5},"display":{label:"Displays",order:12.6},"pippin":{label:"Pippin",order:13},"quicktake":{label:"QuickTake",order:14},"newton":{label:"Newton",order:15},"ipod":{label:"iPod",order:16},"iphone":{label:"iPhone",order:17},"ipad":{label:"iPad",order:18},"apple-watch":{label:"Apple Watch",order:19},"airpods":{label:"AirPods",order:20},"homepod":{label:"HomePod",order:21},"apple-tv":{label:"Apple TV",order:22},"airport":{label:"AirPort & Time Capsule",order:23},"airtag":{label:"AirTag",order:24},"vision-pro":{label:"Vision Pro",order:25}};
+const CATEGORIES={"pre-mac":{label:"Pre-Mac Era",order:0},"compact-mac":{label:"Compact Macs",order:1},"mac-ii":{label:"Mac II Family",order:2},"mac-lc":{label:"Macintosh LC",order:2.5},"quadra-centris":{label:"Quadra & Centris",order:3},"performa":{label:"Performa",order:4},"powerbook":{label:"PowerBook & Duo",order:5},"ibook":{label:"iBook",order:6},"power-mac":{label:"Power Mac",order:7},"imac":{label:"iMac",order:8},"macbook":{label:"MacBook Family",order:9},"mac-mini":{label:"Mac mini",order:10},"mac-pro":{label:"Mac Pro",order:11},"mac-studio":{label:"Mac Studio",order:12},"printer":{label:"Printers",order:12.5},"display":{label:"Displays",order:12.6},"pippin":{label:"Pippin",order:13},"quicktake":{label:"QuickTake",order:14},"newton":{label:"Newton",order:15},"ipod":{label:"iPod",order:16},"iphone":{label:"iPhone",order:17},"ipad":{label:"iPad",order:18},"apple-watch":{label:"Apple Watch",order:19},"airpods":{label:"AirPods",order:20},"homepod":{label:"HomePod",order:21},"apple-tv":{label:"Apple TV",order:22},"airport":{label:"AirPort & Time Capsule",order:23},"airtag":{label:"AirTag",order:24},"vision-pro":{label:"Vision Pro",order:25}};
 
 // ── I18N ──
 const STRINGS={
@@ -1260,7 +1265,7 @@ function showReceiptTile(){
     '<div style="font-size:0.78rem;color:var(--text-tertiary);margin:4px 0">'+(function(){
       const cats={};checked.forEach(p=>{
         let g='acc';
-        if(['pre-mac','compact-mac','mac-ii','quadra-centris','performa','powerbook','ibook','power-mac','imac','macbook','mac-mini','mac-pro','mac-studio'].includes(p.category)) g='comp';
+        if(['pre-mac','compact-mac','mac-ii','mac-lc','quadra-centris','performa','powerbook','ibook','power-mac','imac','macbook','mac-mini','mac-pro','mac-studio'].includes(p.category)) g='comp';
         else if(p.category==='iphone') g='phone';
         else if(p.category==='ipad') g='ipad';
         else if(p.category==='ipod') g='ipod';
